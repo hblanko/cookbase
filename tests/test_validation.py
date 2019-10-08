@@ -14,7 +14,7 @@ class TestValidation(unittest.TestCase):
             data = json.load(json_file)
             json_file.close()
 
-        v = Validation("../resources/schemas")
+        v = Validation("http://www.landarltracker.com/schemas")
         v._instruments = dict()
         for i in data["instruments"].keys():
             v._instruments[i] = [data["instruments"][i], "PROC1000"]
@@ -27,7 +27,7 @@ class TestValidation(unittest.TestCase):
         with open("./resources/pizzaMozzarella.json") as json_file:
             data = json.load(json_file)
             json_file.close()
-        v = Validation("../resources/schemas")
+        v = Validation("http://www.landarltracker.com/schemas")
         v.validate_recipe(data)
 
 

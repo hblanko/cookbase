@@ -1,4 +1,3 @@
-import json
 import sys
 from typing import Any, Dict, Tuple
 
@@ -16,22 +15,24 @@ from cookbase.validation.exceptions import (IngredientsNotUsedError,
 class Validation():
     '''Class performing validation and graph construction of recipes in JSON Cookbase Format.
 
-    :ivar str _schema_base_path: The base path of the JSON Schema directory
+    :ivar str _schema_base_uri: The base uri to the JSON Schema directory for the JSON Cookbase Format
     :ivar _foodstuffs: A structure storing data of remaining foodstuffs in preparation flow
     :vartype _foodstuffs: dict[str, dict[str, Any]]
     :ivar _instruments: A structure storing data of involved instruments together with a string containing the identifier of the process using the instrument
     :vartype _instruments: dict[str, tuple[dict[str, Any], str]]
+    :ivar _schema_ref_resolver: An instance of :class:`jsonschema.validators.RefResolver` resolving remote references to JSON Schemas
+    :vartype _schema_ref_resolver: jsonschema.validators.RefResolver
     :ivar _rg: An instance of :class:`cookbase.graph.RecipeGraph` storing the recipe graph information, defaults to `None`
     :vartype _rg: cookbase.graph.recipegraph.RecipeGraph, optional
     '''
 
     def __init__(self,
-                 schema_base_path: str,
+                 schema_base_uri: str,
                  rg: RecipeGraph = None):
         '''Constructor method'''
-        self. _schema_base_path = schema_base_path
+        self._schema_base_uri = schema_base_uri
+        self._schema_ref_resolver = jsonschema.validators.RefResolver.from_schema({"$ref": self._schema_base_uri + "/recipe.json"})
         self._rg = rg
-        pass
 
     def _update_foodstuffs(self,
                           process_id: str,
@@ -107,14 +108,17 @@ class Validation():
         :param process: The JSON document representing the process to be validated
         :type process: dict[str, Any]
         '''
-        splitprocessname = process["process"].split(' ')
-        with open(self._schema_base_path + '/process/' + splitprocessname[0] + ''.join(x.title() for x in splitprocessname[1:]) + '.json') as f:
-            process_schema = json.load(f)
+        splits = process["process"].split(' ')
+        schema_basename = splits[0] + "".join(x.title() for x in splits[1:]) + ".json"
+        process_definitions = self._schema_ref_resolver.resolve_from_url(self._schema_base_uri +
+                                                                         "/process/" +
+                                                                         schema_basename +
+                                                                         "#/definitions")
 
         # Building involved foodstuffs array
         process_foodstuffs = list()
         fk = list()
-        a = process_schema["definitions"]["foodstuffKeywords"]
+        a = process_definitions["foodstuffKeywords"]
         if isinstance(a, str):
             fk.append(a)
         elif isinstance(a, list):
@@ -136,7 +140,7 @@ class Validation():
 
         # Building CNF formula for necessary instruments
         necessary_instruments = list(tuple(tuple()))
-        a = process_schema["definitions"]["conditions"]["necessaryInstruments"]
+        a = process_definitions["conditions"]["necessaryInstruments"]
         b = list(tuple())
         if isinstance(a, list):
             if len(a) == 1:
@@ -203,9 +207,7 @@ class Validation():
         :param data: The JSON document representing the recipe to be validated
         :type data: dict[str, Any]
         '''
-        with open(self._schema_base_path + '/recipe.json') as f:
-            schema = json.load(f)
-#         jsonschema.validate(data, {"$ref": self._schema_base_path + "/recipe.json"})
+        schema = {"$ref": self._schema_base_uri + "/recipe.json"}
         jsonschema.validate(data, schema)
         self._foodstuffs = dict()
         self._instruments = dict()
