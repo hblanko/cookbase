@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/addingIngredientsOnTop.json",
+  "type": "object",
+  "properties": {
+    "process": {
+      "const": "adding ingredients on top"
+    },
+    "base": {
+      "$ref": "../definitions.json#/foodstuff"
+    },
+    "onTop": {
+      "$ref": "../definitions.json#/foodstuffsList"
+    },
+    "instruments": {
+      "$ref": "../definitions.json#/instruments"
+    }
+  },
+  "required": [
+    "process",
+    "base",
+    "onTop",
+    "instruments"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "conditions": {
+      "necessaryInstruments": [
+        {
+          "i1": ["family", "container"]
+        },
+        {
+          "i1": ["type", "pizza tray"]
+        }
+      ]
+    },
+    "foodstuffKeywords": [
+      "base",
+      "onTop"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/recipe.json",
+  "type": "object",
+  "properties": {
+    "_id" : {
+      "bsonType": "objectId"
+    },
+    "info": {
+      "$ref": "info.json"
+    },
+    "yield": {
+      "$ref": "yield.json"
+    },
+    "ingredients": {
+      "type": "object",
+      "patternProperties": {
+        "^part[1-9]\\d{0,1}$": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "$ref": "ingredient.json"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "instruments": {
+      "type": "object",
+      "patternProperties": {
+        "^inst[1-9]\\d{0,1}$": {
+          "$ref": "instrument.json"
+        }
+      },
+      "additionalProperties": false
+    },
+    "preparation": {
+      "type": "object",
+      "patternProperties": {
+        "^proc[1-9]\\d{0,1}$": {
+          "$ref": "process.json"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "info",
+    "yield",
+    "ingredients",
+    "instruments",
+    "preparation"
+  ],
+  "additionalProperties": false
+}

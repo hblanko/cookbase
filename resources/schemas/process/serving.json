@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/serving.json",
+  "type": "object",
+  "properties": {
+    "process": {
+      "const": "serving"
+    },
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "portions": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "portions"
+      ],
+      "additionalProperties": false
+    },
+    "foodstuffsList": {
+      "$ref": "../definitions.json#/foodstuffsList"
+    },
+    "instruments": {
+      "$ref": "../definitions.json#/instruments"
+    }
+  },
+  "required": [
+    "process",
+    "foodstuffsList",
+    "instruments"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "conditions": {
+      "necessaryInstruments": [
+        {
+          "i1": ["family", "container"]
+        },
+        {
+          "i1": ["family", "plate"]
+        }
+      ]
+    },
+    "foodstuffKeywords": "foodstuffsList"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process.json",
+  "anyOf": [
+    {
+      "$ref": "process/addingIngredients.json"
+    },
+    {
+      "$ref": "process/addingIngredientsOnTop.json"
+    },
+    {
+      "$ref": "process/chopping.json"
+    },
+    {
+      "$ref": "process/peeling.json"
+    },
+    {
+      "$ref": "process/dicing.json"
+    },
+    {
+      "$ref": "process/mixing.json"
+    },
+    {
+      "$ref": "process/kneading.json"
+    },
+    {
+      "$ref": "process/proofing.json"
+    },
+    {
+      "$ref": "process/degassing.json"
+    },
+    {
+      "$ref": "process/dividing.json"
+    },
+    {
+      "$ref": "process/rounding.json"
+    },
+    {
+      "$ref": "process/shaping.json"
+    },
+    {
+      "$ref": "process/saucing.json"
+    },
+    {
+      "$ref": "process/baking.json"
+    },
+    {
+      "$ref": "process/serving.json"
+    },
+    {
+      "$ref": "process/weighing.json"
+    },
+    {
+      "$ref": "process/resting.json"
+    },
+    {
+      "$ref": "process/storing.json"
+    },
+    {
+      "$ref": "process/separating.json"
+    }
+  ]
+}

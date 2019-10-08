@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/baking.json",
+  "type": "object",
+  "properties": {
+    "process": {
+      "const": "baking"
+    },
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "temperature": {
+          "$ref": "../definitions.json#/quantities/temperature"
+        },
+        "ovenPosition": {
+          "$ref": "../definitions.json#/quantities/descriptive/height"
+        },
+        "endConditions": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "$ref": "../definitions.json#/quantities/time"
+            },
+            "descriptive": {
+              "default": "until foodstuff gets browned",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "temperature",
+        "endConditions"
+      ],
+      "additionalProperties": false
+    },
+    "foodstuff": {
+      "$ref": "../definitions.json#/foodstuff"
+    },
+    "instruments": {
+      "allOf": [
+        {
+          "$ref": "../definitions.json#/instruments"
+        },
+        {
+          "minItems": 2
+        }
+      ]
+    }
+  },
+  "required": [
+    "process",
+    "parameters",
+    "foodstuff",
+    "instruments"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "conditions": {
+      "necessaryInstruments": [
+        {
+          "i1": ["family", "oven"],
+          "i2": ["family", "baking"]
+        }
+      ]
+    },
+    "foodstuffKeywords": "foodstuff"
+  }
+}

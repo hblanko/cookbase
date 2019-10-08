@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/yield.json",
+  "type": "object",
+  "properties": {
+    "servings": {
+      "type": "integer",
+      "exclusiveMinimum": 0
+    },
+    "servingSize": {
+      "type": "object",
+      "properties": {
+        "descriptive": {
+          "type": "string",
+          "enum": [
+            "small",
+            "medium",
+            "size"
+          ]
+        },
+        "weight": {
+          "$ref": "definitions.json#/quantities/mass"
+        },
+        "volume": {
+          "$ref": "definitions.json#/quantities/volume"
+        }
+      }
+    },
+    "servingFormat": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/info.json",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "authorship": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "fullName",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "releaseDate": {
+      "type": "string"
+    },
+    "cuisine": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "courseType": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "preparationTime": {
+      "$ref": "definitions.json#/quantities/time"
+    },
+    "cookingTime": {
+      "$ref": "definitions.json#/quantities/time"
+    },
+    "servingTime": {
+      "$ref": "definitions.json#/quantities/time"
+    }
+  },
+  "required": [
+    "name",
+    "authorship",
+    "releaseDate",
+    "cuisine",
+    "courseType",
+    "preparationTime",
+    "cookingTime",
+    "servingTime"
+  ],
+  "additionalProperties": false
+}

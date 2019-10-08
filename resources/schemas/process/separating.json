@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/separating.json",
+  "type": "object",
+  "properties": {
+    "process": {
+      "const": "separating"
+    },
+    "foodstuff": {
+      "$ref": "../definitions.json#/foodstuff"
+    },
+    "instruments": {
+      "$ref": "../definitions.json#/instruments"
+    },
+    "parts": {
+      "type": "object",
+      "minProperties": 2,
+      "patternProperties": {
+        "^part[1-9]\\d{0,1}$": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "oneOf": [
+                {
+                  "$ref": "../definitions.json#/quantities/length"
+                },
+                {
+                  "$ref": "../definitions.json#/quantities/mass"
+                },
+                {
+                  "$ref": "../definitions.json#/quantities/volume"
+                },
+                {
+                  "$ref": "../definitions.json#/proportion"
+                }
+              ]
+            },
+            "additionalProperties": false
+          },
+          "required": [
+            "amount"
+          ],
+          "additionalProperties": false
+        },
+        "additionalProperties": false
+      },
+      "required": [
+        "part1",
+        "part2"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "process",
+    "foodstuff",
+    "instruments",
+    "parts"
+  ],
+  "additionalProperties": false
+}

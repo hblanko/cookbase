@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/resting.json",
+  "type": "object",
+  "properties": {
+    "process": {
+      "const": "resting"
+    },
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "time": {
+          "$ref": "../definitions.json#/quantities/time"
+        }
+      },
+      "required": [
+        "time"
+      ],
+      "additionalProperties": false
+    },
+    "foodstuff": {
+      "$ref": "../definitions.json#/foodstuff"
+    },
+    "instruments": {
+      "$ref": "../definitions.json#/instruments"
+    }
+  },
+  "required": [
+    "process",
+    "foodstuff",
+    "instruments"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "conditions": {
+      "necessaryInstruments": {
+        "i1": ["family", "container"]
+      }
+    },
+    "foodstuffKeywords": "foodstuff"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/proofing.json",
+  "type": "object",
+  "properties": {
+    "process": {
+      "const": "proofing"
+    },
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "endConditions": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "$ref": "../definitions.json#/quantities/time"
+            },
+            "descriptive": {
+              "default": "until dough doubles volume",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "endConditions"
+      ],
+      "additionalProperties": false
+    },
+    "foodstuff": {
+      "$ref": "../definitions.json#/foodstuff"
+    },
+    "instruments": {
+      "$ref": "../definitions.json#/instruments"
+    }
+  },
+  "required": [
+    "process",
+    "parameters",
+    "foodstuff",
+    "instruments"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "conditions": {
+      "necessaryInstruments": [
+        {
+          "i1": ["family", "container"]
+        },
+        {
+          "i1": ["type", "pizza tray"]
+        }
+      ]
+    },
+    "foodstuffKeywords": "foodstuff"
+  }
+}

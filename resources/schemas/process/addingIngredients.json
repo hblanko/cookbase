@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/addingIngredients.json",
+  "type": "object",
+  "properties": {
+    "process": {
+      "const": "adding ingredients"
+    },
+    "foodstuffsList": {
+      "$ref": "../definitions.json#/foodstuffsList"
+    },
+    "instruments": {
+      "$ref": "../definitions.json#/instruments"
+    }
+  },
+  "required": [
+    "process",
+    "foodstuffsList",
+    "instruments"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "conditions": {
+      "necessaryInstruments": {
+        "i1": ["family", "container"]
+      }
+    },
+    "foodstuffKeywords": "foodstuffsList"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cercadevigo.ddns.net:8080/schemas/definitions.json",
+  "return": {
+    "type": "object"
+  },
+  "foodstuff": {
+    "type": "string"
+  },
+  "foodstuffsList": {
+    "type": "array",
+    "minItems": 1,
+    "uniqueItems": true,
+    "items": {
+      "type": "string"
+    }
+  },
+  "instruments": {
+    "type": "array",
+    "minItems": 1,
+    "uniqueItems": true,
+    "items": {
+      "type": "object",
+      "properties": {
+        "instrument": {
+          "type": "string"
+        },
+        "usedAfter": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "instrument",
+        "usedAfter"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "proportion": {
+    "type": "object",
+    "minProperties": 1,
+    "maxProperties": 1,
+    "properties": {
+      "percentage": {
+        "type": "number"
+      },
+      "fraction": {
+        "type": "string",
+        "pattern": "^\\d/\\d$"
+      }
+    },
+    "additionalProperties": false
+  },
+  "quantities": {
+    "length": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "measure": {
+          "default": "cm",
+          "type": "string",
+          "enum": ["m", "cm", "mm"]
+        }
+      },
+      "required": [
+        "value",
+        "measure"
+      ],
+      "additionalProperties": false
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "measure": {
+          "default": "min",
+          "type": "string",
+          "enum": ["d", "h", "min", "s"]
+        }
+      },
+      "required": [
+        "value",
+        "measure"
+      ],
+      "additionalProperties": false
+    },
+    "mass": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "measure": {
+          "default": "g",
+          "type": "string",
+          "enum": ["mg", "g", "Kg"]
+        }
+      },
+      "required": [
+        "value",
+        "measure"
+      ],
+      "additionalProperties": false
+    },
+    "volume": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "measure": {
+          "default": "ml",
+          "type": "string",
+          "enum": ["cm^3", "ml", "l"]
+        }
+      },
+      "required": [
+        "value",
+        "measure"
+      ],
+      "additionalProperties": false
+    },
+    "temperature": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer"
+        },
+        "measure": {
+          "default": "°C",
+          "type": "string",
+          "enum": ["°C", "K", "°F"]
+        }
+      },
+      "required": [
+        "value",
+        "measure"
+      ],
+      "additionalProperties": false
+    },
+    "descriptive": {
+      "temperature": {
+        "type": "string",
+        "enum": ["freeze", "cool", "room", "warm", "hot"]
+      },
+      "height": {
+        "type": "string",
+        "enum": ["bottom", "low", "medium", "high", "top"]
+      }
+    }
+  }
+}
