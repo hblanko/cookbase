@@ -1,19 +1,34 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://cercadevigo.ddns.net:8080/schemas/ingredient.json",
+  "$id": "http://www.landarltracker.com/schemas/ingredient.json",
   "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name"
+  ],
   "properties": {
-    "type": {
-      "type": "object",
-      "patternProperties": {
-        "^key[1-9]\\d{0,1}": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
+    "subdivision": {
+      "type": "string"
     },
     "name": {
-      "type": "string"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "language"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "language": {
+          "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+          "type": "string"
+        }
+      }
+    },
+    "cbi_id": {
+      "$ref": "definitions.json#/ObjectId"
     },
     "amount": {
       "anyOf": [
@@ -25,12 +40,36 @@
         }
       ]
     },
+    "notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "language"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "language": {
+          "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+          "type": "string"
+        }
+      }
+    },
     "optional": {
       "const": true
+    },
+    "type": {
+      "$comment": "This property can potentially become deprecated if the FoodEx2 data model is used properly",
+      "type": "object",
+      "patternProperties": {
+        "^k[1-9]$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
-  },
-  "required": [
-    "name"
-  ],
-  "additionalProperties": false
+  }
 }

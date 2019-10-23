@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/cbi.json",
+  "examples": [
+    {
+      "schema": "http://landarltracker.com/schemas/cbi.json",
+      "fdx_id": 16844167,
+      "name": {
+        "en": "sweet potato",
+        "es": "batata",
+        "es-AR": "batata",
+        "es-ES": [
+          "boniato",
+          "patata dulce"
+        ],
+        "es-BO": "camote",
+        "pl": "batat"
+      },
+      "description": {
+        "en-UK": "Edible Roots/tubers from the plant classified under the species Ipomoea batatas (L.) Lam., commonly known as Sweet potatoes. The part consumed/analysed is not specified. When relevant, information on the part consumed/analysed has to be reported with additional facet descriptors. In case of data collections related to legislations, the default part consumed/analysed is the one defined in the applicable legislation.\u00a3https://en.wikipedia.org/wiki/Sweet_potatoes\u00a3https://www.google.co.uk/search?tbm=isch&q=Sweet potatoes"
+      },
+      "info": {
+        "ndbNumber": 11507,
+        "pictureUrl": "https://farm4.staticflickr.com/3037/2850269642_0ff40a2c09_b.jpg"
+      }
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "schema": {
+      "const": "http://landarltracker.com/schemas/cbi.json"
+    },
+    "_id" : {
+      "$ref": "definitions.json#/ObjectId"
+    },
+    "fdx_id" : {
+      "$ref": "definitions.json#/foodex2termId"
+    },
+    "name" : {
+      "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "description" : {
+      "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "info": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "ndbNumber": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "pictureUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "type": {
+      "$comment": "This property can potentially become deprecated if the FoodEx2 data model is used properly",
+      "type": "object",
+      "patternProperties": {
+        "^k[1-9]$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

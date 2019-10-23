@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://cercadevigo.ddns.net:8080/schemas/yield.json",
+  "$id": "http://www.landarltracker.com/schemas/yield.json",
   "type": "object",
   "properties": {
     "servings": {

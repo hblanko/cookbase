@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/separating.json",
+  "$id": "http://www.landarltracker.com/schemas/process/separating.json",
+  "$comment": "This process schema has to be redefined. The 'parts' property is not yet defined in 'schema-process.json'",
   "type": "object",
   "properties": {
     "process": {
@@ -57,5 +58,24 @@
     "instruments",
     "parts"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "meta": {
+    "conditions": {
+      "necessaryInstruments": [
+        {
+          "i1": [
+            "type",
+            "worktop"
+          ]
+        },
+        {
+          "i1": [
+            "family",
+            "surface"
+          ]
+        }
+      ]
+    },
+    "foodstuffKeywords": "foodstuff"
+  }
 }

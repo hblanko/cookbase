@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://cercadevigo.ddns.net:8080/schemas/process.json",
-  "anyOf": [
+  "$id": "http://www.landarltracker.com/schemas/process.json",
+  "oneOf": [
     {
       "$ref": "process/addingIngredients.json"
     },

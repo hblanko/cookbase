@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://cercadevigo.ddns.net:8080/schemas/process/dividing.json",
+  "$id": "http://www.landarltracker.com/schemas/process/dividing.json",
   "$comment": "It only handles even pieces. Extend syntax to allow for irregular division.",
   "type": "object",
   "properties": {
@@ -9,25 +9,17 @@
     },
     "parameters": {
       "type": "object",
-      "anyOf": [
-        {
-          "properties": {
-            "weight": {
-              "$ref": "../definitions.json#/quantities/mass"
-            }
-          },
-          "additionalProperties": false
+      "minProperties": 1,
+      "properties": {
+        "weight": {
+          "$ref": "../definitions.json#/quantities/mass"
         },
-        {
-          "properties": {
-            "pieces": {
-              "type": "number",
-              "exclusiveMinimum": 0
-            }
-          },
-          "additionalProperties": false
+        "pieces": {
+          "type": "number",
+          "exclusiveMinimum": 0
         }
-      ]
+      },
+      "additionalProperties": false
     },
     "foodstuff": {
       "$ref": "../definitions.json#/foodstuff"
@@ -43,14 +35,20 @@
     "instruments"
   ],
   "additionalProperties": false,
-  "definitions": {
+  "meta": {
     "conditions": {
       "necessaryInstruments": [
         {
-          "i1": ["type", "worktop"]
+          "i1": [
+            "type",
+            "worktop"
+          ]
         },
         {
-          "i1": ["family", "surface"]
+          "i1": [
+            "family",
+            "surface"
+          ]
         }
       ]
     },
