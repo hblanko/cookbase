@@ -4,10 +4,10 @@ from pymongo import MongoClient
 
 
 class MongoDBConnector(object):
-    '''Class performing validation and graph construction of recipes in JSON Cookbase Format.
+    '''Class handling a connection to a MongoDB instance where recipes in Cookbase Recipe Format are stored.
 
-    :ivar str db: The base path of the JSON Schema directory
-    :ivar url: A structure storing data of remaining foodstuffs in preparation flow, defaults to `None`
+    :ivar str db: Name of the MongoDB database where collections are stored
+    :ivar url: The URL to the MongoDB server
     :vartype url: str, optional
     '''
 

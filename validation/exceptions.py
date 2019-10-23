@@ -1,12 +1,12 @@
 from typing import Set
 
 
-class ValidationError(Exception):
+class CbrValidationError(Exception):
     '''Base class for validation errors.'''
     pass
 
 
-class InstrumentNotAvailableError(ValidationError):
+class InstrumentNotAvailableError(CbrValidationError):
     '''Raised when trying to use an unavailable instrument.
 
     :ivar str instrument: Instrument identifier
@@ -23,7 +23,7 @@ class InstrumentNotAvailableError(ValidationError):
         return "Instrument '" + self.instrument + "' is not available for the process'" + self.process + "'"
 
 
-class NecessaryInstrumentsError(ValidationError):
+class NecessaryInstrumentsError(CbrValidationError):
     '''Raised when the conditions of necessary instruments are not met.
 
     :ivar str process: Process identifier
@@ -37,7 +37,7 @@ class NecessaryInstrumentsError(ValidationError):
         return "Definition requirements of necessary instruments sets not met for process '" + self.process + "'"
 
 
-class NoInstrumentUsedAfterError(ValidationError):
+class NoInstrumentUsedAfterError(CbrValidationError):
     '''Raised when there is no instrument remaining used after a given process.
 
     :ivar str process: Process identifier
@@ -51,14 +51,14 @@ class NoInstrumentUsedAfterError(ValidationError):
         return "No instrument remains used after process '" + self.process + "'"
 
 
-class PreparationFlowError(ValidationError):
+class PreparationFlowError(CbrValidationError):
     '''Raised when the recipe does not fulfill preparation flow requirements.'''
 
     def __str__(self):
         return "Preparation does not meet flow requirements"
 
 
-class PreparationKeyError(ValidationError):
+class PreparationKeyError(CbrValidationError):
     '''Raised when an identifier is not found in the JSON document.
 
     :ivar str key: The identifier attempted to access
@@ -72,7 +72,7 @@ class PreparationKeyError(ValidationError):
         return "Bad identifier " + self.key
 
 
-class IngredientsNotUsedError(ValidationError):
+class IngredientsNotUsedError(CbrValidationError):
     '''Raised when remaining ingredients are found after end of preparation flow.
 
     :ivar foodstuffs: A set of ingredient identifiers

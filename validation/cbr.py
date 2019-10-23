@@ -12,10 +12,10 @@ from cookbase.validation.exceptions import (IngredientsNotUsedError,
                                             PreparationKeyError)
 
 
-class Validation():
-    '''Class performing validation and graph construction of recipes in JSON Cookbase Format.
+class CbrValidation():
+    '''Class performing validation and graph construction of recipes in Cookbase Recipe Format.
 
-    :ivar str _schema_base_uri: The base uri to the JSON Schema directory for the JSON Cookbase Format
+    :ivar str _schema_base_uri: The base uri to the JSON Schema directory for the Cookbase Recipe Format
     :ivar _foodstuffs: A structure storing data of remaining foodstuffs in preparation flow
     :vartype _foodstuffs: dict[str, dict[str, Any]]
     :ivar _instruments: A structure storing data of involved instruments together with a string containing the identifier of the process using the instrument
@@ -28,11 +28,17 @@ class Validation():
 
     def __init__(self,
                  schema_base_uri: str,
-                 rg: RecipeGraph = None):
-        '''Constructor method'''
+                 generate_graph: bool = False):
+        '''Constructor method
+        
+        :param bool generate_graph: A flag indicating whether to generate the :class:`cookbase.graph.RecipeGraph` or not
+        '''
         self._schema_base_uri = schema_base_uri
-        self._schema_ref_resolver = jsonschema.validators.RefResolver.from_schema({"$ref": self._schema_base_uri + "/recipe.json"})
-        self._rg = rg
+        self._schema_ref_resolver = jsonschema.validators.RefResolver.from_schema({"$ref": self._schema_base_uri + "/cbr.json"})
+        if generate_graph:
+            self._rg = RecipeGraph()
+        else:
+            self._rg = None
 
     def _update_foodstuffs(self,
                           process_id: str,
@@ -44,10 +50,10 @@ class Validation():
         :type process_foodstuffs: tuple[str, ...]
         '''
         if self._rg is not None:
-            v = self._rg.add_foodstuff(process_id)
+            self._rg.add_foodstuff(process_id)
         for i in process_foodstuffs:
             if self._rg is not None:
-                self._rg.add_foodstuff(i, v)
+                self._rg.add_foodstuff(i, process_id)
             del self._foodstuffs[i]
         self._foodstuffs[process_id] = None
 
@@ -113,7 +119,7 @@ class Validation():
         process_definitions = self._schema_ref_resolver.resolve_from_url(self._schema_base_uri +
                                                                          "/process/" +
                                                                          schema_basename +
-                                                                         "#/definitions")
+                                                                         "#/meta")
 
         # Building involved foodstuffs array
         process_foodstuffs = list()
@@ -174,10 +180,8 @@ class Validation():
         '''
         try:
             # Building internal structures from parsed JSON document
-            for i in data["ingredients"].keys():
-                for k, v in data["ingredients"][i].items():
-                    if k != "name":
-                        self._foodstuffs[k] = v
+            for k, v in data["ingredients"].items():
+                self._foodstuffs[k] = v
             for i in data["instruments"].keys():
                 self._instruments[i] = [data["instruments"][i], None]
 
@@ -207,7 +211,7 @@ class Validation():
         :param data: The JSON document representing the recipe to be validated
         :type data: dict[str, Any]
         '''
-        schema = {"$ref": self._schema_base_uri + "/recipe.json"}
+        schema = {"$ref": self._schema_base_uri + "/cbr.json"}
         jsonschema.validate(data, schema)
         self._foodstuffs = dict()
         self._instruments = dict()
