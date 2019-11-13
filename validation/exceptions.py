@@ -1,44 +1,31 @@
 from typing import Set
 
 
-class CbrValidationError(Exception):
-    '''Base class for validation errors.'''
+class CBRValidationException(Exception):
+    '''Base class for CBRvalidation errors.'''
     pass
 
 
-class InstrumentNotAvailableError(CbrValidationError):
-    '''Raised when trying to use an unavailable instrument.
+class ApplianceNotAvailableError(CBRValidationException):
+    '''Raised when trying to use an unavailable appliance.
 
-    :ivar str instrument: Instrument identifier
+    :ivar str appliance: Appliance identifier
     :ivar str process: Process identifier
     '''
 
     def __init__(self,
-                 instrument: str,
+                 appliance: str,
                  process: str):
-        self.instrument = instrument
+        self.appliance = appliance
         self.process = process
 
     def __str__(self):
-        return "Instrument '" + self.instrument + "' is not available for the process'" + self.process + "'"
+        return "Appliance '" + self.appliance + \
+            "' is not available for the process'" + self.process + "'"
 
 
-class NecessaryInstrumentsError(CbrValidationError):
-    '''Raised when the conditions of necessary instruments are not met.
-
-    :ivar str process: Process identifier
-    '''
-
-    def __init__(self,
-                 process: str):
-        self.process = process
-
-    def __str__(self):
-        return "Definition requirements of necessary instruments sets not met for process '" + self.process + "'"
-
-
-class NoInstrumentUsedAfterError(CbrValidationError):
-    '''Raised when there is no instrument remaining used after a given process.
+class NecessaryAppliancesError(CBRValidationException):
+    '''Raised when the conditions of necessary appliances are not met.
 
     :ivar str process: Process identifier
     '''
@@ -48,17 +35,32 @@ class NoInstrumentUsedAfterError(CbrValidationError):
         self.process = process
 
     def __str__(self):
-        return "No instrument remains used after process '" + self.process + "'"
+        return "Definition requirements of necessary appliances sets not met for process '" + \
+            self.process + "'"
 
 
-class PreparationFlowError(CbrValidationError):
+class NoApplianceUsedAfterError(CBRValidationException):
+    '''Raised when there is no appliance remaining used after a given process.
+
+    :ivar str process: Process identifier
+    '''
+
+    def __init__(self,
+                 process: str):
+        self.process = process
+
+    def __str__(self):
+        return "No appliance remains used after process '" + self.process + "'"
+
+
+class PreparationFlowError(CBRValidationException):
     '''Raised when the recipe does not fulfill preparation flow requirements.'''
 
     def __str__(self):
         return "Preparation does not meet flow requirements"
 
 
-class PreparationKeyError(CbrValidationError):
+class PreparationKeyError(CBRValidationException):
     '''Raised when an identifier is not found in the JSON document.
 
     :ivar str key: The identifier attempted to access
@@ -72,7 +74,7 @@ class PreparationKeyError(CbrValidationError):
         return "Bad identifier " + self.key
 
 
-class IngredientsNotUsedError(CbrValidationError):
+class IngredientsNotUsedError(CBRValidationException):
     '''Raised when remaining ingredients are found after end of preparation flow.
 
     :ivar foodstuffs: A set of ingredient identifiers
@@ -91,3 +93,14 @@ class IngredientsNotUsedError(CbrValidationError):
                     s += " ,"
                 s += "'" + i + "'"
         return "Ingredient/s " + s + " not used"
+
+
+class StorageError(CBRValidationException):
+    '''Raised when there was an error storing the recipe and/or the graph in the database.
+    '''
+
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        return "Error storing the recipe and/or the graph in the database"
