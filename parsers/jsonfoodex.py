@@ -319,7 +319,8 @@ def parsexml(args: argparse.Namespace) -> None:
         str(expo_term_counter))
 
 
-def _traverse_hierarchy(hierarchy_siblings: Dict[str, Any], term_to_attach: Optional[Tuple[str, str, Dict[str, Any]]] = None) -> bool:
+def _traverse_hierarchy(
+        hierarchy_siblings: Dict[str, Any], term_to_attach: Optional[Tuple[str, str, Dict[str, Any]]] = None) -> bool:
     '''Generates a JSON document describing a hierarchy tree.
 
     :param hierarchy_siblings: A dictionary describing all (already scanned) hierarchy terms sharing the same parent
@@ -392,10 +393,11 @@ def hierarchize(args: argparse.Namespace) -> None:
 
 def _main() -> None:
     '''Command-line parser.'''
-    ap = argparse.ArgumentParser(description="jsonfoodex - A parser for the"
-                                 + " Cookbase platform which transforms from"
-                                 + " the standard FoodEx2 XML-formatted file"
-                                 + " into JSON files.", add_help=False)
+    ap = argparse.ArgumentParser(description="jsonfoodex - A parsing suite"
+                                 + " for the Cookbase platform which"
+                                 + " transforms from the standard FoodEx2"
+                                 + " XML-formatted file into JSON files.",
+                                 add_help=False)
     ap.add_argument('-h', '--help', action=_HelpAction,
                     help='show this help message and exit')
     subparsers = ap.add_subparsers(dest="command")
@@ -407,7 +409,7 @@ def _main() -> None:
     parsexml_parser.add_argument(
         "outputfile",
         help="path to the JSON output file")
-    parsexml_parser.add_argument("-t", "--termsfile", help="path tothe JSON separated"
+    parsexml_parser.add_argument("-t", "--termsfile", help="path to the JSON separated"
                                  " output file for FoodEx2 terms, or folder if flag -s is"
                                  " used")
     pg = parsexml_parser.add_mutually_exclusive_group()
