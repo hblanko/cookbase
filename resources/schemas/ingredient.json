@@ -1,10 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://www.landarltracker.com/schemas/ingredient.json",
+  "title": "Cookbase Recipe's ingredient component",
+  "description": "Schema defining the format of a Cookbase Recipe (CBR) ingredient.",
   "type": "object",
+  "examples": [
+    {
+      "subdivision": "dough",
+      "name": {
+        "text": "white sugar",
+        "language": "en"
+      },
+      "cbiId": 363864347,
+      "amount": {
+        "value": 7,
+        "measure": "g"
+      },
+      "notes": {
+        "text": "any common white sugar could be used",
+        "language": "en"
+      }
+    }
+  ],
   "additionalProperties": false,
   "required": [
-    "name"
+    "name",
+    "cbiId"
   ],
   "properties": {
     "subdivision": {
@@ -22,21 +43,21 @@
           "type": "string"
         },
         "language": {
-          "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+          "$comment": "Language code following the IETF Tags for Identifying Languages (BCP 47) standard",
           "type": "string"
         }
       }
     },
-    "cbi_id": {
-      "$ref": "definitions.json#/ObjectId"
+    "cbiId": {
+      "$ref": "cb-global-definitions.json#/hashCRC32"
     },
     "amount": {
       "anyOf": [
         {
-          "$ref": "definitions.json#/quantities/mass"
+          "$ref": "cb-global-definitions.json#/quantities/mass"
         },
         {
-          "$ref": "definitions.json#/quantities/volume"
+          "$ref": "cb-global-definitions.json#/quantities/volume"
         }
       ]
     },
@@ -60,16 +81,6 @@
     },
     "optional": {
       "const": true
-    },
-    "type": {
-      "$comment": "This property can potentially become deprecated if the FoodEx2 data model is used properly",
-      "type": "object",
-      "patternProperties": {
-        "^k[1-9]$": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
     }
   }
 }

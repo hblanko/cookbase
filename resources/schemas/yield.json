@@ -19,10 +19,10 @@
           ]
         },
         "weight": {
-          "$ref": "definitions.json#/quantities/mass"
+          "$ref": "cb-global-definitions.json#/quantities/mass"
         },
         "volume": {
-          "$ref": "definitions.json#/quantities/volume"
+          "$ref": "cb-global-definitions.json#/quantities/volume"
         }
       }
     },

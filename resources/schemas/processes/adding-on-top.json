@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/processes/adding-on-top.json",
+  "title": "Process 'adding on top'",
+  "description": "Schema defining the format of an 'adding on top' process.",
+  "examples": [
+    {
+      "name": {
+        "text": "adding on top",
+        "language": "en"
+      },
+      "cbpId": 629280611,
+      "base": "proc1",
+      "onTop": [
+        "ing1",
+        "ing2"
+      ],
+      "appliances": [
+        {
+          "appliance": "inst1",
+          "usedAfter": true
+        },
+        {
+          "appliance": "inst2",
+          "usedAfter": false
+        }
+      ]
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "cbpId",
+    "base",
+    "onTop",
+    "appliances"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../cb-global-definitions.json#/textWithLanguage"
+    },
+    "cbpId": {
+      "const": 629280611
+    },
+    "base": {
+      "$ref": "../process-schema.json#/definitions/foodstuff"
+    },
+    "onTop": {
+      "$ref": "../process-schema.json#/definitions/foodstuffsList"
+    },
+    "appliances": {
+      "$ref": "../process-schema.json#/definitions/appliances"
+    },
+    "notes": {
+      "$ref": "../cb-global-definitions.json#/notes"
+    }
+  }
+}

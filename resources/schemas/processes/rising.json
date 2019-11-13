@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/processes/rising.json",
+  "title": "Process 'proofing'",
+  "description": "Schema defining the format of an 'rising' process.",
+  "examples": [
+    {
+      "name": {
+        "text": "proofing",
+        "language": "en"
+      },
+      "parameters": {
+        "endConditions": {
+          "time": {
+            "value": 30,
+            "measure": "min"
+          },
+          "descriptive": {
+            "text": "until dough doubles volume",
+            "language": "en"
+          }
+        }
+      },
+      "cbpId": 1965970778,
+      "foodstuff": "proc1",
+      "appliances": [
+        {
+          "appliance": "inst1",
+          "usedAfter": true
+        },
+        {
+          "appliance": "inst2",
+          "usedAfter": false
+        }
+      ]
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "parameters",
+    "cbpId",
+    "foodstuff",
+    "appliances"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../cb-global-definitions.json#/textWithLanguage"
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "endConditions"
+      ],
+      "properties": {
+        "endConditions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "time": {
+              "$ref": "../cb-global-definitions.json#/quantities/time"
+            },
+            "descriptive": {
+              "$comment": "TO-DO: Default value is discarded. Different approach should be considered, probably creating vocabulary into a new meta-schema with a 'descriptive' keyword and allowing enumeration of possible descriptions.",
+              "$ref": "../cb-global-definitions.json#/textWithLanguage"
+            }
+          }
+        }
+      }
+    },
+    "cbpId": {
+      "const": 1965970778
+    },
+    "foodstuff": {
+      "$ref": "../process-schema.json#/definitions/foodstuff"
+    },
+    "appliances": {
+      "$ref": "../process-schema.json#/definitions/appliances"
+    },
+    "notes": {
+      "$ref": "../cb-global-definitions.json#/notes"
+    }
+  }
+}

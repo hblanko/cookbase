@@ -38,13 +38,13 @@
       }
     },
     "preparationTime": {
-      "$ref": "definitions.json#/quantities/time"
+      "$ref": "cb-global-definitions.json#/quantities/time"
     },
     "cookingTime": {
-      "$ref": "definitions.json#/quantities/time"
+      "$ref": "cb-global-definitions.json#/quantities/time"
     },
     "servingTime": {
-      "$ref": "definitions.json#/quantities/time"
+      "$ref": "cb-global-definitions.json#/quantities/time"
     }
   },
   "required": [

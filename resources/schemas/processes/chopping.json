@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/processes/chopping.json",
+  "title": "Process 'chopping'",
+  "description": "Schema defining the format of a 'chopping' process.",
+  "examples": [
+    {
+      "name": {
+        "text": "chopping",
+        "language": "en"
+      },
+      "cbpId": 2281620754,
+      "foodstuff": "proc1",
+      "appliances": [
+        {
+          "appliance": "inst1",
+          "usedAfter": true
+        },
+        {
+          "appliance": "inst2",
+          "usedAfter": false
+        }
+      ]
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "cbpId",
+    "foodstuff",
+    "appliances"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../cb-global-definitions.json#/textWithLanguage"
+    },
+    "cbpId": {
+      "const": 2281620754
+    },
+    "foodstuff": {
+      "$ref": "../process-schema.json#/definitions/foodstuff"
+    },
+    "appliances": {
+      "$ref": "../process-schema.json#/definitions/appliances"
+    },
+    "notes": {
+      "$ref": "../cb-global-definitions.json#/notes"
+    }
+  }
+}

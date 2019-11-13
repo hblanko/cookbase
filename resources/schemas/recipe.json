@@ -4,10 +4,11 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "schema",
     "info",
     "yield",
     "ingredients",
-    "instruments",
+    "appliances",
     "preparation"
   ],
   "properties": {
@@ -15,7 +16,7 @@
       "const": "http://landarltracker.com/schemas/cbr.json"
     },
     "_id" : {
-      "$ref": "definitions.json#/ObjectId"
+      "$ref": "cb-global-definitions.json#/ObjectId"
     },
     "info": {
       "$ref": "info.json"
@@ -32,12 +33,12 @@
         }
       }
     },
-    "instruments": {
+    "appliances": {
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {
-        "^inst[1-9]\\d{0,1}$": {
-          "$ref": "instrument.json"
+        "^app[1-9]\\d{0,1}$": {
+          "$ref": "appliance.json"
         }
       }
     },

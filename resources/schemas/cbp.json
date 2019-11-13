@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/cbp.json",
+  "title": "Cookbase Process - v1.0",
+  "description": "Schema defining the format of a Cookbase Process (CBP).",
+  "examples": [
+    {
+      "schema": "http://landarltracker.com/schemas/cbp.json",
+      "id": 4038648643,
+      "name": {
+        "en": "dicing",
+        "es": [
+          "cortar en dados",
+          "trocear"
+        ]
+      },
+      "version": "1.0",
+      "contributors": [
+        "Hernán Blanco, hblanco@pm.me"
+      ],
+      "fdxId": 16805985,
+      "description": {
+        "en": "cutting to form dices",
+        "es": "cortar para formar dados"
+      },
+      "info": {
+        "processType": "generic",
+        "validation": {
+          "conditions": {
+            "requiredAppliances": [
+              [
+                {
+                  "function": "cuts"
+                },
+                {
+                  "cbaId": 1402285076
+                }
+              ]
+            ]
+          },
+          "foodstuffKeywords": "foodstuff"
+        },
+        "pictureUrl": "https://farm5.staticflickr.com/4076/4740275504_aebcebdb26_b.jpg"
+      }
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "name",
+    "version",
+    "info"
+  ],
+  "properties": {
+    "schema": {
+      "const": "http://landarltracker.com/schemas/cbp.json"
+    },
+    "id": {
+      "$ref": "cb-global-definitions.json#/hashCRC32"
+    },
+    "name": {
+      "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "version": {
+      "$ref": "cb-global-definitions.json#/version"
+    },
+    "contributors": {
+      "$ref": "cb-global-definitions.json#/contributors"
+    },
+    "fdxId": {
+      "$ref": "cb-global-definitions.json#/foodex2termId"
+    },
+    "description": {
+      "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "info": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processType",
+            "validation"
+          ],
+          "properties": {
+            "processType": {
+              "const": "generic"
+            },
+        		"validation": {
+			        "type": "object",
+			        "properties": {
+				        "conditions": {
+					        "type": "object",
+					        "properties": {
+						        "requiredAppliances": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "minProperties": 1,
+                          "maxProperties": 1,
+                          "additionalProperties": false,
+                          "properties": {
+                            "cbaId": {
+                              "$ref": "cb-global-definitions.json#/hashCRC32"
+                            },
+                            "function": {
+                              "$ref": "cb-global-definitions.json#/applianceFunction"
+                            }
+                          }
+                        }
+                      }
+                    }
+					        },
+					        "required": [
+						        "requiredAppliances"
+					        ]
+				        },
+				        "foodstuffKeywords": {
+					        "oneOf": [
+						        {
+							        "$ref": "cb-global-definitions.json#/foodstuffKeywords"
+						        },
+						        {
+							        "type": "array",
+							        "minItems": 2,
+							        "items": {
+								        "$ref": "cb-global-definitions.json#/foodstuffKeywords"
+							        },
+							        "additionalItems": false
+						        }
+					        ]
+				        }
+			        },
+			        "required": [
+				        "conditions",
+				        "foodstuffKeywords"
+  			      ]
+		        },
+        		"inherentProcesses": {
+        		  "type": "array",
+        		  "minItems": 1,
+        		  "items": {
+        		    "$ref": "cb-global-definitions.json#/hashCRC32"
+        		  }
+        		},
+            "pictureUrl": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processType",
+            "inherentOf"
+          ],
+          "properties": {
+            "processType": {
+              "const": "inherent"
+            },
+        		"inherentOf": {
+        		  "type": "array",
+        		  "items": {
+        		    "$ref": "cb-global-definitions.json#/hashCRC32"
+        		  }
+        		},
+            "pictureUrl": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processType",
+            "aggregatedProcesses"
+          ],
+          "properties": {
+            "processType": {
+              "const": "macro"
+            },
+        		"aggregatedProcesses": {
+        		  "$comment": "TODO: this has to provide more granularity, allowing to define conditions on specific appliances and foodstuff",
+        		  "type": "array",
+        		  "minItems": 2,
+        		  "items": {
+        		    "$ref": "cb-global-definitions.json#/hashCRC32"
+        		  }
+        		},
+            "pictureUrl": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

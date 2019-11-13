@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/processes/resting.json",
+  "title": "Process 'resting'",
+  "description": "Schema defining the format of a 'resting' process.",
+  "examples": [
+    {
+      "name": {
+        "text": "resting",
+        "language": "en"
+      },
+      "parameters": {
+        "time": {
+          "value": 20,
+          "measure": "min"
+        }
+      },
+      "cbpId": 2334355260,
+      "foodstuff": "proc1",
+      "appliances": [
+        {
+          "appliance": "inst1",
+          "usedAfter": true
+        }
+      ]
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "parameters",
+    "cbpId",
+    "foodstuff",
+    "appliances"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../cb-global-definitions.json#/textWithLanguage"
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time"
+      ],
+      "properties": {
+        "time": {
+          "$ref": "../cb-global-definitions.json#/quantities/time"
+        }
+      }
+    },
+    "cbpId": {
+      "const": 2334355260
+    },
+    "foodstuff": {
+      "$ref": "../process-schema.json#/definitions/foodstuff"
+    },
+    "appliances": {
+      "$ref": "../process-schema.json#/definitions/appliances"
+    },
+    "notes": {
+      "$ref": "../cb-global-definitions.json#/notes"
+    }
+  }
+}

@@ -3,61 +3,61 @@
   "$id": "http://www.landarltracker.com/schemas/process.json",
   "oneOf": [
     {
-      "$ref": "process/addingIngredients.json"
+      "$ref": "processes/adding.json"
     },
     {
-      "$ref": "process/addingIngredientsOnTop.json"
+      "$ref": "processes/adding-on-top.json"
     },
     {
-      "$ref": "process/chopping.json"
+      "$ref": "processes/baking.json"
     },
     {
-      "$ref": "process/peeling.json"
+      "$ref": "processes/chopping.json"
     },
     {
-      "$ref": "process/dicing.json"
+      "$ref": "processes/degassing.json"
     },
     {
-      "$ref": "process/mixing.json"
+      "$ref": "processes/dicing.json"
     },
     {
-      "$ref": "process/kneading.json"
+      "$ref": "processes/dividing.json"
     },
     {
-      "$ref": "process/proofing.json"
+      "$ref": "processes/kneading.json"
     },
     {
-      "$ref": "process/degassing.json"
+      "$ref": "processes/mixing.json"
     },
     {
-      "$ref": "process/dividing.json"
+      "$ref": "processes/peeling.json"
     },
     {
-      "$ref": "process/rounding.json"
+      "$ref": "processes/resting.json"
     },
     {
-      "$ref": "process/shaping.json"
+      "$ref": "processes/rising.json"
     },
     {
-      "$ref": "process/saucing.json"
+      "$ref": "processes/rounding.json"
     },
     {
-      "$ref": "process/baking.json"
+      "$ref": "processes/saucing.json"
     },
     {
-      "$ref": "process/serving.json"
+      "$ref": "processes/serving.json"
     },
     {
-      "$ref": "process/weighing.json"
+      "$ref": "processes/shaping.json"
     },
     {
-      "$ref": "process/resting.json"
+      "$ref": "processes/soaking.json"
     },
     {
-      "$ref": "process/storing.json"
+      "$ref": "processes/storing.json"
     },
     {
-      "$ref": "process/separating.json"
+      "$ref": "processes/weighing.json"
     }
   ]
 }

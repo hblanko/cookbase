@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/processes/peeling.json",
+  "title": "Process 'peeling'",
+  "description": "Schema defining the format of a 'peeling' process.",
+  "examples": [
+    {
+      "name": {
+        "text": "peeling",
+        "language": "en"
+      },
+      "cbpId": 1722901319,
+      "foodstuff": "ing1",
+      "appliances": [
+        {
+          "appliance": "inst1",
+          "usedAfter": true
+        }
+      ],
+      "residuals": true
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "cbpId",
+    "foodstuff",
+    "appliances",
+    "residuals"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../cb-global-definitions.json#/textWithLanguage"
+    },
+    "cbpId": {
+      "const": 1722901319
+    },
+    "foodstuff": {
+      "$ref": "../process-schema.json#/definitions/foodstuff"
+    },
+    "appliances": {
+      "$ref": "../process-schema.json#/definitions/appliances"
+    },
+    "residuals": {
+      "const": true
+    },
+    "notes": {
+      "$ref": "../cb-global-definitions.json#/notes"
+    }
+  }
+}

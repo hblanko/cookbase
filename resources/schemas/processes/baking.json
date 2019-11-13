@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://www.landarltracker.com/schemas/processes/baking.json",
+  "title": "Process 'baking'",
+  "description": "Schema defining the format of a 'baking' process.",
+  "examples": [
+    {
+      "name": {
+        "text": "baking",
+        "language": "en"
+      },
+      "parameters": {
+        "temperature": {
+          "value": 250,
+          "measure": "°C"
+        },
+        "ovenPosition": "medium",
+        "endConditions": {
+          "time": {
+            "value": 20,
+            "measure": "min"
+          },
+          "descriptive": {
+            "text": "until foodstuff gets browned",
+            "language": "en"
+          }
+        }
+      },
+      "cbpId": 3542442864,
+      "foodstuff": "proc1",
+      "appliances": [
+        {
+          "appliance": "inst1",
+          "usedAfter": true
+        },
+        {
+          "appliance": "inst2",
+          "usedAfter": true
+        }
+      ]
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "parameters",
+    "cbpId",
+    "foodstuff",
+    "appliances"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../cb-global-definitions.json#/textWithLanguage"
+    },
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "temperature": {
+          "$ref": "../cb-global-definitions.json#/quantities/temperature"
+        },
+        "ovenPosition": {
+          "$ref": "../cb-global-definitions.json#/quantities/descriptive/height"
+        },
+        "endConditions": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "$ref": "../cb-global-definitions.json#/quantities/time"
+            },
+            "descriptive": {
+              "$comment": "TO-DO: Default value is discarded. Different approach should be considered, probably creating vocabulary into a new meta-schema with a 'descriptive' keyword and allowing enumeration of possible descriptions.",
+              "$ref": "../cb-global-definitions.json#/textWithLanguage"
+            }
+          }
+        }
+      },
+      "required": [
+        "temperature",
+        "endConditions"
+      ],
+      "additionalProperties": false
+    },
+    "cbpId": {
+      "const": 3542442864
+    },
+    "foodstuff": {
+      "$ref": "../process-schema.json#/definitions/foodstuff"
+    },
+    "appliances": {
+      "allOf": [
+        {
+          "$ref": "../process-schema.json#/definitions/appliances"
+        },
+        {
+          "minItems": 2
+        }
+      ]
+    },
+    "notes": {
+      "$ref": "../cb-global-definitions.json#/notes"
+    }
+  }
+}
