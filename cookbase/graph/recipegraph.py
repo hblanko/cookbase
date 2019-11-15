@@ -8,9 +8,9 @@ from cookbase.validation.logger import logger
 
 
 class RecipeGraph():
-    """Class building and analyzing a recipe graph (CBR-Graph) from recipes based on the Cookbase Recipe Format.
+    """Class building and analyzing a Cookbase Recipe Graph (CBR-Graph) from recipes based on the Cookbase Recipe Standard.
 
-    It makes use of the :mod:`networkx` library to generate the graph.
+    It makes use of the :mod:`networkx` library to generate and manipulate the graph.
 
     :ivar g: An instance of a :mod:`networkx` directed graph
     :vartype g: networkx.classes.digraph.DiGraph
@@ -63,8 +63,17 @@ class RecipeGraph():
         :param process: Process object as extracted from a CBR
         :type process: dict[str, Any]
         """
-        self.g.add_node(process_ref, type="cbp", cbpId=process["cbpId"])
+        # Building appliances dictionary
+        a = dict()
+        for app in process["appliances"]:
+            app_ref = app["appliance"]
+            a[app_ref] = self._appliances[app_ref]
+            a[app_ref]["usedAfter"] = app["usedAfter"]
 
+        self.g.add_node(process_ref, type="cbp", cbpId=process["cbpId"],
+                        appliances=a)
+
+        # Adding foodstuff edges
         def add_foodstuff_edge(foodstuff_ref, process_ref):
             if foodstuff_ref in self.get_ingredients() or foodstuff_ref in self.get_processes():
                 self.g.add_edge(foodstuff_ref, process_ref)
@@ -72,7 +81,6 @@ class RecipeGraph():
                 self._pending_processes_edges.append(
                     (foodstuff_ref, process_ref))
 
-        # Adding foodstuff edges
         for fk in Definitions.foodstuff_keywords:
             if fk in process.keys():
                 if isinstance(process[fk], str):
@@ -80,9 +88,6 @@ class RecipeGraph():
                 else:
                     for i in process[fk]:
                         add_foodstuff_edge(i, process_ref)
-
-        # TODO: Solve adding appliance edges
-        self.g.add_node(process_ref, appliances=process["appliances"])
 
     def resolve_pending_processes_edges(self) -> None:
         """Attempts to add edges that could not have been added before"""
@@ -123,17 +128,86 @@ class RecipeGraph():
                 "Neither ingredient nor process found with reference '" +
                 in_foodstuff + "'")
 
-    def processes_subgraph(self) -> nx.DiGraph:
-        """Returns the subgraph of the CBR-Graph including only the processes
+    def aggregated_appliances_graph(self) -> nx.DiGraph:
+        """Returns a graph where each node represents a concurrent preparation
+        path of a CBR-Graph, containing an inverted index on appliances used
+        in that path together with the list of processes that used it.
 
-        :return: The processes subgraph from the CBR-Graph
+        :return: An aggregated appliances graph
         :rtype: networkx.classes.digraph.DiGraph
         """
-        nodes = list()
-        for node, _ in self.g.nodes(data="type"):
-            if _ == "cbp":
-                nodes.append(node)
-        return self.g.subgraph(nodes)
+        # TODO: This operation is implemented single-threaded. Consider
+        # multi-threading.
+        roots = self.get_root_processes()
+        pj_processes = self.path_joining_processes()
+        leaf_processes = self.get_leaf_processes()
+        aggregated_graph = nx.DiGraph()
+        # A dictionary with key the ag_id, and value the starting process of a
+        # path
+        current_ag_leaves = dict()
+        # A map of the path-starting process reference into the aggregated path
+        # id
+        first_pg_to_ag = dict()
+
+        for i in range(len(roots)):
+            aggregated_graph.add_node(i)
+            current_ag_leaves[i] = roots[i]
+            first_pg_to_ag[roots[i]] = i
+
+        ag_id_counter = len(current_ag_leaves)
+
+        while current_ag_leaves:
+            ag_nodes_already_generated = set()
+            pg_nodes_to_generate = set()
+
+            for ag_id, p in current_ag_leaves.items():
+                appliances = dict()
+                s = p
+                while True:
+                    # Build inverted index on appliance for given process path
+                    for app_ref in self.g.nodes[s]["appliances"].keys():
+                        if app_ref not in appliances:
+                            appliances[app_ref] = [s]
+                        else:
+                            appliances[app_ref].append(s)
+
+                    if s in pj_processes or s in leaf_processes:
+                        break
+                    # Not path-joining nor leaf: check if path continues
+                    t = next(self.g.successors(s))
+                    if t in pj_processes:
+                        break
+                    else:
+                        s = t  # Iterate over path
+
+                aggregated_graph.add_node(ag_id, appliances=appliances)
+                ag_nodes_already_generated.add(ag_id)
+
+                for v in self.g.successors(s):
+                    pg_nodes_to_generate.add((ag_id, v))
+
+            for n in ag_nodes_already_generated:
+                del current_ag_leaves[n]
+            for ag_id, v in pg_nodes_to_generate:
+                if v not in first_pg_to_ag:
+                    aggregated_graph.add_edge(ag_id, ag_id_counter)
+                    current_ag_leaves[ag_id_counter] = v
+                    first_pg_to_ag[v] = ag_id_counter
+                    ag_id_counter += 1
+                else:
+                    aggregated_graph.add_edge(ag_id, first_pg_to_ag[v])
+
+        return aggregated_graph
+
+    def processes_subgraph_view(self) -> nx.DiGraph:
+        """Returns the subgraph view of the CBR-Graph including only the processes
+
+        :return: The processes subgraph view from the CBR-Graph
+        :rtype: networkx.classes.digraph.DiGraph
+        """
+        def filter_process(node):
+            return self.g.nodes[node]["type"] == "cbp"
+        return nx.subgraph_view(self.g, filter_node=filter_process)
 
     def get_ingredients(self) -> List[Hashable]:
         """Returns the list of nodes representing ingredients in the CBR-Graph
@@ -157,17 +231,24 @@ class RecipeGraph():
         :return: The list of process root nodes from the processes subgraph
         :rtype: list[Hashable]
         """
-        return [i for i, _ in self.processes_subgraph().in_degree()
+        return [i for i, _ in self.processes_subgraph_view().in_degree()
                 if _ == 0]
 
-    def get_merging_processes(self) -> List[Hashable]:
-        """Returns the list of nodes in which the processes subgraph merges two or more process flows or branches
+    def path_joining_processes(self) -> List[Hashable]:
+        """Returns the list of process nodes that represent a junction point
+        of two or more preparation paths.
 
         :return: The list of merging process nodes from the processes subgraph
         :rtype: list[Hashable]
         """
-        return [i for i, _ in self.processes_subgraph().in_degree()
-                if _ > 1]
+        pjp = list()
+        psw = self.processes_subgraph_view()
+
+        for i in list(psw.nodes):
+            if psw.in_degree(i) > 1 or psw.out_degree(i) > 1:
+                pjp.append(i)
+
+        return pjp
 
     def get_leaf_processes(self) -> List[Hashable]:
         """Returns the list of leaf nodes from the processes subgraph
@@ -175,7 +256,7 @@ class RecipeGraph():
         :return: The list of process leaf nodes from the processes subgraph
         :rtype: list[Hashable]
         """
-        return [i for i, _ in self.processes_subgraph().out_degree()
+        return [i for i, _ in self.processes_subgraph_view().out_degree()
                 if _ == 0]
 
     def get_serializable_graph(self) -> Dict[str, Any]:

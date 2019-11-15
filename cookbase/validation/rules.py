@@ -128,13 +128,13 @@ class Semantics():
                 else:
                     used_appliances.add(a["appliance"])
         # Checking unused ingridients
-        diff = used_ingredients - ingredients.keys()
+        diff = ingredients.keys() - used_ingredients
         for d in diff:
             ret = False
             logger.warning(
                 "Ingredient '" + d + "' is not used in 'preparation' section")
         # Checking unused appliances
-        diff = used_appliances - appliances.keys()
+        diff = appliances.keys() - used_appliances
         for d in diff:
             ret = False
             logger.warning(
@@ -248,10 +248,6 @@ class Semantics():
 
 class Graph():
     """Class containing a number of methods that impose graph consistency conditions in order to validate a CBR."""
-    @staticmethod
-    def appliances_not_in_conflict(graph: RecipeGraph) -> bool:
-        # TODO:
-        pass
 
     @staticmethod
     def ingredients_used_only_once(graph: RecipeGraph) -> bool:
@@ -274,4 +270,59 @@ class Graph():
         if not ret:
             logger.error(
                 "There are more than one ending processes in the recipe")
+        return ret
+
+    @staticmethod
+    def appliances_not_in_conflict(graph: RecipeGraph) -> bool:
+        ret = True
+        ag = graph.aggregated_appliances_graph()
+        concurrent_paths = [i for i, _ in ag.in_degree() if _ == 0]
+
+        while concurrent_paths:
+            # Checks all combinations of two concurrent paths
+            for i in range(len(concurrent_paths) - 1):
+                for j in range(i + 1, len(concurrent_paths)):
+                    appls_1 = ag.nodes[concurrent_paths[i]
+                                       ]["appliances"].keys()
+                    appls_2 = ag.nodes[concurrent_paths[j]
+                                       ]["appliances"].keys()
+                    conflicting_appliances = appls_1 & appls_2
+                    if conflicting_appliances:
+                        ret = False
+                        for k in conflicting_appliances:
+                            s = "("
+                            for p in ag.nodes[concurrent_paths[i]
+                                              ]["appliances"][k]:
+                                s += "'" + p + "', "
+                            s = s.rpartition(", ")[0] + ") and ("
+                            for p in ag.nodes[concurrent_paths[j]
+                                              ]["appliances"][k]:
+                                s += "'" + p + "', "
+                            s = s.rpartition(", ")[0] + ")"
+                            logger.warning(
+                                "Appliance '" + k + "' is used in potentially concurrent processes " + s)
+
+            #
+            candidates_next = set()
+            for i in concurrent_paths:
+                for s in ag.successors(i):
+                    candidates_next.add(s)
+
+            next_cp = set()
+            cp_helper_set = set(concurrent_paths)
+            for i in candidates_next:
+                advances = True
+                for j in ag.predecessors(i):
+                    if j not in cp_helper_set:
+                        advances = False
+                        break
+                if advances:
+                    next_cp.add(i)
+                else:
+                    for j in ag.predecessors(i):
+                        if j in cp_helper_set:
+                            next_cp.add(j)
+
+            concurrent_paths = list(next_cp)
+
         return ret

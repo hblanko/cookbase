@@ -69,10 +69,8 @@ class Validator():
             self.graph)
         result["single_final_process"] = rules.Graph.single_final_process(
             self.graph)
-        # This check requires single_final_process to have passed
-#         if result["single_final_process"]:
-#             result["appliances_not_in_conflict"] = rules.Graph.appliances_not_in_conflict(
-#                 self.graph)
+        result["appliances_not_in_conflict"] = rules.Graph.appliances_not_in_conflict(
+            self.graph)
         return result
 
     def validate(self,
@@ -108,8 +106,8 @@ if __name__ == '__main__':
     recipe_path = "../resources/cbr/pizzaMozzarella.json"
     recipe = utils.parse_json_recipe(recipe_path)
     t1 = time.time()
-    result = Validator().validate(recipe, store=True)
-    if result["inserted_id"]:
+    result = Validator().validate(recipe, store=False)
+    if "inserted_id" in result:
         logger.info("CBR and CBR-Graph inserted with ID " +
                     str(result["inserted_id"]))
     t2 = time.time()
