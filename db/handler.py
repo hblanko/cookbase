@@ -134,5 +134,6 @@ class DBHandler(object):
 
 
 # Default behavior
-mongodb_url = input("Enter MongoDB URI: ")
+# mongodb_url = input("Enter MongoDB URI: ")
+mongodb_url = "mongodb://xxx:yyy@zzz"
 db_handler = DBHandler(mongodb_url, "mongodb", "cookbase")
