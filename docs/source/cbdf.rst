@@ -1,6 +1,9 @@
 Cookbase Data Format
 ====================
 
+Subpackages
+-----------
+
 The following diagram represents the Cookbase Recipe (CBR) data model, described as a set of JSON Schema documents.
 
 .. image:: ./images/cbr.svg
