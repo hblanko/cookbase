@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="819.7917px" preserveAspectRatio="none" style="width:664px;height:819px;" version="1.1" viewBox="0 0 664 819" width="664.5833px" zoomAndPan="magnify"><defs><linearGradient id="g5059dy0o5b280" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#EDF0F2"/><stop offset="100%" stop-color="#E9ECEF"/></linearGradient><linearGradient id="g5059dy0o5b281" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#59B6EC"/><stop offset="100%" stop-color="#2FA4E7"/></linearGradient></defs><g><rect fill="url(#g5059dy0o5b280)" height="45.0846" rx="4.1667" ry="4.1667" style="stroke: #BABDBF; stroke-width: 1.0416666666666667;" width="212.5" x="231.7708" y="2.0833"/><text fill="#2FA4E7" font-family="Verdana" font-size="20.8333" lengthAdjust="spacingAndGlyphs" textLength="185.4167" x="245.3125" y="31.838">Cookbase Process</text><!--MD5=[8cbffccb911383b05156a8918b6b4f0e]
+cluster CBP--><polygon fill="#F5F5F5" points="22.9167,75.293,67.7083,75.293,75,106.5104,641.6667,106.5104,641.6667,807.5846,22.9167,807.5846,22.9167,75.293" style="stroke: #59B6EC; stroke-width: 2.0833333333333335;"/><line style="stroke: #59B6EC; stroke-width: 2.0833333333333335;" x1="22.9167" x2="75" y1="106.5104" y2="106.5104"/><text fill="#2FA4E7" font-family="Verdana" font-size="12.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="28.125" x="32.2917" y="94.1874">CBP</text><!--MD5=[04f3310102b599e9b0e1704661b94a38]
+class CBP.CBP--><rect fill="#052F92" height="210.0016" id="CBP.CBP" rx="4.1667" ry="4.1667" style="stroke: #191970; stroke-width: 1.0416666666666667;" width="428.125" x="41.1458" y="119.043"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="25" x="242.7083" y="141.0624">CBP</text><line style="stroke: #191970; stroke-width: 1.0416666666666667;" x1="42.1875" x2="468.2292" y1="154.4271" y2="154.4271"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="405.2083" x="52.6042" y="174.438">schema: String [1] = "https://landarltracker.com/schemas/cbp.json"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="107.2917" x="52.6042" y="198.1929">id: HashCRC32 [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="150" x="52.6042" y="221.9477">name: LangTextMatrix [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="107.2917" x="52.6042" y="245.7026">version: String [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="90.625" x="52.6042" y="269.4575">contributors [*]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="159.375" x="52.6042" y="293.2124">fdxId: Foodex2termId [0..1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="101.0417" x="52.6042" y="316.9673">description [0..1]</text><!--MD5=[1b423f4642f5032c579b5e4b156c7460]
+class CBP.info--><rect fill="url(#g5059dy0o5b281)" height="91.2272" id="CBP.info" rx="4.1667" ry="4.1667" style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" width="159.375" x="175.5208" y="403.418"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="23.9583" x="243.2292" y="425.4374">info</text><line style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" x1="176.5625" x2="333.8542" y1="438.8021" y2="438.8021"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="129.1667" x="186.9792" y="458.813">type: ProcessType [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="136.4583" x="186.9792" y="482.5679">pictureUrl: String [0..1]</text><!--MD5=[374cc0b632a8ff090454a5666ccf9fb5]
+class CBP.ProcessType--><rect fill="#A0916F" height="114.9821" id="CBP.ProcessType" rx="4.1667" ry="4.1667" style="stroke: #827057; stroke-width: 1.0416666666666667;" width="98.9583" x="40.1042" y="391.9596"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="82.2917" x="48.4375" y="413.9791">ProcessType</text><line style="stroke: #827057; stroke-width: 1.0416666666666667;" x1="41.1458" x2="138.0208" y1="427.3438" y2="427.3438"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="54.1667" x="51.5625" y="447.3546">"generic"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="59.375" x="51.5625" y="471.1095">"inherent"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="47.9167" x="51.5625" y="494.8644">"macro"</text><!--MD5=[f21cb79618dcf044943c826d37859e06]
+class CBP.Generic--><rect fill="url(#g5059dy0o5b281)" height="35.3841" id="CBP.Generic" rx="4.1667" ry="4.1667" style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" width="66.6667" x="39.5833" y="585.1888"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="50" x="47.9167" y="607.2083">Generic</text><!--MD5=[316f376403c3341ce318e5c9042c3bc7]
+class CBP.Validation--><rect fill="url(#g5059dy0o5b281)" height="91.2272" id="CBP.Validation" rx="4.1667" ry="4.1667" style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" width="281.25" x="39.5833" y="699.2513"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="64.5833" x="147.9167" y="721.2708">Validation</text><line style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" x1="40.625" x2="319.7917" y1="734.6354" y2="734.6354"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="198.9583" x="51.0417" y="754.6463">conditions: ProcessConditions [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="258.3333" x="51.0417" y="778.4012">foodstuffKeywords: FoodstuffKeyword [1..*]</text><!--MD5=[744dcbed52abf2533cc4ae3719861c0f]
+class CBP.Inherent--><rect fill="url(#g5059dy0o5b281)" height="67.4723" id="CBP.Inherent" rx="4.1667" ry="4.1667" style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" width="181.25" x="142.7083" y="569.043"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="55.2083" x="205.7292" y="591.0624">Inherent</text><line style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" x1="143.75" x2="322.9167" y1="604.4271" y2="604.4271"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="158.3333" x="154.1667" y="624.438">inherentOf: HashCRC32 [*]</text><!--MD5=[2c864166bfee13540d3b0246aaf42f63]
+class CBP.Macro--><rect fill="url(#g5059dy0o5b281)" height="67.4723" id="CBP.Macro" rx="4.1667" ry="4.1667" style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" width="264.5833" x="360.4167" y="569.043"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="39.5833" x="472.9167" y="591.0624">Macro</text><line style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" x1="361.4583" x2="623.9583" y1="604.4271" y2="604.4271"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="241.6667" x="371.875" y="624.438">aggregatedProcesses: HashCRC32 [2..*]</text><!--MD5=[392e0674841e50a12996e163f5fac8e3]
+reverse link CBP.CBP to CBP.info--><path d="M255.2083,343.2732 C255.2083,364.668 255.2083,385.7409 255.2083,403.3242 " fill="none" id="CBP.CBP&lt;-CBP.info" style="stroke: #2FA4E7; stroke-width: 3.125;"/><polygon fill="#2FA4E7" points="255.2083,329.5721,251.0417,335.8221,255.2083,342.0721,259.375,335.8221,255.2083,329.5721" style="stroke: #2FA4E7; stroke-width: 3.125;"/><text fill="#343A40" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="8.3333" x="240.1725" y="387.0636">1</text><!--MD5=[c1aab6b75fa2d4b4fe9faa1c4f7ee53a]
+link CBP.ProcessType to CBP.info--><path d="M139.0771,449.2513 C151.174,449.2513 163.2708,449.2513 175.3677,449.2513 " fill="none" id="CBP.ProcessType-CBP.info" style="stroke: #2FA4E7; stroke-width: 3.125;"/><!--MD5=[7a0faa81a9f8817e1eb20b194831ce9c]
+reverse link CBP.info to CBP.Generic--><path d="M184.7615,508.8648 C151.8917,536.193 115.2302,566.6742 93.1284,585.0513 " fill="none" id="CBP.info&lt;-CBP.Generic" style="stroke: #2FA4E7; stroke-width: 3.125; stroke-dasharray: 7.0,7.0;"/><polygon fill="none" points="180.3271,503.069,201.0083,495.3565,189.65,514.2826,180.3271,503.069" style="stroke: #2FA4E7; stroke-width: 3.125;"/><!--MD5=[4cc74c4332affc0ca16e7602d14cc55f]
+reverse link CBP.Generic to CBP.Validation--><path d="M94.2867,631.844 C109.0109,651.0711 128.899,677.0419 145.8323,699.1534 " fill="none" id="CBP.Generic&lt;-CBP.Validation" style="stroke: #2FA4E7; stroke-width: 3.125;"/><polygon fill="#2FA4E7" points="85.8585,620.8388,86.35,628.3343,93.4579,630.7635,92.9664,623.2681,85.8585,620.8388" style="stroke: #2FA4E7; stroke-width: 3.125;"/><text fill="#343A40" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="8.3333" x="125.3178" y="682.8921">1</text><!--MD5=[39a6d9ac249c6dfaad6fe39578bfbcae]
+reverse link CBP.info to CBP.Inherent--><path d="M245.7094,516.1086 C243.0823,534.3117 240.3417,553.2951 238.1104,568.7596 " fill="none" id="CBP.info&lt;-CBP.Inherent" style="stroke: #2FA4E7; stroke-width: 3.125; stroke-dasharray: 7.0,7.0;"/><polygon fill="none" points="238.5115,514.9346,248.7042,495.3565,252.9448,517.018,238.5115,514.9346" style="stroke: #2FA4E7; stroke-width: 3.125;"/><!--MD5=[b9ee40b33eeb4d2ee46c677ce88422fc]
+reverse link CBP.info to CBP.Macro--><path d="M343.3646,506.5503 C376.2656,527.5471 412.5302,550.6888 441.0833,568.9107 " fill="none" id="CBP.info&lt;-CBP.Macro" style="stroke: #2FA4E7; stroke-width: 3.125; stroke-dasharray: 7.0,7.0;"/><polygon fill="none" points="339.1417,512.5055,325.5021,495.1513,346.9865,500.2117,339.1417,512.5055" style="stroke: #2FA4E7; stroke-width: 3.125;"/><!--MD5=[240a32d9a998442250f1d501af7f238f]
+@startuml
+
+
+
+skinparam backgroundColor transparent
+
+
+
+
+
+
+
+skinparam defaultFontName        "Verdana"
+skinparam defaultFontSize        12
+skinparam dpi                    100
+skinparam shadowing              false
+skinparam roundcorner            8
+skinparam ParticipantPadding     40
+skinparam BoxPadding             40
+skinparam Padding                5
+skinparam ArrowColor             #868E96
+skinparam stereotype {
+    CBackgroundColor #EDF0F2
+    CBorderColor #BABDBF
+    ABackgroundColor #8FB961
+    ABorderColor #5C862E
+    IBackgroundColor #D2494E
+    IBorderColor #9F161B
+    EBackgroundColor #E47833
+    EBorderColor #B14500
+    NBackgroundColor #35638F
+    NBorderColor #02305C
+}
+skinparam title {
+	FontColor	                 #2FA4E7
+	BorderColor	                 #BABDBF
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              #EDF0F2-#E9ECEF
+}
+
+
+skinparam legend {
+	BackgroundColor #E9ECEF
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam activity {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	BarColor #73A839
+	StartColor #033C73
+	EndColor #033C73
+	DiamondBackgroundColor #FFF-#EDF0F2
+  	DiamondBorderColor #BABDBF
+	DiamondFontColor #343A40
+}
+
+skinparam participant {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	ParticipantBorderThickness 2
+}
+
+skinparam actor {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam arrow {
+	Thickness 3
+	Color #2FA4E7
+	FontColor #343A40
+}
+
+skinparam sequence {
+	BorderColor #2FA4E7
+	TitleFontColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #2FA4E7
+	EndColor #2FA4E7
+	BoxBackgroundColor #F8F9FA
+	BoxBorderColor #868E96
+	BoxFontColor #343A40
+	LifeLineBorderColor #BABDBF
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor #EDF0F2
+	GroupBorderColor #868E96
+	GroupFontColor #343A40
+	GroupHeaderFontColor #033C73
+	DividerBackgroundColor #FFF-#F8F9FA
+    DividerBorderColor #868E96
+    DividerBorderThickness 2
+    DividerFontColor #343A40
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #868E96
+	ReferenceFontColor #343A40
+	ReferenceHeaderFontColor #033C73
+}
+
+skinparam partition {
+	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BackgroundColor transparent
+}
+
+skinparam collections {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+
+skinparam control {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam entity {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam boundary {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam agent {
+	BackgroundColor #orange
+	BorderColor #999999
+	FontColor #333333
+}
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor #35638F-#033C73
+	BorderColor #033C73
+	FontColor #FFF
+}
+
+skinparam artifact {
+	BackgroundColor #FFF-#F8F9FA
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam component {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+
+skinparam interface {
+	BackgroundColor  #D2494E
+	BorderColor  #C71C22
+	FontColor #343A40
+}
+
+skinparam storage {
+	BackgroundColor #E47833-#DD5600
+  	BorderColor #DD5600
+	FontColor #FFF
+}
+
+skinparam node {
+	BackgroundColor #EDF0F2-#E9ECEF
+	BorderColor #E9ECEF
+	FontColor #343A40
+}
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #2FA4E7
+}
+
+skinparam database {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam class {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	HeaderBackgroundColor #2FA4E7-#2683B9
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #F8F9FA
+	AttributeFontSize 11
+}
+
+skinparam object {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+skinparam usecase {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+skinparam rectangle {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+skinparam package {
+	FontColor #2FA4E7
+	BorderColor #59B6EC
+	BackgroundColor transparent
+	BorderThickness 2
+}
+
+skinparam folder {
+	BackgroundColor #FFF-#EDF0F2
+  	BorderColor #DD5600
+	FontColor #DD5600
+	BorderThickness 2
+}
+
+skinparam frame {
+	BackgroundColor #FFF-#EDF0F2
+  	BorderColor #033C73
+	FontColor #033C73
+	BorderThickness 2
+}
+
+skinparam state {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	StartColor #033C73
+	EndColor #033C73
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+skinparam queue {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+
+skinparam card {
+	BackgroundColor #35638F-#033C73
+	BorderColor #033C73
+	FontColor #FFF
+}
+
+skinparam file {
+	BackgroundColor #EDF0F2-#E9ECEF
+	BorderColor #033C73
+	FontColor #868E96
+
+}
+
+skinparam stack {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+  skinparam classBackgroundColor<<root>> #052f92
+  skinparam classBorderColor<<root>> MidnightBlue
+  skinparam packageBackgroundColor WhiteSmoke
+  skinparam enumBackgroundColor #a0916f
+  skinparam classBorderColor<<Enum>> #827057
+  skinparam enumBorderColor #827057
+  hide empty members
+  hide empty methods
+  hide circle
+  hide stereotype
+
+  title Cookbase Process
+
+  namespace CBP {
+    class CBP <<root>>{
+      schema: String [1] = "https://landarltracker.com/schemas/cbp.json"
+      id: HashCRC32 [1]
+      name: LangTextMatrix [1]
+      version: String [1]
+      contributors [*]
+      fdxId: Foodex2termId [0..1]
+      description [0..1]
+    }
+
+    interface CBP.info {
+      type: ProcessType [1]
+      pictureUrl: String [0..1]
+    }
+
+    enum ProcessType <<Enum>>{
+      "generic"
+      "inherent"
+      "macro"
+    }
+
+    class Generic
+
+    class Validation{
+      conditions: ProcessConditions [1]
+      foodstuffKeywords: FoodstuffKeyword [1..*]
+    }
+
+    class Inherent{
+      inherentOf: HashCRC32 [*]
+    }
+
+    class Macro{
+      aggregatedProcesses: HashCRC32 [2..*]
+    }
+
+    CBP *- - "1" CBP.info
+    CBP.info -left- ProcessType
+    CBP.info <|.. Generic
+    Generic *- - "1" Validation
+    CBP.info <|.. Inherent
+    CBP.info <|.. Macro
+  }
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 13:30:53 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_232-8u232-b09-1~deb9u1-b09
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

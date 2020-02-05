@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="832.2917px" preserveAspectRatio="none" style="width:508px;height:832px;" version="1.1" viewBox="0 0 508 832" width="508.3333px" zoomAndPan="magnify"><defs><linearGradient id="glujehlippul00" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#EDF0F2"/><stop offset="100%" stop-color="#E9ECEF"/></linearGradient><linearGradient id="glujehlippul01" x1="50%" x2="50%" y1="0%" y2="100%"><stop offset="0%" stop-color="#59B6EC"/><stop offset="100%" stop-color="#2FA4E7"/></linearGradient></defs><g>
+<a href="https://landarltracker.com/cookbase/schemas/cba.json">
+<rect fill="url(#glujehlippul00)" height="45.0846" rx="4.1667" ry="4.1667" style="stroke: #BABDBF; stroke-width: 1.0416666666666667;" width="238.5417" x="140.625" y="2.0833"/></a><text fill="#2FA4E7" font-family="Verdana" font-size="20.8333" lengthAdjust="spacingAndGlyphs" textLength="211.4583" x="154.1667" y="31.838">Cookbase Appliance</text><!--MD5=[80cf17ced389e1797064985b93b4fdbf]
+cluster CBA--><polygon fill="#F5F5F5" points="22.9167,75.293,67.7083,75.293,75,106.5104,485.4167,106.5104,485.4167,820.0846,22.9167,820.0846,22.9167,75.293" style="stroke: #59B6EC; stroke-width: 2.0833333333333335;"/><line style="stroke: #59B6EC; stroke-width: 2.0833333333333335;" x1="22.9167" x2="75" y1="106.5104" y2="106.5104"/><text fill="#2FA4E7" font-family="Verdana" font-size="12.5" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="28.125" x="32.2917" y="94.1874">CBA</text><!--MD5=[4eb8a055de748709780be2c4553fa082]
+class CBA.CBA--><rect fill="#052F92" height="186.2467" id="CBA.CBA" rx="4.1667" ry="4.1667" style="stroke: #191970; stroke-width: 1.0416666666666667;" width="428.125" x="40.1042" y="119.043"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="25" x="241.6667" y="141.0624">CBA</text><line style="stroke: #191970; stroke-width: 1.0416666666666667;" x1="41.1458" x2="467.1875" y1="154.4271" y2="154.4271"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="405.2083" x="51.5625" y="174.438">schema: String [1] = "https://landarltracker.com/schemas/cba.json"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="107.2917" x="51.5625" y="198.1929">id: HashCRC32 [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="150" x="51.5625" y="221.9477">name: LangTextMatrix [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="107.2917" x="51.5625" y="245.7026">version: String [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="90.625" x="51.5625" y="269.4575">contributors [*]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="101.0417" x="51.5625" y="293.2124">description [0..1]</text><!--MD5=[0ef455a1a5f9fd5d6f716a78e598071d]
+class CBA.info--><rect fill="url(#glujehlippul01)" height="138.737" id="CBA.info" rx="4.1667" ry="4.1667" style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" width="186.4583" x="160.9375" y="391.9596"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="23.9583" x="242.1875" y="413.9791">info</text><line style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" x1="161.9792" x2="346.3542" y1="427.3438" y2="427.3438"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="135.4167" x="172.3958" y="447.3546">familyLevel: Integer [1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="151.0417" x="172.3958" y="471.1095">parent: HashCRC32 [0..1]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="163.5417" x="172.3958" y="494.8644">typicalUses: HashCRC32 [*]</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="136.4583" x="172.3958" y="518.6193">pictureUrl: String [0..1]</text><!--MD5=[ab1137067a6adcc77d7be8cc091f9b6e]
+class CBA.function--><rect fill="#A0916F" height="186.2467" id="CBA.function" rx="4.1667" ry="4.1667" style="stroke: #827057; stroke-width: 1.0416666666666667;" width="83.3333" x="40.625" y="368.0013"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="53.125" x="55.7292" y="390.0208">function</text><line style="stroke: #827057; stroke-width: 1.0416666666666667;" x1="41.6667" x2="122.9167" y1="403.3854" y2="403.3854"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="45.8333" x="52.0833" y="423.3963">"bakes"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="60.4167" x="52.0833" y="447.1512">"contains"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="50" x="52.0833" y="470.9061">"covers"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="44.7917" x="52.0833" y="494.6609">"props"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="53.125" x="52.0833" y="518.4158">"scoops"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="11.4583" x="52.0833" y="542.1707">︙</text><!--MD5=[c618de4ab3161128f60ae48c92964a92]
+class CBA.requiredProperty--><rect fill="#A0916F" height="186.2467" id="CBA.requiredProperty" rx="4.1667" ry="4.1667" style="stroke: #827057; stroke-width: 1.0416666666666667;" width="147.9167" x="180.2083" y="616.9596"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="110.4167" x="198.9583" y="638.9791">requiredProperty</text><line style="stroke: #827057; stroke-width: 1.0416666666666667;" x1="181.25" x2="327.0833" y1="652.3438" y2="652.3438"/><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="125" x="191.6667" y="672.3546">"temperatureRange",</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="51.0417" x="191.6667" y="696.1095">"length",</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="67.7083" x="191.6667" y="719.8644">"diameter",</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="57.2917" x="191.6667" y="743.6193">"volume",</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="68.75" x="191.6667" y="767.3742">"withCover"</text><text fill="#F8F9FA" font-family="Verdana" font-size="11.4583" lengthAdjust="spacingAndGlyphs" textLength="11.4583" x="191.6667" y="791.129">︙</text><!--MD5=[933947ac6c23b0f3bc560655a617bba0]
+class CBA.material--><rect fill="url(#glujehlippul01)" height="35.3841" id="CBA.material" rx="4.1667" ry="4.1667" style="stroke: #2FA4E7; stroke-width: 1.0416666666666667;" width="69.7917" x="383.8542" y="443.5221"/><text fill="#FFFFFF" font-family="Verdana" font-size="12.5" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="53.125" x="392.1875" y="465.5416">material</text><!--MD5=[43cd298214c46d2ac8706d1df6b30166]
+reverse link CBA.CBA to CBA.info--><path d="M254.1667,319.1586 C254.1667,343.8023 254.1667,369.4013 254.1667,391.9169 " fill="none" id="CBA.CBA&lt;-CBA.info" style="stroke: #2FA4E7; stroke-width: 3.125;"/><polygon fill="#2FA4E7" points="254.1667,305.5919,250,311.8419,254.1667,318.0919,258.3333,311.8419,254.1667,305.5919" style="stroke: #2FA4E7; stroke-width: 3.125;"/><text fill="#343A40" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="8.3333" x="239.541" y="375.4173">1</text><!--MD5=[50c79776a07067b8f56151527f38d4c3]
+link CBA.function to CBA.info--><path d="M124.2531,461.2305 C131.8656,461.2305 139.4771,461.2305 147.0896,461.2305 " fill="none" id="CBA.function-&gt;CBA.info" style="stroke: #2FA4E7; stroke-width: 3.125;"/><polygon fill="#2FA4E7" points="160.7917,461.2305,154.5417,457.0638,148.2917,461.2305,154.5417,465.3971,160.7917,461.2305" style="stroke: #2FA4E7; stroke-width: 3.125;"/><text fill="#343A40" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="6.25" x="137.4772" y="452.2713">*</text><!--MD5=[73179c8306e393b9924fe45c9b3ef874]
+reverse link CBA.info to CBA.requiredProperty--><path d="M254.1667,544.4169 C254.1667,567.5378 254.1667,592.843 254.1667,616.5305 " fill="none" id="CBA.info&lt;-CBA.requiredProperty" style="stroke: #2FA4E7; stroke-width: 3.125;"/><polygon fill="#2FA4E7" points="254.1667,530.7128,250,536.9628,254.1667,543.2128,258.3333,536.9628,254.1667,530.7128" style="stroke: #2FA4E7; stroke-width: 3.125;"/><text fill="#343A40" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="6.25" x="241.9922" y="600.3575">*</text><!--MD5=[2249766e5db1c119bd522e530ec0dbba]
+reverse link CBA.info to CBA.material--><path d="M361.5198,461.2305 C368.9406,461.2305 376.3625,461.2305 383.7844,461.2305 " fill="none" id="CBA.info&lt;-CBA.material" style="stroke: #2FA4E7; stroke-width: 3.125;"/><polygon fill="#2FA4E7" points="347.7094,461.2305,353.9594,465.3971,360.2094,461.2305,353.9594,457.0638,347.7094,461.2305" style="stroke: #2FA4E7; stroke-width: 3.125;"/><text fill="#343A40" font-family="Verdana" font-size="12.5" lengthAdjust="spacingAndGlyphs" textLength="6.25" x="364.0722" y="451.899">*</text><!--MD5=[c846f725abafecded4ed5c1e64cd106f]
+@startuml
+
+
+
+skinparam backgroundColor transparent
+
+
+
+
+
+
+
+skinparam defaultFontName        "Verdana"
+skinparam defaultFontSize        12
+skinparam dpi                    100
+skinparam shadowing              false
+skinparam roundcorner            8
+skinparam ParticipantPadding     40
+skinparam BoxPadding             40
+skinparam Padding                5
+skinparam ArrowColor             #868E96
+skinparam stereotype {
+    CBackgroundColor #EDF0F2
+    CBorderColor #BABDBF
+    ABackgroundColor #8FB961
+    ABorderColor #5C862E
+    IBackgroundColor #D2494E
+    IBorderColor #9F161B
+    EBackgroundColor #E47833
+    EBorderColor #B14500
+    NBackgroundColor #35638F
+    NBorderColor #02305C
+}
+skinparam title {
+	FontColor	                 #2FA4E7
+	BorderColor	                 #BABDBF
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              #EDF0F2-#E9ECEF
+}
+
+
+skinparam legend {
+	BackgroundColor #E9ECEF
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam activity {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	BarColor #73A839
+	StartColor #033C73
+	EndColor #033C73
+	DiamondBackgroundColor #FFF-#EDF0F2
+  	DiamondBorderColor #BABDBF
+	DiamondFontColor #343A40
+}
+
+skinparam participant {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	ParticipantBorderThickness 2
+}
+
+skinparam actor {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam arrow {
+	Thickness 3
+	Color #2FA4E7
+	FontColor #343A40
+}
+
+skinparam sequence {
+	BorderColor #2FA4E7
+	TitleFontColor #2FA4E7
+	BackgroundColor transparent
+	StartColor #2FA4E7
+	EndColor #2FA4E7
+	BoxBackgroundColor #F8F9FA
+	BoxBorderColor #868E96
+	BoxFontColor #343A40
+	LifeLineBorderColor #BABDBF
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor #EDF0F2
+	GroupBorderColor #868E96
+	GroupFontColor #343A40
+	GroupHeaderFontColor #033C73
+	DividerBackgroundColor #FFF-#F8F9FA
+    DividerBorderColor #868E96
+    DividerBorderThickness 2
+    DividerFontColor #343A40
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #868E96
+	ReferenceFontColor #343A40
+	ReferenceHeaderFontColor #033C73
+}
+
+skinparam partition {
+	BorderColor #2FA4E7
+	FontColor #2FA4E7
+	BackgroundColor transparent
+}
+
+skinparam collections {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+
+skinparam control {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam entity {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam boundary {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam agent {
+	BackgroundColor #orange
+	BorderColor #999999
+	FontColor #333333
+}
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor #35638F-#033C73
+	BorderColor #033C73
+	FontColor #FFF
+}
+
+skinparam artifact {
+	BackgroundColor #FFF-#F8F9FA
+	BorderColor #BABDBF
+	FontColor #343A40
+}
+
+skinparam component {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+
+skinparam interface {
+	BackgroundColor  #D2494E
+	BorderColor  #C71C22
+	FontColor #343A40
+}
+
+skinparam storage {
+	BackgroundColor #E47833-#DD5600
+  	BorderColor #DD5600
+	FontColor #FFF
+}
+
+skinparam node {
+	BackgroundColor #EDF0F2-#E9ECEF
+	BorderColor #E9ECEF
+	FontColor #343A40
+}
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #2FA4E7
+}
+
+skinparam database {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	FontColor #343A40
+}
+
+skinparam class {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	HeaderBackgroundColor #2FA4E7-#2683B9
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #F8F9FA
+	AttributeFontSize 11
+}
+
+skinparam object {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	StereotypeFontColor #343A40
+	BorderThickness 1
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+skinparam usecase {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+skinparam rectangle {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2FA4E7
+}
+
+skinparam package {
+	FontColor #2FA4E7
+	BorderColor #59B6EC
+	BackgroundColor transparent
+	BorderThickness 2
+}
+
+skinparam folder {
+	BackgroundColor #FFF-#EDF0F2
+  	BorderColor #DD5600
+	FontColor #DD5600
+	BorderThickness 2
+}
+
+skinparam frame {
+	BackgroundColor #FFF-#EDF0F2
+  	BorderColor #033C73
+	FontColor #033C73
+	BorderThickness 2
+}
+
+skinparam state {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+	StartColor #033C73
+	EndColor #033C73
+	AttributeFontColor #343A40
+	AttributeFontSize 11
+}
+
+skinparam queue {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+
+skinparam card {
+	BackgroundColor #35638F-#033C73
+	BorderColor #033C73
+	FontColor #FFF
+}
+
+skinparam file {
+	BackgroundColor #EDF0F2-#E9ECEF
+	BorderColor #033C73
+	FontColor #868E96
+
+}
+
+skinparam stack {
+		FontColor #FFF
+	BorderColor #2FA4E7
+	BackgroundColor #59B6EC-#2FA4E7
+}
+  skinparam classBackgroundColor<<root>> #052f92
+  skinparam classBorderColor<<root>> MidnightBlue
+  skinparam packageBackgroundColor WhiteSmoke
+  skinparam enumBackgroundColor #a0916f
+  skinparam classBorderColor<<Enum>> #827057
+  skinparam enumBorderColor #827057
+  hide empty members
+  hide empty methods
+  hide circle
+  hide stereotype
+
+  title Cookbase Appliance
+
+  namespace CBA {
+    class CBA <<root>>{
+      schema: String [1] = "https://landarltracker.com/schemas/cba.json"
+      id: HashCRC32 [1]
+      name: LangTextMatrix [1]
+      version: String [1]
+      contributors [*]
+      description [0..1]
+    }
+
+    class CBA.info {
+      familyLevel: Integer [1]
+      parent: HashCRC32 [0..1]
+      typicalUses: HashCRC32 [*]
+      pictureUrl: String [0..1]
+    }
+
+    enum function <<Enum>>{
+      "bakes"
+      "contains"
+      "covers"
+      "props"
+      "scoops"
+      ︙
+    }
+
+    enum requiredProperty <<Enum>>{
+      "temperatureRange",
+      "length",
+      "diameter",
+      "volume",
+      "withCover"
+      ︙
+    }
+
+    abstract material
+
+    CBA *- - "1" CBA.info
+    CBA.info *-left- "*" function
+    CBA.info *-down- "*" requiredProperty
+    CBA.info *-right- "*" material
+  }
+@enduml
+
+PlantUML version 1.2020.00(Sat Jan 11 13:30:53 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 1.8.0_232-8u232-b09-1~deb9u1-b09
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
