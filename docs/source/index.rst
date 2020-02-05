@@ -9,7 +9,7 @@ This document introduces the Cookbase API, including recipe validation, recipe g
 
 To view and download the source code, please check out `our GitHub repository <https://github.com/hblanko/cookbase>`_.
 
-.. include:: cbdf.rst
+:ref:`cbdf`
 
 .. toctree::
    :maxdepth: 4

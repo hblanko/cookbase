@@ -1,3 +1,5 @@
+.. _cbdf:
+
 Cookbase Data Format
 ====================
 
