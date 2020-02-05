@@ -10,6 +10,7 @@ Full documentation is at <https://github.com/hblanko/cookbase>.
 __all__ = [
     'db',
     'graph',
+    'gui',
     'tests',
     'validation',
     'parsers'

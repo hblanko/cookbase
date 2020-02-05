@@ -135,5 +135,6 @@ class DBHandler(object):
 
 # Default behavior
 # mongodb_url = input("Enter MongoDB URI: ")
-mongodb_url = "mongodb://xxx:yyy@zzz"
+with open("../../credentials.txt", "r") as f:
+    mongodb_url = f.readline()
 db_handler = DBHandler(mongodb_url, "mongodb", "cookbase")

@@ -106,7 +106,7 @@ if __name__ == '__main__':
     recipe_path = "../resources/cbr/pizzaMozzarella.json"
     recipe = utils.parse_json_recipe(recipe_path)
     t1 = time.time()
-    result = Validator().validate(recipe, store=False)
+    result = Validator().validate(recipe, store=True)
     if "inserted_id" in result:
         logger.info("CBR and CBR-Graph inserted with ID " +
                     str(result["inserted_id"]))
