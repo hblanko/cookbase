@@ -1,0 +1,49 @@
+@startuml
+  !include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+  !include cb-style.puml
+
+  title Cookbase Appliance
+
+  namespace CBA {
+    class CBA <<root>>{
+      schema: String [1] = "https://landarltracker.com/schemas/cba.json"
+      id: HashCRC32 [1]
+      name: LangTextMatrix [1]
+      version: String [1]
+      contributors [*]
+      description [0..1]
+    }
+
+    class CBA.info {
+      familyLevel: Integer [1]
+      parent: HashCRC32 [0..1]
+      typicalUses: HashCRC32 [*]
+      pictureUrl: String [0..1]
+    }
+
+    enum function <<Enum>>{
+      "bakes"
+      "contains"
+      "covers"
+      "props"
+      "scoops"
+      ︙
+    }
+
+    enum requiredProperty <<Enum>>{
+      "temperatureRange",
+      "length",
+      "diameter",
+      "volume",
+      "withCover"
+      ︙
+    }
+
+    abstract material
+
+    CBA *-- "1" CBA.info
+    CBA.info *-left- "*" function
+    CBA.info *-down- "*" requiredProperty
+    CBA.info *-right- "*" material
+  }
+@enduml

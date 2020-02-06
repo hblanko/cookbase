@@ -1,0 +1,33 @@
+@startuml
+  !include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+  !include cb-style.puml
+
+  title Cookbase Ingredient
+
+  namespace CBI {
+    class CBI <<root>>{
+      schema: String [1] = "https://landarltracker.com/schemas/cbi.json"
+      id: HashCRC32 [1]
+      name: LangTextMatrix [1]
+      version: String [1]
+      contributors [*]
+      fdxId: Foodex2termId [0..1]
+      description [0..1]
+    }
+
+    class CBI.info {
+      ndbNumber: Integer [0..1]
+      pictureUrl: String [0..1]
+    }
+
+    enum defaultMeasure <<Enum>>{
+      "mg"
+      "g"
+      "Kg"
+      ︙
+    }
+
+    CBI *-- "1" CBI.info
+    info *-left- "1" defaultMeasure
+  }
+@enduml

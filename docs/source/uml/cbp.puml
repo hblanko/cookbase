@@ -1,0 +1,51 @@
+@startuml
+  !include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+  !include cb-style.puml
+
+  title Cookbase Process
+
+  namespace CBP {
+    class CBP <<root>>{
+      schema: String [1] = "https://landarltracker.com/schemas/cbp.json"
+      id: HashCRC32 [1]
+      name: LangTextMatrix [1]
+      version: String [1]
+      contributors [*]
+      fdxId: Foodex2termId [0..1]
+      description [0..1]
+    }
+
+    interface CBP.info {
+      type: ProcessType [1]
+      pictureUrl: String [0..1]
+    }
+
+    enum ProcessType <<Enum>>{
+      "generic"
+      "inherent"
+      "macro"
+    }
+
+    class Generic
+
+    class Validation{
+      conditions: ProcessConditions [1]
+      foodstuffKeywords: FoodstuffKeyword [1..*]
+    }
+
+    class Inherent{
+      inherentOf: HashCRC32 [*]
+    }
+
+    class Macro{
+      aggregatedProcesses: HashCRC32 [2..*]
+    }
+
+    CBP *-- "1" CBP.info
+    CBP.info -left- ProcessType
+    CBP.info <|.. Generic
+    Generic *-- "1" Validation
+    CBP.info <|.. Inherent
+    CBP.info <|.. Macro
+  }
+@enduml

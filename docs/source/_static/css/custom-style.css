@@ -1,0 +1,12 @@
+.wy-nav-content {
+    max-width: none;
+}
+
+object {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+text {
+  font-family: sans-serif !important;
+}

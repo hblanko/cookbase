@@ -1,0 +1,25 @@
+@startuml
+  !include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+  !include cb-style.puml
+
+  title Cookbase Appliance Function
+
+  namespace CAF {
+    class CAF <<root>>{
+      schema: String [1] = "https://landarltracker.com/schemas/caf.json"
+      id: HashCRC32 [1]
+      name: LangTextMatrix [1]
+      version: String [1]
+      contributors [*]
+      fdxId: Foodex2termId [0..1]
+      description [0..1]
+      notes [0..1]
+    }
+
+    class CAF.info {
+      requirable: Boolean [1]
+    }
+
+    CAF *-- "1" CAF.info
+  }
+@enduml
