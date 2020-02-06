@@ -1,0 +1,12 @@
+@startuml
+  skinparam classBackgroundColor<<root>> #052f92
+  skinparam classBorderColor<<root>> MidnightBlue
+  skinparam packageBackgroundColor WhiteSmoke
+  skinparam enumBackgroundColor #a0916f
+  skinparam classBorderColor<<Enum>> #827057
+  skinparam enumBorderColor #827057
+  hide empty members
+  hide empty methods
+  hide circle
+  hide stereotype
+@enduml

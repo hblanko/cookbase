@@ -1,0 +1,99 @@
+@startuml
+  !include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+  !include cb-style.puml
+
+  title Cookbase Recipe
+
+  namespace CBR{
+    class CBR <<root>>{
+      schema: String [1] = "https://landarltracker.com/schemas/cbr.json"
+      id: recipeId [0..1]
+    }
+
+    class yield{
+      servings [0..1]
+      servingFormat: String [0..1]
+    }
+
+    class servingSize{
+      descriptive: String [0..1]
+      weight: Mass [0..1]
+      volume: Volume [0..1]
+    }
+
+    class CBR.info{
+      name: String [1]
+      releaseDate: Date [1]
+      cuisine: String [*]
+      courseType: String [*]
+      preparationTime: Time [1]
+      cookingTime: Time [1]
+      servingTime: Time [1]
+    }
+
+    class authorship{
+      fullName: String [1]
+      version: String [1]
+    }
+
+    class amount
+    abstract Mass
+    abstract Volume
+
+    class appliance{
+      name: LangText [1]
+      cbaId: HashCRC32 [1]
+      functions [*]
+      properties [0..1]
+      notes [0..1]
+      optional: Boolean [0..1] = true
+    }
+
+    interface process {
+      name: LangText [1]
+      cbpId: Foodex2termId [1]
+      residuals: Boolean [0..1] = true
+      notes [0..1]
+    }
+
+    class ingredient{
+      subdivision: String [0..1]
+      name: LangText [1]
+      cbiId: HashCRC32 [1]
+      notes [0..1]
+      optional: Boolean [0..1] = true
+    }
+
+    interface foodstuff
+
+    class applianceRef{
+      usedAfter: Boolean [1]
+    }
+
+    class parameters{
+      timeMax: Time [0..1]
+      temperature: Temperature [0..1]
+      weight: Mass [0..1]
+      ovenPosition: Height [0..1]
+      size: Length [0..1]
+      ︙
+    }
+
+    CBR *-right- "1" yield
+    CBR *-left- "1" info
+    CBR *-down- "*" appliance
+    CBR *-down- "*" process
+    CBR *-down- "*" ingredient
+    yield *-right- "0..1" servingSize
+    info *-left- "1" authorship
+    ingredient *- "0..1" amount
+    amount <|-- Mass
+    amount <|-- Volume
+    appliance "1..*" <- process
+    process -down-> "1..*" foodstuff
+    process *-- "*" parameters
+    foodstuff .> ingredient
+    foodstuff .> process
+    (appliance, process) .. applianceRef
+  }
+@enduml
