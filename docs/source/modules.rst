@@ -2,6 +2,6 @@ cookbase
 ========
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    cookbase
