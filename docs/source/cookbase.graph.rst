@@ -15,8 +15,8 @@ Module contents
 Submodules
 ==========
 
-cookbase.graph.recipegraph module
----------------------------------
+cookbase.graph.recipegraph
+--------------------------
 
 .. automodule:: cookbase.graph.recipegraph
    :members:

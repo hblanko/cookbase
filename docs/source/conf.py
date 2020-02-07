@@ -61,3 +61,8 @@ master_doc = 'index'
 html_css_files = ['css/custom-style.css']
 plantuml = 'java -jar ../../lib/plantuml.jar'
 plantuml_output_format = 'svg'
+
+html_theme_options = {
+    "navigation_depth": 5,
+    "collapse_navigation": False
+}
