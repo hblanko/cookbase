@@ -10,3 +10,12 @@ object {
 text {
   font-family: sans-serif !important;
 }
+
+a[href^="#cbr-"] {
+  font-family: monospace !important;
+}
+
+div[id^="cbr-"] > h3 {
+  font-family: monospace !important;
+}
+
