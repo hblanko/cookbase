@@ -18,7 +18,7 @@ To view and download the source code, please check out `our GitHub repository <h
 
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
    :caption: Cookbase Python API
 
    cookbase
