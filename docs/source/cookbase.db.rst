@@ -1,8 +1,9 @@
-cookbase.db package
-============================
+cookbase.db
+===========
 
+===============
 Module contents
----------------
+===============
 
 .. automodule:: cookbase.db
    :members:
@@ -13,24 +14,27 @@ Module contents
 Submodules
 ----------
 
-cookbase.db.exceptions module
------------------------------------
+----------------------
+cookbase.db.exceptions
+----------------------
 
 .. automodule:: cookbase.db.exceptions
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.db.handler module
------------------------------------
+-------------------
+cookbase.db.handler
+-------------------
 
 .. automodule:: cookbase.db.handler
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.db.utils module
------------------------------------
+-----------------
+cookbase.db.utils
+-----------------
 
 .. automodule:: cookbase.db.utils
    :members:

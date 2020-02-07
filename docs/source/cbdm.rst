@@ -1,4 +1,4 @@
-Cookbase Data Model
+The Cookbase Data Model
 ====================
 
 The **Cookbase Data Model (CBDM)** is a suite of data format specifications aiming to
@@ -161,4 +161,3 @@ Cookbase Appliance Function (CAF)
          <a class="headerlink" href="#uml-caf" title="Permalink to this image">¶</a>
       </p>
    </div>
-

@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Cookbase'
-copyright = '2019, Hernán Blanco'
+copyright = '2019, Hernan Blanco'
 author = 'Hernán Blanco'
 
 # The full version, including alpha/beta/rc tags

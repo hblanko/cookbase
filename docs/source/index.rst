@@ -10,10 +10,17 @@ This document introduces the Cookbase API, including recipe validation, recipe g
 To view and download the source code, please check out `our GitHub repository <https://github.com/hblanko/cookbase>`_.
 
 .. toctree::
-   :maxdepth: 4
-   :caption: Contents:
+   :maxdepth: 2
+   :caption: Cookbase Reference
 
    cbdm
+   cbarch
+
+
+.. toctree::
+   :maxdepth: 4
+   :caption: Cookbase Python API
+
    cookbase
 
 
@@ -24,4 +31,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

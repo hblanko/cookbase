@@ -1,11 +1,11 @@
-cookbase package
-================
+cookbase
+========
 
 Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
 
    cookbase.db
    cookbase.graph
@@ -13,10 +13,10 @@ Subpackages
    cookbase.tests
    cookbase.validation
 
-Module contents
----------------
-
-.. automodule:: cookbase
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. Module contents
+.. ---------------
+..
+.. .. automodule:: cookbase
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
