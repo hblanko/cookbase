@@ -1,8 +1,9 @@
-cookbase.tests package
-======================
+cookbase.tests
+==============
 
+===============
 Module contents
----------------
+===============
 
 .. automodule:: cookbase.tests
    :members:
@@ -10,19 +11,21 @@ Module contents
    :show-inheritance:
 
 
+==========
 Submodules
-----------
+==========
 
-cookbase.tests.test\_cbr module
---------------------------------------
+cookbase.tests.test\_cbr
+------------------------
 
 .. automodule:: cookbase.tests.test_cbr
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.tests.test\_termcode module
---------------------------------------
+
+cookbase.tests.test\_termcode
+-----------------------------
 
 .. automodule:: cookbase.tests.test_termcode
    :members:

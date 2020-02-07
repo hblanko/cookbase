@@ -1,8 +1,9 @@
-cookbase.parsers package
-===========================
+cookbase.parsers
+================
 
+===============
 Module contents
----------------
+===============
 
 .. automodule:: cookbase.parsers
    :members:
@@ -10,27 +11,30 @@ Module contents
    :show-inheritance:
 
 
+==========
 Submodules
-----------
+==========
 
-cookbase.parsers.jsonfoodex module
--------------------------------------
+cookbase.parsers.jsonfoodex
+---------------------------
 
 .. automodule:: cookbase.parsers.jsonfoodex
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.parsers.termcode module
--------------------------------------
+
+cookbase.parsers.termcode
+-------------------------
 
 .. automodule:: cookbase.parsers.termcode
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.parsers.utils module
--------------------------------------
+
+cookbase.parsers.utils
+----------------------
 
 .. automodule:: cookbase.parsers.utils
    :members:

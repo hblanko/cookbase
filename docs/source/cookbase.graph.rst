@@ -1,8 +1,9 @@
-cookbase.graph package
-======================
+cookbase.graph
+==============
 
+===============
 Module contents
----------------
+===============
 
 .. automodule:: cookbase.graph
    :members:
@@ -10,8 +11,9 @@ Module contents
    :show-inheritance:
 
 
+==========
 Submodules
-----------
+==========
 
 cookbase.graph.recipegraph module
 ---------------------------------

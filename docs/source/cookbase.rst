@@ -1,8 +1,19 @@
 cookbase
 ========
 
+===============
+Module contents
+===============
+
+.. automodule:: cookbase
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+===========
 Subpackages
------------
+===========
 
 .. toctree::
    :maxdepth: 3
@@ -12,11 +23,3 @@ Subpackages
    cookbase.parsers
    cookbase.tests
    cookbase.validation
-
-.. Module contents
-.. ---------------
-..
-.. .. automodule:: cookbase
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:

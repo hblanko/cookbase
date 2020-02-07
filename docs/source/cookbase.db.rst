@@ -15,7 +15,6 @@ Module contents
 Submodules
 ==========
 
-
 cookbase.db.exceptions
 ----------------------
 
@@ -24,6 +23,7 @@ cookbase.db.exceptions
    :undoc-members:
    :show-inheritance:
 
+
 cookbase.db.handler
 -------------------
 
@@ -31,6 +31,7 @@ cookbase.db.handler
    :members:
    :undoc-members:
    :show-inheritance:
+
 
 cookbase.db.utils
 -----------------

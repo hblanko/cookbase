@@ -1,8 +1,9 @@
 cookbase.validation package
 ===========================
 
+===============
 Module contents
----------------
+===============
 
 .. automodule:: cookbase.validation
    :members:
@@ -10,51 +11,56 @@ Module contents
    :show-inheritance:
 
 
+==========
 Submodules
-----------
+==========
 
-cookbase.validation.cba module
--------------------------------------
+cookbase.validation.cba
+-----------------------
 
 .. automodule:: cookbase.validation.cba
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.validation.cbr module
--------------------------------------
+
+cookbase.validation.cbr
+-----------------------
 
 .. automodule:: cookbase.validation.cbr
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.validation.exceptions module
--------------------------------------
+
+cookbase.validation.exceptions
+------------------------------
 
 .. automodule:: cookbase.validation.exceptions
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.validation.globals module
--------------------------------------
+cookbase.validation.globals
+---------------------------
 
 .. automodule:: cookbase.validation.globals
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.validation.logger module
--------------------------------------
+
+cookbase.validation.logger
+--------------------------
 
 .. automodule:: cookbase.validation.logger
    :members:
    :undoc-members:
    :show-inheritance:
 
-cookbase.validation.rules module
--------------------------------------
+
+cookbase.validation.rules
+-------------------------
 
 .. automodule:: cookbase.validation.rules
    :members:

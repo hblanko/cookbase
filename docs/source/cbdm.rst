@@ -54,7 +54,8 @@ from `its formal definition <https://landarltracker.com/schemas/cbr.json>`_.
       </p>
    </div>
 
-Basically, a CBR document consists of five core sections: `cbr.info`_, `cbr.yield`_, `cbr.ingredients`_, `cbr.appliances`_ and `cbr.preparation`_.
+Basically, a CBR document consists of five core sections: `cbr.info`_, `cbr.yield`_,
+`cbr.ingredients`_, `cbr.appliances`_ and `cbr.preparation`_.
 
 
 cbr.info
