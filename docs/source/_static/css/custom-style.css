@@ -2,20 +2,19 @@
     max-width: none;
 }
 
-object {
+.uml-diagram {
   width: 100% !important;
   height: 100% !important;
 }
 
-text {
-  font-family: sans-serif !important;
+p.cbr-links-paragraph > a,
+div.api-toctree .toctree-l1 > a,
+div.api-toctree .toctree-l3 > a,
+div.api-toctree .toctree-l5 > a {
+  font-family: monospace !important;
+  font-weight: bold !important;
 }
 
-a[href^="#cbr-"] {
+div.cbr-subsection-header > h3 {
   font-family: monospace !important;
 }
-
-div[id^="cbr-"] > h3 {
-  font-family: monospace !important;
-}
-

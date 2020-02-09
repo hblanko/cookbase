@@ -1,5 +1,5 @@
 The Cookbase Data Model
-====================
+=======================
 
 The **Cookbase Data Model (CBDM)** is a suite of data format specifications aiming to
 allow for a solution to represent the data involved in *the vast domain of cooking*. In
@@ -44,7 +44,7 @@ from `its formal definition <https://landarltracker.com/schemas/cbr.json>`_.
 
   <div class="figure align-center" id="uml-cbr">
       <p class="uml">
-         <object data="_static/images/cbr.svg" type="image/svg+xml">
+         <object class="uml-diagram" data="_static/images/cbr.svg" type="image/svg+xml">
             <img src="_static/images/cbr.png" alt="The Cookbase Recipe format diagram.">
          </object>
       </p>
@@ -54,35 +54,46 @@ from `its formal definition <https://landarltracker.com/schemas/cbr.json>`_.
       </p>
    </div>
 
-Basically, a CBR document consists of five core sections: `cbr.info`_, `cbr.yield`_,
-`cbr.ingredients`_, `cbr.appliances`_ and `cbr.preparation`_.
+.. rst-class:: cbr-links-paragraph
 
+Basically, a CBR document consists of five core sections: `info`_, `yield`_,
+`ingredients`_, `appliances`_ and `preparation`_.
 
-cbr.info
---------
+.. rst-class:: cbr-subsection-header
 
-
-
-
-cbr.yield
----------
+info
+----
 
 
 
 
-cbr.ingredients
+.. rst-class:: cbr-subsection-header
+
+yield
+-----
+
+
+
+
+.. rst-class:: cbr-subsection-header
+
+ingredients
 -----------
 
 
 
 
-cbr.appliances
+.. rst-class:: cbr-subsection-header
+
+appliances
 ----------
 
 
 
 
-cbr.preparation
+.. rst-class:: cbr-subsection-header
+
+preparation
 -----------
 
 
@@ -96,7 +107,7 @@ Cookbase Ingredient (CBI)
 
   <div class="figure align-center" id="uml-cbi">
       <p class="uml">
-         <object data="_static/images/cbi.svg" type="image/svg+xml">
+         <object class="uml-diagram" data="_static/images/cbi.svg" type="image/svg+xml">
             <img src="_static/images/cbi.png" alt="The Cookbase Ingredient format diagram.">
          </object>
       </p>
@@ -115,7 +126,7 @@ Cookbase Appliance (CBA)
 
   <div class="figure align-center" id="uml-cba">
       <p class="uml">
-         <object data="_static/images/cba.svg" type="image/svg+xml">
+         <object class="uml-diagram" data="_static/images/cba.svg" type="image/svg+xml">
             <img src="_static/images/cba.png" alt="The Cookbase Appliance format diagram.">
          </object>
       </p>
@@ -134,7 +145,7 @@ Cookbase Process (CBP)
 
   <div class="figure align-center" id="uml-cbp">
       <p class="uml">
-         <object data="_static/images/cbp.svg" type="image/svg+xml">
+         <object class="uml-diagram" data="_static/images/cbp.svg" type="image/svg+xml">
             <img src="_static/images/cbp.png" alt="The Cookbase Process format diagram.">
          </object>
       </p>
@@ -153,7 +164,7 @@ Cookbase Appliance Function (CAF)
 
   <div class="figure align-center" id="uml-caf">
       <p class="uml">
-         <object data="_static/images/caf.svg" type="image/svg+xml">
+         <object class="uml-diagram" data="_static/images/caf.svg" type="image/svg+xml">
             <img src="_static/images/caf.png" alt="The Cookbase Appliance Function format diagram.">
          </object>
       </p>

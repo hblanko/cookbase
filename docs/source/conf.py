@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-)
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -18,8 +19,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Cookbase'
-copyright = '2019, Hernan Blanco'
-author = 'Hernán Blanco'
+copyright = u'2019-2020, Hernán Blanco'
+author = u'Hernán Blanco'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1'
@@ -63,6 +64,9 @@ plantuml = 'java -jar ../../lib/plantuml.jar'
 plantuml_output_format = 'svg'
 
 html_theme_options = {
-    "navigation_depth": 5,
-    "collapse_navigation": False
+    'navigation_depth': -1,
+    'collapse_navigation': False,
+    'logo_only': True
 }
+
+html_logo = '_static/logo-inverted-blue.png'
