@@ -1,5 +1,11 @@
+.. image:: _static/logo.png
+
+|
+|
+|
+
 The Cookbase Platform
-====================================
+=====================
 This document introduces the Cookbase API, including recipe validation, recipe graph
 construction and a description of the Cookbase Recipe Standard Format.
 
