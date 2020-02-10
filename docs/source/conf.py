@@ -69,4 +69,4 @@ html_theme_options = {
     'logo_only': True
 }
 
-html_logo = '_static/logo-inverted-blue.png'
+html_logo = '_static/new-logo-no-blue-green.png'
