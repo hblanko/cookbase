@@ -70,3 +70,5 @@ html_theme_options = {
 }
 
 html_logo = '_static/new-logo-no-blue-green.png'
+rst_prolog = open('defs.rst', 'r').read()
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.git', 'defs.rst']

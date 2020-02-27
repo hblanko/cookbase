@@ -18,3 +18,25 @@ div.api-toctree .toctree-l5 > a {
 div.cbr-subsection-header > h3 {
   font-family: monospace !important;
 }
+
+.logo-cook {
+  color: #ff6600 !important;
+  font-weight: bold;
+}
+
+.logo-b {
+  color: #008033 !important;
+  font-weight: bold;
+}
+
+.logo-as {
+  font-weight: bold;
+  background: -webkit-linear-gradient(#008033, #006680);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-e {
+  color: #006680 !important;
+  font-weight: bold;
+}
