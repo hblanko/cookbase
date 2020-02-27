@@ -19,6 +19,10 @@ div.cbr-subsection-header > h3 {
   font-family: monospace !important;
 }
 
+.term-mono {
+  font-family: monospace !important;
+}
+
 .logo-cook {
   color: #ff6600 !important;
   font-weight: bold;

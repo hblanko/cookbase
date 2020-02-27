@@ -68,7 +68,7 @@ info
 ----
 
 Metadata and basic information about the recipe –such as course types or cooking times–
-are contained in this part of the CBR document.
+are contained into the :term-mono:`info` part of the CBR document.
 
 .. code-block:: json
    :caption: **Example:** A typical info object.
