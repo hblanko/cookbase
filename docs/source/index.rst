@@ -18,6 +18,7 @@ To view and download the source code, please check out `our GitHub repository
    :caption: Cookbase Reference
 
    cbdm
+   cbrg
    cbarch
 
 .. rst-class:: api-toctree

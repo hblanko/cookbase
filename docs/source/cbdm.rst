@@ -68,10 +68,11 @@ info
 ----
 
 Metadata and basic information about the recipe –such as course types or cooking times–
-are contained into the :term-mono:`info` part of the CBR document.
+are contained into the :term-mono:`info` object of the CBR document (`schema description
+<https://landarltracker.com/schemas/info.json>`_).
 
 .. code-block:: json
-   :caption: **Example:** A typical info object.
+   :caption: **Example:** A typical :term-mono:`info` object.
 
    {
       "name": "Pizza mozzarella",
@@ -106,11 +107,12 @@ are contained into the :term-mono:`info` part of the CBR document.
 yield
 -----
 
-This section contains information regarding the form of the recipe output and the way it
-is to be served.
+The :term-mono:`yield` section (`schema description
+<https://landarltracker.com/schemas/appliance.json>`_) contains information regarding
+the form of the recipe output and the way it is to be served.
 
 .. code-block:: json
-   :caption: **Example:** A typical yield object.
+   :caption: **Example:** A typical :term-mono:`yield` object.
 
    {
       "servings": 8,
@@ -134,7 +136,7 @@ is to be served.
 ingredients
 -----------
 
-A collection of ingredient objects (`source code
+A collection of :term-mono:`ingredient` objects (`schema description
 <https://landarltracker.com/schemas/ingredient.json>`_) is included in the CBR document,
 each of them holding an identifier to a `Cookbase Ingredient (CBI)`_ object and the
 specific information on the ingredient utilized for the recipe. Every ingredient is
@@ -176,7 +178,7 @@ characterized by the following properties:
 appliances
 ----------
 
-The list of appliance objects (`source code
+The list of :term-mono:`appliance` objects (`schema description
 <https://landarltracker.com/schemas/appliance.json>`_) in the CBR document describes
 all the kitchenware involved in the preparation of the given recipe.
 
@@ -185,12 +187,12 @@ Appliances can be defined in two different ways:
 #. In association to a determined definition of a `Cookbase Appliance (CBA)`_
 
    - :code:`name`: The name given to an appliance used during the recipe preparation
-   - :code:`cbaId`: The identifier to the base `Cookbase Appliance (CBA)`_
+   - :code:`cbaId`: The identifier to the base CBA document
 
 #. Specifying the functions that the appliance is to be able to perform
 
-   - :code:`functions`: An array containing the different functionalities required to the
-     appliance
+   - :code:`functions`: An array containing the different functionalities required to
+     the appliance
 
 On top of the items involved on these two possible instantiation models, the following
 also apply to any specified appliance:
@@ -227,8 +229,16 @@ also apply to any specified appliance:
 preparation
 -----------
 
+The :term-mono:`preparation` section represents the sequence of steps that are required
+to prepare the recipe expressed by the CBR document. It is constructed as a collection
+of :term-mono:`process` objects (`schema description
+<https://landarltracker.com/schemas/process.json>`_) that define the interactions
+produced during the ellaboration of a recipe with the given ingredients and appliances.
+The data contained in the :term-mono:`preparation` object (together with the
+`ingredients`_ and `appliances`_ objects) is designed to allow for the representation
+of a :doc:`Cookbase Recipe Graph <cbrg>`.
 
-
+A process is
 
 =========================
 Cookbase Ingredient (CBI)
