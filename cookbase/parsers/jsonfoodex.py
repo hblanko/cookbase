@@ -29,37 +29,19 @@ The `hierarchize` command permits to build a JSON document describing a
 hierarchy tree.
 
 '''
+import argparse
+from collections import OrderedDict
+import json
+from math import ceil
+import os
+from time import time
 from typing import Any, Dict, Optional, Tuple
 from xml.dom import minidom
-import os
-import json
-from time import time
-from collections import OrderedDict
-from math import ceil
-import argparse
 
-# from cookbase.parsers import termcode # this import is performed in the
-# main() function
+from cookbase.utils import _HelpAction
 
+# from cookbase.parsers import termcode # this import is performed in-place
 vprint = None
-
-
-class _HelpAction(argparse._HelpAction):
-    '''Redefined class to print full help on the different commands.'''
-
-    def __call__(self, parser, _, __, ___):
-        parser.print_help()
-        print()
-
-        subparsers_actions = [
-            action for action in parser._actions
-            if isinstance(action, argparse._SubParsersAction)]
-        for subparsers_action in subparsers_actions:
-            for choice, subparser in subparsers_action.choices.items():
-                print("Command '{}'".format(choice))
-                print(subparser.format_help())
-
-        parser.exit()
 
 
 def parsexml(args: argparse.Namespace) -> None:
@@ -320,7 +302,7 @@ def parsexml(args: argparse.Namespace) -> None:
 
 
 def _traverse_hierarchy(
-        hierarchy_siblings: Dict[str, Any], term_to_attach: Optional[Tuple[str, str, Dict[str, Any]]] = None) -> bool:
+        hierarchy_siblings: Dict[str, Any], term_to_attach: Optional[Tuple[str, str, Dict[str, Any]]]=None) -> bool:
     '''Generates a JSON document describing a hierarchy tree.
 
     :param hierarchy_siblings: A dictionary describing all (already scanned) hierarchy terms sharing the same parent
@@ -394,9 +376,9 @@ def hierarchize(args: argparse.Namespace) -> None:
 def _main() -> None:
     '''Command-line parser.'''
     ap = argparse.ArgumentParser(description="jsonfoodex - A parsing suite"
-                                 + " for the Cookbase platform which"
-                                 + " transforms from the standard FoodEx2"
-                                 + " XML-formatted file into JSON files.",
+                                 +" for the Cookbase platform which"
+                                 +" transforms from the standard FoodEx2"
+                                 +" XML-formatted file into JSON files.",
                                  add_help=False)
     ap.add_argument('-h', '--help', action=_HelpAction,
                     help='show this help message and exit')

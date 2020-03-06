@@ -1,0 +1,46 @@
+%YAML 1.2
+---
+# Routes to the different JSON Schema 'type' definitions that CBP refers to in
+# order to generate the CBR Process schemas.
+#
+# The namespace, 'ns', identifies one of the definition namespaces to be defined
+# at the build configuration file (by default ./build-config.yaml).
+# The 'def' field provides a JSON Pointer to the given definition's location
+# in the namespace's definitions document
+descriptive:
+  ns: common
+  def: "/$defs/textWithLanguage"
+name:
+  ns: common
+  def: "/$defs/textWithLanguage"
+notes:
+  ns: common
+  def: "/$defs/notes"
+ovenPosition:
+  ns: common
+  def: "/$defs/quantities/descriptive/height"
+pieces:
+  ns: common
+  def: "/$defs/positiveInteger"
+size:
+  ns: common
+  def: "/$defs/quantities/length"
+temperature:
+  ns: common
+  def: "/$defs/quantities/temperature"
+time:
+  ns: common
+  def: "/$defs/quantities/time"
+weight:
+  ns: common
+  def: "/$defs/quantities/mass"
+foodstuff:
+  ns: cbr_process
+  def: "/$defs/foodstuff"
+foodstuffsList:
+  ns: cbr_process
+  def: "/$defs/foodstuffsList"
+# Standard 'appliances' definition, not refered from CBPs
+appliances:
+  ns: cbr_process
+  def: "/$defs/appliances"

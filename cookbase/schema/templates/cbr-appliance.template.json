@@ -1,0 +1,141 @@
+{
+  "$$schema": "${json_schema_uri}",
+  "$$id": "${cbr_appliance_schema_url}",
+  "$$defs": {
+    "properties": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "oneOf": [
+            {
+              "$$ref": "${common_defs_path}#/$$defs/quantities/length"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "relativeTo": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "relativeTo"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "capacity": {
+          "oneOf": [
+            {
+              "$$ref": "${common_defs_path}#/$$defs/quantities/volume"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "relativeTo": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "relativeTo"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "diameter": {
+          "oneOf": [
+            {
+              "$$ref": "${common_defs_path}#/$$defs/quantities/length"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "relativeTo": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "relativeTo"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "temperatureRange": {
+          "type": "object",
+          "properties": {
+            "minTemperature": {
+              "$$ref": "${common_defs_path}#/$$defs/quantities/temperature"
+            },
+            "maxTemperature": {
+              "$$ref": "${common_defs_path}#/$$defs/quantities/temperature"
+            }
+          },
+          "additionalProperties": false
+        },
+        "preferredMaterial": {
+          "$$ref": "${common_defs_path}#/$$defs/material"
+        },
+        "withCover": {
+          "type": "boolean"
+        },
+        "additionalProperties": false
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "cbaId"
+      ],
+      "properties": {
+        "name": {
+          "$$ref": "${common_defs_path}#/$$defs/textWithLanguage"
+        },
+        "cbaId": {
+          "$$ref": "${common_defs_path}#/$$defs/hashCRC32"
+        },
+        "properties": {
+          "$$ref": "#/$$defs/properties"
+        },
+        "notes": {
+          "$$ref": "${common_defs_path}#/$$defs/notes"
+        },
+        "optional": {
+          "const": true
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "functions"
+      ],
+      "properties": {
+        "functions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$$ref": "${common_defs_path}#/$$defs/applianceFunction"
+          }
+        },
+        "properties": {
+          "$$ref": "#/$$defs/properties"
+        },
+        "notes": {
+          "$$ref": "${common_defs_path}#/$$defs/notes"
+        },
+        "optional": {
+          "const": true
+        }
+      }
+    }
+  ]
+}

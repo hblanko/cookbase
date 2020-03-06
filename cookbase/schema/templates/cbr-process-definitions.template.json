@@ -1,0 +1,43 @@
+{
+  "$$schema": "${json_schema_uri}",
+  "$$id": "${cbr_process_definitions_url}",
+  "title": "CBR process schema definitions - v1.0",
+  "description": "Definitions of data types used by the CBR process schema.",
+  "$$defs": {
+    "foodstuff": {
+      "type": "string"
+    },
+    "foodstuffsList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "appliances": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "appliance": {
+            "type": "string"
+          },
+          "usedAfter": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "appliance",
+          "usedAfter"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "return": {
+      "type": "object"
+    }
+  }
+}

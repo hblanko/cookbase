@@ -11,7 +11,9 @@ __all__ = [
     'db',
     'graph',
     'gui',
+    'parsers',
+    'schema',
     'tests',
-    'validation',
-    'parsers'
+    'utils',
+    'validation'
 ]

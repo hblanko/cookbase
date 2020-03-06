@@ -1,0 +1,303 @@
+{
+  "$$schema": "${json_schema_uri}",
+  "$$id": "${cb_common_definitions_url}",
+  "title": "Cookbase common definitions - v1.0",
+  "description": "Common definitions for the Cookbase Data Formats (CBR, CBI, CBA, CAF, CBP).",
+  "$$defs": {
+    "foodex2termCode": {
+      "type": "string",
+      "pattern": "^[A-Z][0-9,A-Z]{4}$$"
+    },
+    "foodex2termId": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMaximum": 60466176
+    },
+    "recipeId": {
+      "$$comment": "A hexadecimal representation of a 12-byte identifier",
+      "type": "string",
+      "pattern": "/^[a-f\\d]{24}$$/i"
+    },
+    "hashCRC32": {
+      "$$comment": "A CRC-32 hash to identify unique CBI, CBA and CBP",
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMaximum": 4294967296
+    },
+    "textWithLanguage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "language"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "language": {
+          "$$comment": "Language code following the IETF Tags for Identifying Languages (BCP 47) standard",
+          "type": "string"
+        }
+      }
+    },
+    "translationsMatrix": {
+      "$$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(\\d|[1-9]\\d).(\\d|[1-9]\\d)$$"
+    },
+    "contributors": {
+      "$$comment": "TODO",
+      "type": "array"
+    },
+    "notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "language"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "language": {
+          "$$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+          "type": "string"
+        }
+      }
+    },
+    "proportion": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "percentage": {
+          "type": "number"
+        },
+        "fraction": {
+          "type": "string",
+          "pattern": "^\\d/\\d$$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "quantities": {
+      "length": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "measure": {
+            "default": "cm",
+            "type": "string",
+            "enum": [
+              "m",
+              "cm",
+              "mm"
+            ]
+          }
+        },
+        "required": [
+          "value",
+          "measure"
+        ],
+        "additionalProperties": false
+      },
+      "time": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "measure": {
+            "default": "min",
+            "type": "string",
+            "enum": [
+              "d",
+              "h",
+              "min",
+              "s"
+            ]
+          }
+        },
+        "required": [
+          "value",
+          "measure"
+        ],
+        "additionalProperties": false
+      },
+      "mass": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "measure": {
+            "default": "g",
+            "type": "string",
+            "enum": [
+              "mg",
+              "g",
+              "Kg"
+            ]
+          }
+        },
+        "required": [
+          "value",
+          "measure"
+        ],
+        "additionalProperties": false
+      },
+      "volume": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "measure": {
+            "default": "ml",
+            "type": "string",
+            "enum": [
+              "cm³",
+              "ml",
+              "l"
+            ]
+          }
+        },
+        "required": [
+          "value",
+          "measure"
+        ],
+        "additionalProperties": false
+      },
+      "temperature": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer"
+          },
+          "measure": {
+            "default": "°C",
+            "type": "string",
+            "enum": [
+              "°C",
+              "K",
+              "°F"
+            ]
+          }
+        },
+        "required": [
+          "value",
+          "measure"
+        ],
+        "additionalProperties": false
+      },
+      "descriptive": {
+        "temperature": {
+          "type": "string",
+          "enum": [
+            "freeze",
+            "cool",
+            "room",
+            "warm",
+            "hot"
+          ]
+        },
+        "height": {
+          "type": "string",
+          "enum": [
+            "bottom",
+            "low",
+            "medium",
+            "high",
+            "top"
+          ]
+        }
+      }
+    },
+    "applianceFunction": {
+      "$$comment": "Keep growing appliance functions",
+      "type": "string",
+      "enum": [
+        "bakes",
+        "contains",
+        "contains to bake",
+        "contains to boil",
+        "contains to cook",
+        "cooks",
+        "covers",
+        "cuts",
+        "heats",
+        "measures",
+        "props",
+        "protects",
+        "scoops",
+        "scrapes",
+        "stirs",
+        "tableware",
+        "transfers"
+      ]
+    },
+    "material": {
+      "$$comment": "Add more materials into this enum. Rethink material classification.",
+      "type": "string",
+      "enum": [
+        "ceramic",
+        "fabric",
+        "glass",
+        "metal",
+        "metal:steel",
+        "metal:iron",
+        "polymer",
+        "polymer:pe",
+        "polymer:teflon",
+        "polymer:silicone",
+        "stone",
+        "stone:marble",
+        "wood"
+      ]
+    },
+    "foodstuffKeywords": {
+      "$$comment": "New foodstuff keywords must be included into this enum",
+      "type": "string",
+      "enum": [
+        "foodstuff",
+        "foodstuffsList",
+        "base",
+        "onTop",
+        "sauce",
+        "liquid",
+        "toSoak"
+      ]
+    }
+  }
+}

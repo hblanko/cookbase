@@ -21,5 +21,6 @@ Subpackages
    cookbase.db
    cookbase.graph
    cookbase.parsers
+   cookbase.schema
    cookbase.tests
    cookbase.validation

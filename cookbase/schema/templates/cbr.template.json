@@ -1,0 +1,46 @@
+{
+  "$$schema": "${json_schema_uri}",
+  "$$id": "${cbr_schema_url}",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "info",
+    "yield",
+    "ingredients",
+    "appliances",
+    "preparation"
+  ],
+  "properties": {
+    "schema": {
+      "const": "${cbr_schema_url}"
+    },
+    "id": {
+      "$$ref": "${common_defs_path}#/$$defs/recipeId"
+    },
+    "info": {
+      "$$ref": "${cbr_info_path}"
+    },
+    "yield": {
+      "$$ref": "${cbr_yield_path}"
+    },
+    "ingredients": {
+      "type": "object",
+      "additionalProperties": {
+        "$$ref": "${cbr_ingredient_path}"
+      }
+    },
+    "appliances": {
+      "type": "object",
+      "additionalProperties": {
+        "$$ref": "${cbr_appliance_path}"
+      }
+    },
+    "preparation": {
+      "type": "object",
+      "additionalProperties": {
+        "$$ref": "${cbr_process_path}"
+      }
+    }
+  }
+}

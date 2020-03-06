@@ -1,0 +1,76 @@
+{
+  "$$schema": "${json_schema_uri}",
+  "$$id": "${caf_schema_url}",
+  "title": "Cookbase Appliance Function - v1.0",
+  "description": "Schema defining the format of a Cookbase Appliance Function (CAF).",
+  "examples": [
+    {
+      "schema": "${caf_schema_url}",
+      "id": 860805363,
+      "name": {
+        "en": "bakes",
+        "es": "hornea"
+      },
+      "version": "1.0",
+      "contributors": [
+        "Hernán Blanco, hblanco@pm.me"
+      ],
+      "description": {
+        "en": "cooks by dry heat without direct exposure to a flame",
+        "es": "cocina mediante calor seco sin exposición directa a una llama"
+      },
+      "info": {
+        "requirable": true
+      }
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "name",
+    "version",
+    "contributors",
+    "description",
+    "info"
+  ],
+  "properties": {
+    "schema": {
+      "const": "$${caf_schema_url}"
+    },
+    "id": {
+      "$$ref": "${common_defs_path}#/$$defs/hashCRC32"
+    },
+    "name": {
+      "$$ref": "${common_defs_path}#/$$defs/translationsMatrix"
+    },
+    "version": {
+      "$$ref": "${common_defs_path}#/$$defs/version"
+    },
+    "contributors": {
+      "$$ref": "${common_defs_path}#/$$defs/contributors"
+    },
+    "fdxId": {
+      "$$ref": "${common_defs_path}#/$$defs/foodex2termId"
+    },
+    "description": {
+      "$$ref": "${common_defs_path}#/$$defs/translationsMatrix"
+    },
+    "info": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirable"
+      ],
+      "properties": {
+        "requirable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "notes": {
+      "$$ref": "${common_defs_path}#/$$defs/notes"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+%YAML 1.2
+---
+build_params:
+  # Path to the local directory where the Cookbase Schema templates are stored
+  cb_schema_templates_dir: ./templates/
+
+  # Path to the build directory. It accepts either a local path or an SSH or
+  # SFTP URI. All other paths (except for the build_params.cb_schema_templates_dir,
+  # cbr_process.cbp_dir and cbr_process.types_path paths) specified in this
+  # config file *must* be relative to this root path.
+  root_build_dir: ./schemas/
+  cbr_schema_path: cbr/cbr.json
+  cbr_process_collection_dir: cbr/processes/
+  cbi_schema_path: cbi/cbi.json
+  cba_schema_path: cba/cba.json
+  cbp_schema_path: cbp/cbp.json
+  caf_schema_path: caf/caf.json
+common:
+  # JSON Schema specification followed by the Cookbase schemas
+  json_schema_uri: http://json-schema.org/draft-07/schema#
+
+  # The base URL pointing to the directory where the schemas
+  # are to be located
+  cb_schemas_base_url: http://example.com/schemas/
+  defs_path: cb-common-definitions.json
+cbr:
+  cbr_info_path: cbr/cbr-info.json
+  cbr_yield_path: cbr/cbr-yield.json
+  cbr_ingredient_path: cbr/cbr-ingredient.json
+  cbr_appliance_path: cbr/cbr-appliance.json
+  cbr_process_path: cbr/cbr-process.json
+cbr_process:
+  # Path to the local directory where the CBP files are stored
+  cbp_dir: ../resources/cbp/
+  # Path to the configuration file providing the location to the schema
+  # definitions used by the CBR Process schemas
+  types_path: ./cbr-process-types.yaml
+  defs_path: cbr/cbr-process-definitions.json

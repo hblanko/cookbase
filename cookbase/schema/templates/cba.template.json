@@ -1,0 +1,216 @@
+{
+  "$$schema": "${json_schema_uri}",
+  "$$id": "${cba_schema_url}",
+  "title": "Cookbase Appliance - v1.0",
+  "description": "Schema defining the format of a Cookbase Appliance (CBA).",
+  "examples": [
+    {
+      "schema": "${cba_schema_url}",
+      "id": 3617238731,
+      "name": {
+        "en": "bowl",
+        "es": [
+          "cuenco",
+          "bol"
+        ]
+      },
+      "version": "1.0",
+      "contributors": [
+        "Hernán Blanco, hblanco@pm.me"
+      ],
+      "description": {
+        "en": "A round, deep dish or basin used to contain foodstuffs.",
+        "es": "Recipiente redondo y profundo empleado para contener alimentos."
+      },
+      "info": {
+        "familyLevel": 1,
+        "functions": [
+          "contains"
+        ],
+        "materials": {
+          "policy": "disallow",
+          "list": [
+            "metal:iron",
+            "stone",
+            "polymer:silicone",
+            "fabric"
+          ]
+        },
+        "requiredProperties": [
+          "withCover"
+        ],
+        "typicalUses": [
+          3308424952,
+          1353671189,
+          2334355260,
+          1965970778,
+          2660615365
+        ],
+        "pictureUrl": "https://live.staticflickr.com/3377/3409634583_97caef443e.jpg"
+      }
+    }
+  ],
+  "$$defs": {
+    "functions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$$ref": "${common_defs_path}#/$$defs/applianceFunction"
+      }
+    },
+    "requiredProperties": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "temperatureRange",
+          "length",
+          "diameter",
+          "volume",
+          "withCover"
+        ]
+      }
+    },
+    "materials": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "list"
+      ],
+      "properties": {
+        "policy": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "disallow"
+          ]
+        },
+        "list": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$$ref": "${common_defs_path}#/$$defs/material"
+          }
+        }
+      }
+    },
+    "typicalUses": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$$ref": "${common_defs_path}#/$$defs/hashCRC32"
+      }
+    },
+    "pictureUrl": {
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "name",
+    "version"
+  ],
+  "properties": {
+    "schema": {
+      "const": "${cba_schema_url}"
+    },
+    "id": {
+      "$$ref": "${common_defs_path}#/$$defs/hashCRC32"
+    },
+    "name": {
+      "$$ref": "${common_defs_path}#/$$defs/translationsMatrix"
+    },
+    "version": {
+      "$$ref": "${common_defs_path}#/$$defs/version"
+    },
+    "contributors": {
+      "$$ref": "${common_defs_path}#/$$defs/contributors"
+    },
+    "description": {
+      "$$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "info": {
+      "$$comment": "TODO: Rethink default properties for appliance instances (e.g. defining house cookware ensemble)",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "familyLevel",
+            "functions"
+          ],
+          "properties": {
+            "familyLevel": {
+              "const": 1
+            },
+            "functions": {
+              "$$ref": "#/$$defs/functions"
+            },
+            "requiredProperties": {
+              "$$ref": "#/$$defs/requiredProperties"
+            },
+            "materials": {
+              "$$ref": "#/$$defs/materials"
+            },
+            "typicalUses": {
+              "$$ref": "#/$$defs/typicalUses"
+            },
+            "pictureUrl": {
+              "$$ref": "#/$$defs/pictureUrl"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "familyLevel",
+            "parent"
+          ],
+          "$$comment": "TODO: decision on how to handle hierarchies on appliance properties. Functions are inherdited incrementally",
+          "properties": {
+            "familyLevel": {
+              "type": "integer",
+              "enum": [
+                2,
+                3
+              ]
+            },
+            "parent": {
+              "$$ref": "${common_defs_path}#/$$defs/hashCRC32"
+            },
+            "functions": {
+              "$$ref": "#/$$defs/functions"
+            },
+            "requiredProperties": {
+              "$$ref": "#/$$defs/requiredProperties"
+            },
+            "materials": {
+              "$$ref": "#/$$defs/materials"
+            },
+            "typicalUses": {
+              "$$ref": "#/$$defs/typicalUses"
+            },
+            "pictureUrl": {
+              "$$ref": "#/$$defs/pictureUrl"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
