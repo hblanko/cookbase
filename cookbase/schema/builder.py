@@ -39,9 +39,9 @@ class _SSHConnection():
     def __init__(self, hostname: str=None, port: int=None, username: str=None):
         '''
         Constructor method
-        
+
         If provided with a hostname, automatically initiates the SFTP session
-        
+
         :param str hostname: The SSH host, defaults to None
         :param int port: The port where the SSH host is listening, defaults to None
         :param str username: The username on the target SSH host, defaults to None
@@ -52,7 +52,7 @@ class _SSHConnection():
     def set_session(self, hostname: str, port: int=None, username: str=None):
         '''
         Sets up an SFTP session
-        
+
         :param str hostname: The SSH host
         :param int port: The port where the SSH host is listening, defaults to None
         :param str username: The username on the target SSH host, defaults to None
@@ -82,7 +82,7 @@ class _SSHConnection():
         '''
         Simulates the :code:`mkdir -p <path>` Unix command, making a directory and
         all its non-existing parent directories
-        
+
         :param str path: The path to a directory
         '''
         dirs = []
@@ -105,7 +105,7 @@ class _SSHConnection():
         '''
         Creates or overwrites a file under `path` and stores the content
         of `s` in it
-        
+
         :param str s: String to be written into a new file
         :param path: Path to the new file
         '''
@@ -140,7 +140,7 @@ def build_abs_schema_uri(rel_path: str):
     It forms an absolute URI from a relative path considering
     the :code:`common.cb_schemas_base_url` property provided by the build configuration
     file
-    
+
     :param str rel_path: A path relative to :code:`build_params.root_build_dir`
     :return: An absolute URI intended to unambiguously refer to the given path
     :rtype: str
@@ -161,7 +161,7 @@ def build_abs_schema_uri(rel_path: str):
 def build_rel_path(start_rel_path: str, target_rel_path: str):
     '''
     Calculates the relative path from `start_rel_path` to `target_rel_path`
-    
+
     :param str start_rel_path: The startpoint path
     :param str target_rel_path: The target path
     :return: A relative path from `start_rel_path` to `target_rel_path`
@@ -178,7 +178,7 @@ def write_to_file(s: str, path: str):
     '''
     Creates or overwrites a file (either locally or remotely) and stores `s`
     in it
-    
+
     :param str s: The string to be written in the file
     :param str path: The path where the file is to be created
     '''
@@ -194,11 +194,11 @@ def render(template_filename: str, schema_path: str, substs: Dict[str, str]):
     '''
     Creates a JSON Schema file under `schema_path` from applying the
     substitutions `substs` to a template stored in `template_filename`
-    
+
     :param str template_filename: The name of the template file to be rendered
     :param str schema_path: The path where the generated JSON Schema will be stored
     :param substs: A dictionary including the substitutions to be performed on the
-    template
+      template
     :type substs: Dict[str, str]
     '''
     with open(os.path.join(config['build_params']['cb_schema_templates_dir'], template_filename)) as f:
@@ -227,12 +227,12 @@ def build_cb_common_definitions_schema():
 def build_cbr_schema(build_cbr_process: bool=True):
     '''
     Builds the CBR Schema according to the provided configuration.
-    
-    If the `build_cbr_process` flag is set to :code:`True` (the default), this
+
+    If the `build_cbr_process` flag is set to :const:`True` (the default), this
     function will also build CBR Process Schema.
-    
+
     :param bool build_cbr_process: Flag indicating whether the CBR Process Schema
-    will be generated or not.
+      will be generated or not.
     '''
     # Build CBR main schema
     substs = {
@@ -368,12 +368,12 @@ def build_caf_schema():
 def build_cbr_process_schema(do_collection=True):
     '''
     Builds the CBR Process Schema according to the provided configuration.
-    
-    If the `do_collection` flag is set to :code:`True` (the default), the
+
+    If the `do_collection` flag is set to :const:`True` (the default), the
     function will builds CBR Process Schemas collection.
-    
+
     :param bool do_collection: Flag indicating whether the CBR Process Schemas
-    collection will be generated or not.
+      collection will be generated or not.
     '''
     build_cbr_process_definitions_schema()
 
@@ -399,11 +399,11 @@ def generate_cbr_process_collection():
     '''
     Generates and writes into files the CBR Process Schemas from a collection of CBP
     files.
-    
+
     The accessed CBP files are under the directory specified by
     the :code:`cbr_process.cbp_dir` property from the build configuration file.
-    
-    The routes to the JSON Schema definitions of the different :code:`type`s referred
+
+    The routes to the JSON Schema definitions of the different :code:`type`\ s referred
     by the CBP documents are detailed in the configuration file under the path given
     by the :code:`cbr_process.types_path` property.
     '''
@@ -429,7 +429,8 @@ def generate_cbr_process_collection():
             if cbp['data']['processType'] != 'generic':
                 continue
 
-            schema = generate_cbr_process_collection_item(cbp, defs)
+            schema_filename = filename.rsplit('-', 1)[0].replace(' ', '_') + '.json'
+            schema = generate_cbr_process_collection_item(cbp, defs, schema_filename)
             path = os.path.join(uritools.urisplit(
                 config['build_params']['root_build_dir']).path,
                 config['build_params']['cbr_process_collection_dir'],
@@ -439,15 +440,23 @@ def generate_cbr_process_collection():
             write_to_file(json.dumps(schema, indent=2), path)
 
 
-def generate_cbr_process_collection_item(cbp: Dict[str, Any], defs: Dict[str, str]):
+def generate_cbr_process_collection_item(cbp: Dict[str, Any], defs: Dict[str, str],
+                                         schema_filename: str=None):
     '''
     Generates and writes into a file a CBR Process Schema from a CBP document.
     
+    If `schema_filename` is set to :const:`None` (the default), the output file
+    name will be assumed to be the first English name given in the CBP's :code:`name`
+    property, lowercased, substituted spaces by underscores :const:`_`, and appended the
+    :code:`.json` extension.
+
     :param cbp: The dictionary representing the content of a CBP document.
     :type cbp: dict[str, Any]
-    :param defs: A dictionary mapping the CBP :code:`type`s to the location of its
-    definition.
+    :param defs: A dictionary mapping the CBP :code:`type`\ s to the location of its
+      definition.
     :type defs: dict[str, str]
+    :param str schema_filename: The name of the file where the CBP is to be stored,
+      defaults to :const:`None`.
     '''
     # It assumes a valid CBP
     if cbp['data']['processType'] != 'generic':
@@ -455,20 +464,24 @@ def generate_cbr_process_collection_item(cbp: Dict[str, Any], defs: Dict[str, st
 
     # Get CBP name
     process_name = cbp['name']['en']
+
     if isinstance(process_name, list):
         process_name = process_name[0]
+
+    if not schema_filename:
+        schema_filename = process_name.lower().replace(' ', '_')
 
     schema = OrderedDict()
     schema['$schema'] = config['common']['json_schema_uri']
     schema['$id'] = build_abs_schema_uri(
         os.path.join(
             config['build_params']['cbr_process_collection_dir'],
-            process_name + '.json'
+            schema_filename
             )
         )
-    schema['title'] = 'Process \'' + process_name + '\''
-    schema['description'] = 'Schema defining the format of the CBR \'' + \
-        process_name + '\' process.'
+    schema['title'] = 'Cookbase Recipe Process "' + process_name + '"'
+    schema['description'] = 'Schema defining the format of the CBR "' + \
+        process_name + '" Process.'
     schema['type'] = 'object'
     schema['additionalProperties'] = False
     schema['required'] = ['name', 'cbpId']
@@ -551,13 +564,15 @@ def generate_cbr_process_main_schema():
     '''
     Generates and writes into file the CBR Process Main Schema from a collection of CBR
     Process Schemas.
-    
+
     Its path is provided by the :code:`cbr.cbr_process_path` property in the build
     configuration file.
     '''
     schema = OrderedDict()
     schema['$schema'] = config['common']['json_schema_uri']
     schema['$id'] = build_abs_schema_uri(config['cbr']['cbr_process_path'])
+    schema['title'] = 'Cookbase Recipe Process - v1.0'
+    schema['description'] = 'Schema defining the format of the Cookbase Recipe (CBR) Process. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-preparation to read the documentation.'
     schema['oneOf'] = []
     collection_base_path = os.path.join(
         uritools.urisplit(config['build_params']['root_build_dir']).path,
@@ -594,11 +609,11 @@ def generate_cbr_process_main_schema():
 def init(config_path: str=None):
     '''
     Initializes the builder.
-    
+
     If a custom build configuration file `config_path` is not provided, the
     default build configuration is loaded; if provided, any lacking parameter will
     be completed with the default configuration.
-    
+
     In case of a :code:`build_params.root_build_dir` configuration property consisting
     of an SSH or SFTP URI, a SFTP session with the target host is opened.
 

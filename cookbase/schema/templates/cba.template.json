@@ -2,7 +2,7 @@
   "$$schema": "${json_schema_uri}",
   "$$id": "${cba_schema_url}",
   "title": "Cookbase Appliance - v1.0",
-  "description": "Schema defining the format of a Cookbase Appliance (CBA).",
+  "description": "Schema defining the format of a Cookbase Appliance (CBA). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cba to read the documentation.",
   "examples": [
     {
       "schema": "${cba_schema_url}",

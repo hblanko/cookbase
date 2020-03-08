@@ -2,7 +2,7 @@
   "$$schema": "${json_schema_uri}",
   "$$id": "${cbi_schema_url}",
   "title": "Cookbase Ingredient - v1.0",
-  "description": "Schema defining the format of a Cookbase Ingredient (CBI).",
+  "description": "Schema defining the format of a Cookbase Ingredient (CBI). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbi to read the documentation.",
   "examples": [
     {
       "schema": "${cbi_schema_url}",

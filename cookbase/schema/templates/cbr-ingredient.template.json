@@ -1,9 +1,8 @@
 {
   "$$schema": "${json_schema_uri}",
   "$$id": "${cbr_ingredient_schema_url}",
-  "title": "Cookbase Recipe's ingredient component",
-  "description": "Schema defining the format of a Cookbase Recipe (CBR) ingredient.",
-  "type": "object",
+  "title": "Cookbase Recipe Ingredient - v1.0",
+  "description": "Schema defining the format of a Cookbase Recipe (CBR) Ingredient. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-ingredients to read the documentation.",
   "examples": [
     {
       "subdivision": "dough",
@@ -22,6 +21,7 @@
       }
     }
   ],
+  "type": "object",
   "additionalProperties": false,
   "required": [
     "name",

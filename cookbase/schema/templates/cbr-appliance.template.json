@@ -1,6 +1,8 @@
 {
   "$$schema": "${json_schema_uri}",
   "$$id": "${cbr_appliance_schema_url}",
+  "title": "Cookbase Recipe Appliance - v1.0",
+  "description": "Schema defining the format of a Cookbase Recipe (CBR) Appliance. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-appliances to read the documentation.",
   "$$defs": {
     "properties": {
       "type": "object",

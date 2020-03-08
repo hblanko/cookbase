@@ -2,7 +2,7 @@
   "$$schema": "${json_schema_uri}",
   "$$id": "${cbp_schema_url}",
   "title": "Cookbase Process - v1.0",
-  "description": "Schema defining the format of a Cookbase Process (CBP).",
+  "description": "Schema defining the format of a Cookbase Process (CBP). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbp to read the documentation.",
   "examples": [
     {
       "schema": "${cbp_schema_url}",

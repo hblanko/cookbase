@@ -2,7 +2,7 @@
   "$$schema": "${json_schema_uri}",
   "$$id": "${caf_schema_url}",
   "title": "Cookbase Appliance Function - v1.0",
-  "description": "Schema defining the format of a Cookbase Appliance Function (CAF).",
+  "description": "Schema defining the format of a Cookbase Appliance Function (CAF). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#caf to read the documentation.",
   "examples": [
     {
       "schema": "${caf_schema_url}",
@@ -37,7 +37,7 @@
   ],
   "properties": {
     "schema": {
-      "const": "$${caf_schema_url}"
+      "const": "${caf_schema_url}"
     },
     "id": {
       "$$ref": "${common_defs_path}#/$$defs/hashCRC32"

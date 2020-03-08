@@ -31,7 +31,7 @@ cbr:
   cbr_process_path: cbr/cbr-process.json
 cbr_process:
   # Path to the local directory where the CBP files are stored
-  cbp_dir: ../resources/cbp/
+  cbp_dir: ../../resources/cbp/
   # Path to the configuration file providing the location to the schema
   # definitions used by the CBR Process schemas
   types_path: ./cbr-process-types.yaml

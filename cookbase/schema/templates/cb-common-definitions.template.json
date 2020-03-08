@@ -1,8 +1,8 @@
 {
   "$$schema": "${json_schema_uri}",
   "$$id": "${cb_common_definitions_url}",
-  "title": "Cookbase common definitions - v1.0",
-  "description": "Common definitions for the Cookbase Data Formats (CBR, CBI, CBA, CAF, CBP).",
+  "title": "Cookbase Schema common definitions - v1.0",
+  "description": "Common definitions for the Cookbase Data Model (CBDM). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html to read the documentation.",
   "$$defs": {
     "foodex2termCode": {
       "type": "string",

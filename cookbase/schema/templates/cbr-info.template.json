@@ -1,6 +1,8 @@
 {
   "$$schema": "${json_schema_uri}",
   "$$id": "${cbr_info_schema_url}",
+  "title": "Cookbase Recipe's info section - v1.0",
+  "description": "Schema defining the content of the Cookbase Recipe (CBR) info section. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-info to read the documentation.",
   "type": "object",
   "properties": {
     "name": {
