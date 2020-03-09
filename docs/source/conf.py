@@ -34,7 +34,8 @@ release = '0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.plantuml'
+    'sphinxcontrib.plantuml',
+    'sphinx.ext.extlinks'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -72,3 +73,5 @@ html_theme_options = {
 html_logo = '_static/new-logo-no-blue-green.png'
 rst_prolog = open('defs.rst', 'r').read()
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.git', 'defs.rst']
+extlinks = {'cbschema': ('http://landarltracker.com/schemas/%s',
+                      'CBSchema ')}

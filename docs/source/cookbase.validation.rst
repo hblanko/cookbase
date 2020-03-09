@@ -1,5 +1,5 @@
-cookbase.validation package
-===========================
+cookbase.validation
+===================
 
 ===============
 Module contents
