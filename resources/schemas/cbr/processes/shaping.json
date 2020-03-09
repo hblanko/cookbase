@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/cbr/processes/shaping.json",
+  "title": "Cookbase Recipe Process \"shaping\"",
+  "description": "Schema defining the format of the CBR \"shaping\" Process.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "cbpId",
+    "foodstuff",
+    "appliances"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../../cb-common-definitions.json#/$defs/textWithLanguage"
+    },
+    "cbpId": {
+      "const": 76031203
+    },
+    "foodstuff": {
+      "$ref": "../cbr-process-definitions.json#/$defs/foodstuff"
+    },
+    "appliances": {
+      "$ref": "../cbr-process-definitions.json#/$defs/appliances"
+    },
+    "notes": {
+      "$ref": "../../cb-common-definitions.json#/$defs/notes"
+    }
+  }
+}

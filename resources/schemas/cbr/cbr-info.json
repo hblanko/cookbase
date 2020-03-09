@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/cbr/cbr-info.json",
+  "title": "Cookbase Recipe's info section - v1.0",
+  "description": "Schema defining the content of the Cookbase Recipe (CBR) info section. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-info to read the documentation.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "authorship": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "fullName",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "releaseDate": {
+      "type": "string"
+    },
+    "cuisine": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "courseType": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "preparationTime": {
+      "$ref": "../cb-common-definitions.json#/$defs/quantities/time"
+    },
+    "cookingTime": {
+      "$ref": "../cb-common-definitions.json#/$defs/quantities/time"
+    },
+    "servingTime": {
+      "$ref": "../cb-common-definitions.json#/$defs/quantities/time"
+    },
+    "description": {
+      "$ref": "../cb-common-definitions.json#/$defs/textWithLanguage"
+    }
+  },
+  "required": [
+    "name",
+    "authorship",
+    "releaseDate",
+    "cuisine",
+    "courseType",
+    "preparationTime",
+    "cookingTime",
+    "servingTime"
+  ],
+  "additionalProperties": false
+}

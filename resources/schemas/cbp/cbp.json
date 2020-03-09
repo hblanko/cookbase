@@ -1,0 +1,306 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/cbp/cbp.json",
+  "title": "Cookbase Process - v1.0",
+  "description": "Schema defining the format of a Cookbase Process (CBP). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbp to read the documentation.",
+  "examples": [
+    {
+      "schema": "http://landarltracker.com/schemas/cbp/cbp.json",
+      "id": 4038648643,
+      "name": {
+        "en": "dicing",
+        "es": [
+          "cortar en dados",
+          "trocear"
+        ]
+      },
+      "version": "1.0",
+      "contributors": [
+        "Hernán Blanco, hblanco@pm.me"
+      ],
+      "fdxId": 16805985,
+      "description": {
+        "en": "cutting to form dices",
+        "es": "cortar para formar dados"
+      },
+      "data": {
+        "processType": "generic",
+        "schema": {
+          "foodstuffKeywords": {
+            "foodstuff": {
+              "type": "foodstuff",
+              "required": true
+            }
+          },
+          "parameters": {
+            "size": {
+              "required": true
+            }
+          }
+        },
+        "validation": {
+          "conditions": {
+            "requiredAppliances": [
+              [
+                {
+                  "function": "cuts"
+                },
+                {
+                  "cbaId": 1402285076
+                }
+              ]
+            ]
+          }
+        },
+        "pictureUrl": "https://farm5.staticflickr.com/4076/4740275504_aebcebdb26_b.jpg"
+      }
+    }
+  ],
+  "$defs": {
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "name",
+    "version",
+    "data"
+  ],
+  "properties": {
+    "schema": {
+      "const": "http://landarltracker.com/schemas/cbp/cbp.json"
+    },
+    "id": {
+      "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"
+    },
+    "name": {
+      "$ref": "../cb-common-definitions.json#/$defs/translationsMatrix"
+    },
+    "version": {
+      "$ref": "../cb-common-definitions.json#/$defs/version"
+    },
+    "contributors": {
+      "$ref": "../cb-common-definitions.json#/$defs/contributors"
+    },
+    "fdxId": {
+      "$ref": "../cb-common-definitions.json#/$defs/foodex2termId"
+    },
+    "description": {
+      "$comment": "Keys are language codes following the IETF Tags for Identifying Languages (BCP 47) standard",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processType",
+            "schema",
+            "validation"
+          ],
+          "properties": {
+            "processType": {
+              "const": "generic"
+            },
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "foodstuffKeywords"
+              ],
+              "properties": {
+                "foodstuffKeywords": {
+                  "type": "object",
+                  "minProperties": 1,
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "type",
+                      "required"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "foodstuff",
+                          "foodstuffsList"
+                        ]
+                      },
+                      "required": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "minProperties": 1,
+                  "properties": {
+                    "endConditions": {
+                      "type": "object",
+                      "minProperties": 1,
+                      "properties": {
+                        "time": {
+                          "$ref": "#/$defs/parameter"
+                        },
+                        "descriptive": {
+                          "$ref": "#/$defs/parameter"
+                        }
+                      }
+                    },
+                    "ovenPosition": {
+                      "$ref": "#/$defs/parameter"
+                    },
+                    "pieces": {
+                      "$ref": "#/$defs/parameter"
+                    },
+                    "size": {
+                      "$ref": "#/$defs/parameter"
+                    },
+                    "temperature": {
+                      "$ref": "#/$defs/parameter"
+                    },
+                    "weight": {
+                      "$ref": "#/$defs/parameter"
+                    }
+                  }
+                },
+                "minParameters": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "flags": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "residuals",
+                      "return"
+                    ]
+                  }
+                }
+              }
+            },
+            "validation": {
+              "type": "object",
+              "properties": {
+                "conditions": {
+                  "type": "object",
+                  "properties": {
+                    "requiredAppliances": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "minProperties": 1,
+                          "maxProperties": 1,
+                          "additionalProperties": false,
+                          "properties": {
+                            "cbaId": {
+                              "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"
+                            },
+                            "function": {
+                              "$ref": "../cb-common-definitions.json#/$defs/applianceFunction"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "requiredAppliances"
+                  ]
+                }
+              },
+              "required": [
+                "conditions"
+              ],
+              "additionalProperties": false
+            },
+            "inherentProcesses": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"
+              }
+            },
+            "pictureUrl": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processType",
+            "inherentOf"
+          ],
+          "properties": {
+            "processType": {
+              "const": "inherent"
+            },
+            "inherentOf": {
+              "type": "array",
+              "items": {
+                "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"
+              }
+            },
+            "pictureUrl": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processType",
+            "aggregatedProcesses"
+          ],
+          "properties": {
+            "processType": {
+              "const": "macro"
+            },
+            "aggregatedProcesses": {
+              "$comment": "TODO: this has to provide more granularity, allowing to define conditions on specific appliances and foodstuff",
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"
+              }
+            },
+            "pictureUrl": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

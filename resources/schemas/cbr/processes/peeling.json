@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/cbr/processes/peeling.json",
+  "title": "Cookbase Recipe Process \"peeling\"",
+  "description": "Schema defining the format of the CBR \"peeling\" Process.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "cbpId",
+    "foodstuff",
+    "appliances",
+    "residuals"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../../cb-common-definitions.json#/$defs/textWithLanguage"
+    },
+    "cbpId": {
+      "const": 1722901319
+    },
+    "foodstuff": {
+      "$ref": "../cbr-process-definitions.json#/$defs/foodstuff"
+    },
+    "appliances": {
+      "$ref": "../cbr-process-definitions.json#/$defs/appliances"
+    },
+    "residuals": {
+      "const": true
+    },
+    "notes": {
+      "$ref": "../../cb-common-definitions.json#/$defs/notes"
+    }
+  }
+}

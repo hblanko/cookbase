@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/cbr/cbr.json",
+  "title": "Cookbase Recipe - v1.0",
+  "description": "Schema defining the format of a Cookbase Recipe (CBR). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr to read the documentation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "info",
+    "yield",
+    "ingredients",
+    "appliances",
+    "preparation"
+  ],
+  "properties": {
+    "schema": {
+      "const": "http://landarltracker.com/schemas/cbr/cbr.json"
+    },
+    "id": {
+      "$ref": "../cb-common-definitions.json#/$defs/recipeId"
+    },
+    "info": {
+      "$ref": "cbr-info.json"
+    },
+    "yield": {
+      "$ref": "cbr-yield.json"
+    },
+    "ingredients": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "cbr-ingredient.json"
+      }
+    },
+    "appliances": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "cbr-appliance.json"
+      }
+    },
+    "preparation": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "cbr-process.json"
+      }
+    }
+  }
+}

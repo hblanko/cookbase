@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/cbr/processes/dividing.json",
+  "title": "Cookbase Recipe Process \"dividing\"",
+  "description": "Schema defining the format of the CBR \"dividing\" Process.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "cbpId",
+    "foodstuff",
+    "appliances"
+  ],
+  "properties": {
+    "name": {
+      "$ref": "../../cb-common-definitions.json#/$defs/textWithLanguage"
+    },
+    "cbpId": {
+      "const": 3172901335
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "pieces": {
+          "$ref": "../../cb-common-definitions.json#/$defs/positiveInteger"
+        },
+        "weight": {
+          "$ref": "../../cb-common-definitions.json#/$defs/quantities/mass"
+        }
+      }
+    },
+    "foodstuff": {
+      "$ref": "../cbr-process-definitions.json#/$defs/foodstuff"
+    },
+    "appliances": {
+      "$ref": "../cbr-process-definitions.json#/$defs/appliances"
+    },
+    "notes": {
+      "$ref": "../../cb-common-definitions.json#/$defs/notes"
+    }
+  }
+}

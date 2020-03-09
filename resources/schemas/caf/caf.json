@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/caf/caf.json",
+  "title": "Cookbase Appliance Function - v1.0",
+  "description": "Schema defining the format of a Cookbase Appliance Function (CAF). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#caf to read the documentation.",
+  "examples": [
+    {
+      "schema": "http://landarltracker.com/schemas/caf/caf.json",
+      "id": 860805363,
+      "name": {
+        "en": "bakes",
+        "es": "hornea"
+      },
+      "version": "1.0",
+      "contributors": [
+        "Hernán Blanco, hblanco@pm.me"
+      ],
+      "description": {
+        "en": "cooks by dry heat without direct exposure to a flame",
+        "es": "cocina mediante calor seco sin exposición directa a una llama"
+      },
+      "info": {
+        "requirable": true
+      }
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "name",
+    "version",
+    "contributors",
+    "description",
+    "info"
+  ],
+  "properties": {
+    "schema": {
+      "const": "http://landarltracker.com/schemas/caf/caf.json"
+    },
+    "id": {
+      "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"
+    },
+    "name": {
+      "$ref": "../cb-common-definitions.json#/$defs/translationsMatrix"
+    },
+    "version": {
+      "$ref": "../cb-common-definitions.json#/$defs/version"
+    },
+    "contributors": {
+      "$ref": "../cb-common-definitions.json#/$defs/contributors"
+    },
+    "fdxId": {
+      "$ref": "../cb-common-definitions.json#/$defs/foodex2termId"
+    },
+    "description": {
+      "$ref": "../cb-common-definitions.json#/$defs/translationsMatrix"
+    },
+    "info": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirable"
+      ],
+      "properties": {
+        "requirable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "notes": {
+      "$ref": "../cb-common-definitions.json#/$defs/notes"
+    }
+  }
+}

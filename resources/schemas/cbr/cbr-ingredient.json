@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://landarltracker.com/schemas/cbr/cbr-ingredient.json",
+  "title": "Cookbase Recipe Ingredient - v1.0",
+  "description": "Schema defining the format of a Cookbase Recipe (CBR) Ingredient. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-ingredients to read the documentation.",
+  "examples": [
+    {
+      "subdivision": "dough",
+      "name": {
+        "text": "white sugar",
+        "language": "en"
+      },
+      "cbiId": 363864347,
+      "amount": {
+        "value": 7,
+        "measure": "g"
+      },
+      "notes": {
+        "text": "any common white sugar could be used",
+        "language": "en"
+      }
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "cbiId"
+  ],
+  "properties": {
+    "subdivision": {
+      "type": "string"
+    },
+    "name": {
+      "$ref": "../cb-common-definitions.json#/$defs/textWithLanguage"
+    },
+    "cbiId": {
+      "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"
+    },
+    "amount": {
+      "anyOf": [
+        {
+          "$ref": "../cb-common-definitions.json#/$defs/quantities/mass"
+        },
+        {
+          "$ref": "../cb-common-definitions.json#/$defs/quantities/volume"
+        }
+      ]
+    },
+    "notes": {
+      "$ref": "../cb-common-definitions.json#/$defs/notes"
+    },
+    "optional": {
+      "const": true
+    }
+  }
+}
