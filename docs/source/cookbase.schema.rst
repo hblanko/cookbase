@@ -19,6 +19,7 @@ cookbase.schema.builder
 -----------------------
 
 .. automodule:: cookbase.schema.builder
+   :private-members:
    :members:
    :undoc-members:
    :show-inheritance:

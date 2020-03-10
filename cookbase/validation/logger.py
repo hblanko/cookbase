@@ -1,13 +1,13 @@
+'''Module setting up a :mod:`logging` instance to report on the validation process.'''
 import logging.config
 import os
-import yaml
 
-config_file_path = os.path.join(
-    os.path.dirname(__file__),
-    "logger-config.yaml")
+from ruamel.yaml import YAML
 
-with open(config_file_path, "r") as f:
-    config = yaml.safe_load(f.read())
-    logging.config.dictConfig(config)
+config_file_path = os.path.join(os.path.dirname(__file__), 'logger-config.yaml')
 
-logger = logging.getLogger("Validator")
+with open(config_file_path) as f:
+    config = YAML().load(f)
+
+logging.config.dictConfig(config)
+logger = logging.getLogger('Validator')

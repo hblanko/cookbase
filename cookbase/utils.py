@@ -2,7 +2,9 @@ import argparse
 
 
 class _HelpAction(argparse._HelpAction):
-    '''Redefined class to print full help on the different commands.'''
+    '''Redefined class to print full help on the different commands.
+
+    '''
 
     def __call__(self, parser, _, __, ___):
         parser.print_help()
@@ -13,7 +15,7 @@ class _HelpAction(argparse._HelpAction):
             if isinstance(action, argparse._SubParsersAction)]
         for subparsers_action in subparsers_actions:
             for choice, subparser in subparsers_action.choices.items():
-                print("Command '{}'".format(choice))
+                print('Command "{}"'.format(choice))
                 print(subparser.format_help())
 
         parser.exit()

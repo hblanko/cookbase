@@ -5,7 +5,9 @@ from cookbase.validation.cbr import Validator
 
 
 class TestCbrValidator(unittest.TestCase):
-    '''Test class for the `cookbase.validation` package.'''
+    '''Test class for the :mod:`cookbase.validation.cbr` module.
+
+    '''
 
 #     def test__store(self):
 #         '''Testing the `Validator._store` method'''
@@ -13,14 +15,17 @@ class TestCbrValidator(unittest.TestCase):
 #         pass
 
     def test_validate_recipe(self):
-        '''Testing the `Validation.validate_recipe` method'''
-        recipe_path = "../resources/cbr/pizzaMozzarella.json"
+        '''Tests the :meth:`cookbase.validation.cbr.Validator.validate_recipe`
+        method.
+        '''
+        recipe_path = '../../resources/cbr/pizzaMozzarella.json'
         recipe = utils.parse_json_recipe(recipe_path)
         result = Validator().validate(recipe, store=False)
+
         for i in result.values():
             self.assertTrue(i)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

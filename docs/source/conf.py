@@ -13,6 +13,7 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../..'))
 
 
@@ -74,4 +75,4 @@ html_logo = '_static/new-logo-no-blue-green.png'
 rst_prolog = open('defs.rst', 'r').read()
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.git', 'defs.rst']
 extlinks = {'cbschema': ('http://landarltracker.com/schemas/%s',
-                      'CBSchema ')}
+                         'CBSchema ')}

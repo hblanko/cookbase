@@ -1,4 +1,2 @@
-"""A package to handle recipe graphs."""
-__all__ = [
-    'recipegraph'
-    ]
+'''A package that handles :doc:`Cookbase Recipe Graphs <cbrg>`.'''
+__all__ = ['recipegraph']

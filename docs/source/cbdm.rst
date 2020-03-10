@@ -260,8 +260,8 @@ following properties are general present:
   temperature, weight, position in the oven...
 - :code:`foodstuff` *("abstract")*: One or more properties that provide references
   either to ingredients or to the product of a previously performed (and finished)
-  process. Such references must be strings that match within the same CBR document to a
-  definition of either a **CBR Ingredient** or a **CBR Process**.
+  process. Such references must be strings that match within the same CBR document to
+  the key of either a **CBR Ingredient** or a **CBR Process**.
 
   Different names can be given to a :code:`foodstuff` property, in order to provide a
   better insight of its role within the context of a concrete process. This

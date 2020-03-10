@@ -1,7 +1,7 @@
-import requests
 from typing import Any, Dict, List, Union
 from urllib import parse
 
+import requests
 from jsonschema.validators import RefResolver
 
 
@@ -12,24 +12,26 @@ class SchemaRetriever():
 
     @staticmethod
     def retrieve(url: str) -> Dict[str, Any]:
-        '''Retrieves a complete Cookbase Format Schema
+        '''Retrieves a complete :doc:`Cookbase Schema (CBSchema)<cbdm>`.
 
         This function assumes JSON Schema validity.
 
-        :param str url: An absolute URI indicating the location of the JSON Schema object to retrieve
-        :return: A dictionary containing the requested JSON Schema object
+        :param str url: An absolute URI indicating the location of the `CBSchema <cbdm>`
+          to be retrieved
+        :return: A dictionary containing the requested `CBSchema <cbdm>`
         :rtype: dict[str, Any]
         '''
         retriever = SchemaRetriever(url)
         return retriever._resolve_schema(url)
 
     def _resolve_schema(self, url: str) -> Dict[str, Any]:
-        '''Resolves a JSON Schema object recursively
+        '''Resolves a `CBSchema <cbdm>` object recursively.
 
         This function assumes JSON Schema validity.
 
-        :param str url: An absolute URI indicating the location of the JSON Schema object to retrieve
-        :return: A dictionary containing the requested JSON Schema object
+        :param str url: An absolute URI indicating the location of the `CBSchema <cbdm>`
+          object to retrieve
+        :return: A dictionary containing the requested `CBSchema <cbdm>` object
         :rtype: dict[str, Any]
         '''
         schema = self._resolver.resolve_from_url(url)
@@ -68,15 +70,15 @@ if __name__ == '__main__':
     import time
 #     import timeit
 #     print(timeit.timeit(
-#         "SchemaRetriever.retrieve('http://www.landarltracker.com/schemas/cbr.json')",
-#         "from cookbase.gui.utils import SchemaRetriever",
+#         'SchemaRetriever.retrieve('http://www.landarltracker.com/schemas/cbr.json')',
+#         'from cookbase.gui.utils import SchemaRetriever',
 #         number=2))
     t = time.time()
     s = SchemaRetriever.retrieve(
         'http://www.landarltracker.com/schemas/cba.json')
     print(time.time() - t)
-    if "definitions" in s:
-        del s["definitions"]
-    if "examples" in s:
-        del s["examples"]
+    if 'definitions' in s:
+        del s['definitions']
+    if 'examples' in s:
+        del s['examples']
     pprint(s)
