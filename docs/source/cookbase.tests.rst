@@ -24,6 +24,15 @@ cookbase.tests.test\_cbr
    :show-inheritance:
 
 
+cookbase.tests.test\_db
+-----------------------------
+
+.. automodule:: cookbase.tests.test_db
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 cookbase.tests.test\_termcode
 -----------------------------
 
