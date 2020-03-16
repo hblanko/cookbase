@@ -1,13 +1,13 @@
 from typing import Any, Dict, List, Union
-from urllib import parse
 
 import requests
+import uritools
 from jsonschema.validators import RefResolver
 
 
 class SchemaRetriever():
 
-    def __init__(self, url):
+    def __init__(self, url: str):
         self._resolver = RefResolver.from_schema(requests.get(url).json())
 
     @staticmethod
@@ -49,8 +49,8 @@ class SchemaRetriever():
                         if v.startswith('processes/'):
                             pass
                         else:
-                            if not bool(parse.urlparse(v).netloc):
-                                v = parse.urljoin(url, v)
+                            if not uritools.urisplit(v).gethost():
+                                v = uritools.urijoin(url, v)
                             retrieved_object = self._resolve_schema(v)
 
                 if retrieved_object is not None:
@@ -68,17 +68,15 @@ class SchemaRetriever():
 if __name__ == '__main__':
     from pprint import pprint
     import time
-#     import timeit
-#     print(timeit.timeit(
-#         'SchemaRetriever.retrieve('http://www.landarltracker.com/schemas/cbr.json')',
-#         'from cookbase.gui.utils import SchemaRetriever',
-#         number=2))
+
     t = time.time()
-    s = SchemaRetriever.retrieve(
-        'http://www.landarltracker.com/schemas/cba.json')
+    s = SchemaRetriever.retrieve('http://www.landarltracker.com/schemas/cba/cba.json')
     print(time.time() - t)
-    if 'definitions' in s:
-        del s['definitions']
+
+    if '$defs' in s:
+        del s['$defs']
+
     if 'examples' in s:
         del s['examples']
+
     pprint(s)

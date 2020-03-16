@@ -15,7 +15,7 @@ class _HelpAction(argparse._HelpAction):
             if isinstance(action, argparse._SubParsersAction)]
         for subparsers_action in subparsers_actions:
             for choice, subparser in subparsers_action.choices.items():
-                print('Command "{}"'.format(choice))
+                print(f'Command "{choice}"')
                 print(subparser.format_help())
 
         parser.exit()

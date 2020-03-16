@@ -1,10 +1,9 @@
 from typing import Any, Dict, Hashable, List
 
 import networkx as nx
-from networkx.readwrite import json_graph
-
+from cookbase.logging import logger
 from cookbase.validation.globals import Definitions
-from cookbase.validation.logger import logger
+from networkx.readwrite import json_graph
 
 
 class RecipeGraph():
@@ -78,8 +77,8 @@ class RecipeGraph():
 
         # Adding foodstuff edges
         def add_foodstuff_edge(foodstuff_ref, process_ref):
-            if foodstuff_ref in self.get_ingredients() or \
-                    foodstuff_ref in self.get_processes():
+            if foodstuff_ref in self.get_ingredients() or (foodstuff_ref in
+                                                           self.get_processes()):
                 self.g.add_edge(foodstuff_ref, process_ref)
             else:
                 self._pending_processes_edges.append((foodstuff_ref, process_ref))
@@ -95,12 +94,15 @@ class RecipeGraph():
     def resolve_pending_processes_edges(self) -> None:
         '''Attempts to add edges that could not have been added to the graph before.'''
         not_found = []
+
         for i in range(len(self._pending_processes_edges)):
             in_process, out_process = self._pending_processes_edges[i]
+
             if in_process in self.get_processes():
                 self.g.add_edge(in_process, out_process)
             else:
                 not_found.append(self._pending_processes_edges[i])
+
         self._pending_processes_edges = not_found
 
     def clear(self) -> None:
@@ -117,19 +119,25 @@ class RecipeGraph():
         '''
         self.clear()
         self.g.graph['name'] = data['info']['name']
+
         for k, v in data['ingredients'].items():
             self.add_ingredient(k, v)
+
         for k, v in data['appliances'].items():
             self.add_appliance(k, v)
+
         for k, v in data['preparation'].items():
             self.add_process(k, v)
+
         self.resolve_pending_processes_edges()
+
         for in_foodstuff, out_process in self._pending_processes_edges:
             self.g.add_node(in_foodstuff, type='unref_foodstuff')
             self.g.add_edge(in_foodstuff, out_process)
             logger.error(
-                'Neither ingredient nor process found with reference \'' +
-                in_foodstuff + '\'')
+                'Neither ingredient nor process found with reference '
+                f'\'{in_foodstuff}\''
+            )
 
     def aggregated_appliances_graph(self) -> nx.DiGraph:
         '''Returns a graph where each node represents a concurrent preparation path of a
@@ -166,6 +174,7 @@ class RecipeGraph():
             for ag_id, p in current_ag_leaves.items():
                 appliances = {}
                 s = p
+
                 while True:
                     # Build inverted index on appliance for given process path
                     for app_ref in self.g.nodes[s]['appliances'].keys():
@@ -176,8 +185,10 @@ class RecipeGraph():
 
                     if s in pj_processes or s in leaf_processes:
                         break
+
                     # Not path-joining nor leaf: check if path continues
                     t = next(self.g.successors(s))
+
                     if t in pj_processes:
                         break
                     else:
@@ -191,6 +202,7 @@ class RecipeGraph():
 
             for n in ag_nodes_already_generated:
                 del current_ag_leaves[n]
+
             for ag_id, v in pg_nodes_to_generate:
                 if v not in first_pg_to_ag:
                     aggregated_graph.add_edge(ag_id, ag_id_counter)

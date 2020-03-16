@@ -21,7 +21,7 @@ def check_for_duplicate_keys(ordered_pairs: List[Tuple[Hashable, Any]]) -> Dict:
     dict_out = {}
     for key, val in ordered_pairs:
         if key in dict_out:
-            raise ValueError('duplicate key: ' + key)
+            raise ValueError(f'duplicate key: {key}')
         else:
             dict_out[key] = val
     return dict_out
@@ -53,7 +53,7 @@ def populate_collection(collection_dir: str, object_type: str) -> None:
     docs = []
 
     for e in os.scandir(collection_dir):
-        if e.path.endswith('.' + object_type):
+        if e.path.endswith(f'.{object_type}'):
             with open(e.path) as f:
                 docs.append(json.load(f, object_hook=underscore_id))
 

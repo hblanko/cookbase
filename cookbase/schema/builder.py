@@ -19,10 +19,9 @@ from typing import Any, Dict
 
 import paramiko
 import uritools
+from cookbase.utils import _HelpAction, _SortingDict
 from paramiko.client import SSHClient
 from ruamel.yaml import YAML
-
-from cookbase.utils import _HelpAction, _SortingDict
 
 
 class _SSHConnection():
@@ -443,13 +442,11 @@ def generate_cbr_process_collection():
     with open(config['cbr_process']['types_path']) as f:
         d = YAML().load(f)
 
-    def build_ref(entry): return build_rel_path(
-        os.path.join(
+    def build_ref(entry):
+        return uritools.urijoin(build_rel_path(os.path.join(
             config['build_params']['cbr_process_collection_dir'],
             'dummy'
-        ),
-        config[entry['ns']]['defs_path']
-    ) + '#' + entry['def']
+        ), config[entry['ns']]['defs_path']), f'#{entry["def"]}')
 
     defs = {i: build_ref(d[i]) for i in d.keys()}
 
@@ -516,8 +513,9 @@ def generate_cbr_process_collection_item(cbp: Dict[str, Any], defs: Dict[str, st
         )
     )
     schema['title'] = 'Cookbase Recipe Process "' + process_name + '"'
-    schema['description'] = 'Schema defining the format of the CBR "' + \
-        process_name + '" Process.'
+    schema['description'] = (
+        f'Schema defining the format of the CBR "{process_name}" Process.'
+    )
     schema['type'] = 'object'
     schema['additionalProperties'] = False
     schema['required'] = ['name', 'cbpId']
@@ -612,9 +610,11 @@ def generate_cbr_process_main_schema():
     schema['$schema'] = config['common']['json_schema_uri']
     schema['$id'] = build_abs_schema_uri(config['cbr']['cbr_process_path'])
     schema['title'] = 'Cookbase Recipe Process - v1.0'
-    schema['description'] = 'Schema defining the format of the Cookbase Recipe' + \
-        ' (CBR) Process. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#' + \
-        'cbr-preparation to read the documentation.'
+    schema['description'] = (
+        'Schema defining the format of the Cookbase Recipe (CBR) Process. Visit '
+        'https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-preparation to read '
+        'the documentation.'
+    )
     schema['oneOf'] = []
     collection_base_path = os.path.join(
         uritools.urisplit(config['build_params']['root_build_dir']).path,
