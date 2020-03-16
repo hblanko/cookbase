@@ -27,7 +27,7 @@ class DBClientConnectionError(DBHandlerException):
         self.db_id = db_id
 
     def __str__(self):
-        return 'Connection failure with database \'' + self.db_id + '\'.'
+        return f'Connection failure with database \'{self.db_id}\'.'
 
 
 class DBNotRegisteredError(DBHandlerException):
@@ -42,8 +42,10 @@ class DBNotRegisteredError(DBHandlerException):
         self.db_id = db_id
 
     def __str__(self):
-        return 'There is no \'' + self.db_id + '\' database registered on ' + \
-            self.db_handler_class_name + '.'
+        return (
+            f'There is no \'{self.db_id}\' database registered on '
+            f'{self.db_handler_class_name}.'
+        )
 
 
 class InvalidDBTypeError(DBHandlerException):
@@ -58,4 +60,4 @@ class InvalidDBTypeError(DBHandlerException):
         self.invalid_db_type = invalid_db_type
 
     def __str__(self):
-        return '\'' + self.invalid_db_type + '\' is not a valid database type.'
+        return f'\'{self.invalid_db_type}\' is not a valid database type.'

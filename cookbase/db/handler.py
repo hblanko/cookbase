@@ -1,10 +1,10 @@
 import os
 import pathlib
-from collections import namedtuple
-from typing import Any, Dict, NamedTuple, Optional, Union
+from typing import Any, Dict, Optional, Union
 
-import cookbase
 import pymongo
+import uritools
+from attr import attrib, attrs
 from bson.objectid import ObjectId
 from cookbase.db.exceptions import (BadCBRGraphError, DBClientConnectionError,
                                     DBNotRegisteredError, InvalidDBTypeError)
@@ -19,7 +19,7 @@ class DBHandler():
       <https://docs.mongodb.com/manual/reference/connection-string/>`_ to use as
       default database
     :param str db_type: An identifier of the database connection to use, defaults to
-      :attr:`DBTypes.mongodb`
+      :attr:`DBTypes.MONGODB`
     :param str db_name: The name of the database to connect to, defaults to
       :const:`'cookbase'`
 
@@ -40,46 +40,42 @@ class DBHandler():
         '''Helper class registering the different types of databases that are handled by
         :class:`cookbase.db.handler.DBHandler`.
         '''
-        mongodb: str = 'mongodb'
+        MONGODB: str = 'mongodb'
 
-    class InsertCBRResult(NamedTuple):
-        '''A :mod:`namedtuple` containing the results from the :meth:`insert_cbr`
-        method.
+    @attrs
+    class InsertCBRResult():
+        '''A class containing the results from the :meth:`insert_cbr` method.
+
+        :param cbr_id: Field taking an integer representing the database identifier of
+          the inserted :ref:`Cookbase Recipe (CBR) <cbr>`, or a :const:`False` boolean
+          value in case of an unsuccessful insertion
+        :type cbr_id: int or bool
+        :param cbrgraph_id: Field taking an integer representing the database identifier
+          of the inserted :doc:`Cookbase Recipe Graph (CBRGraph) <cbrg>`, a
+          :const:`False` boolean value in case of an unsuccessful insertion, or
+          :const:`None` if :doc:`CBRGraph <cbrg>` insertion was not performed
+        :type cbrgraph_id: int or bool, optional
 
         '''
-        cbr_id: Union[int, bool]
-        cbrgraph_id: Optional[Union[int, bool]] = None
+        cbr_id: Union[int, bool] = attrib()
+        cbrgraph_id: Optional[Union[int, bool]] = attrib(default=None)
 
-    InsertCBRResult.cbr_id.__doc__ = (
-        'Field taking an integer representing the '
-        'database identifier of the inserted :ref:`Cookbase Recipe (CBR) <cbr>`, or a '
-        ':const:`False` boolean value in case of an unsuccessful '
-        'insertion\n\n**type:** int or bool'
-    )
-    InsertCBRResult.cbrgraph_id.__doc__ = (
-        'Field taking an integer representing the '
-        'database identifier of the inserted :doc:`Cookbase Recipe Graph (CBRGraph) '
-        '<cbrg>`, a :const:`False` boolean value in case of an unsuccessful insertion, '
-        'or :const:`None` if :doc:`CBRGraph <cbrg>` insertion was not '
-        'performed\n\n**type:** int or bool, optional'
-    )
-
-    def __init__(self, mongodb_url: str, db_type: str = DBTypes.mongodb,
+    def __init__(self, mongodb_url: str, db_type: str = DBTypes.MONGODB,
                  db_name: str = 'cookbase'):
         '''Constructor method.'''
-        if db_type == self.DBTypes.mongodb:
-            self._default_db_id = db_type + ':' + db_name
+        if db_type == self.DBTypes.MONGODB:
+            self._default_db_id: str = f'{db_type}:{db_name}'
 
             try:
-                client = pymongo.MongoClient(mongodb_url + '/' + db_name)
+                client = pymongo.MongoClient(uritools.urijoin(mongodb_url, db_name))
                 client.admin.command('ismaster')
             except pymongo.errors.PyMongoError:
                 import sys
                 raise DBClientConnectionError(
                     self._default_db_id).with_traceback(sys.exc_info()[2])
 
-            self._default_db = client[db_name]
-            self._connections = {self._default_db_id: self._default_db}
+            self._default_db: Any = client[db_name]
+            self._connections: Dict[str, Any] = {self._default_db_id: self._default_db}
         else:
             raise InvalidDBTypeError(db_type)
 
@@ -98,7 +94,7 @@ class DBHandler():
           registered
         '''
         db_type = db_id.split(':')[0]
-        if db_type == self.DBTypes.mongodb:
+        if db_type == self.DBTypes.MONGODB:
             if db_id in self._connections:
                 return self._connections[db_id].client
             else:
@@ -148,14 +144,14 @@ class DBHandler():
         return self._default_db.cbr.find_one(query)
 
     def insert_cbr(self, cbr: Dict[str, Any],
-                   graph: Optional[Dict[str, Any]] = None) -> Optional[NamedTuple]:
+                   graph: Optional[Dict[str, Any]] = None) -> InsertCBRResult:
         '''Inserts a :ref:`CBR <cbr>` into database with its :doc:`CBRGraph <cbrg>` (if
         given).
 
         :param cbr: A dictionary representing the :ref:`CBR <cbr>`
         :type cbr: dict[str, Any]
         :param graph: A dictionary representing the :doc:`CBRGraph <cbrg>`
-        :type graph: dict[str, Any], optional
+        :type graph: dict[str, Any] or None, optional
         :return: A :class:`InsertCBRResult` object holding the insertion results.
         :rtype: InsertCBRResult
 
@@ -169,9 +165,9 @@ class DBHandler():
             raise
 
         if not r_cbr.acknowledged:
-            return self.InsertCBRResult(False, None)
+            return self.InsertCBRResult(False)
         elif not graph:
-            return self.InsertCBRResult(r_cbr.inserted_id, None)
+            return self.InsertCBRResult(r_cbr.inserted_id)
         else:
             graph['_id'] = ObjectId(str(r_cbr.inserted_id))
 
@@ -191,33 +187,60 @@ class DBHandler():
             else:
                 return self.InsertCBRResult(r_cbr.inserted_id, r_graph.inserted_id)
 
+    def close_connections(self):
+        '''Closes all connections registered by this :class:`DBHandler` object.'''
+        try:
+            for k, v in self._connections.items():
+                if k.split(':')[0] == self.DBTypes.MONGODB:
+                    v.client.close()
 
-def get_handler(credentials_path=os.path.join(
-        pathlib.Path(__file__).parent.absolute(), '../../credentials.txt')):
+            self._connections.clear()
+        except AttributeError:
+            pass
+
+    def __del__(self):
+        '''Destructor method.'''
+        self.close_connections()
+
+
+def get_handler(credentials_path: Optional[str] = None,
+                force_new_instance: bool = False):
     '''Provides the database handler instance.
 
-    The first time this function is called, a :class:`DBHandler` object is instantiated
-    and returned according to the credentials provided in the file located at
-    `credentials_path`; if called after the first time, it returns the already available
-    instance, disregarding the given argument.
+    The first time this function is called (or if the `force_new_instance` flag is set
+    to :const:`True`) a :class:`DBHandler` object is instantiated and returned according
+    to the credentials provided in the file located at `credentials_path`; if called
+    after the first time (and being the `force_new_instance` flag set to
+    :const:`False`), it returns the already available instance, disregarding the
+    `credentials_path` argument.
 
-    :param credentials_path: A dictionary representing the :ref:`CBR <cbr>`
-    :type credentials_path: str
-    :return: A :class:`DBHandler` instance connected to the default database.
+    :param credentials_path: Path to the file containing the connection credentials
+    :type credentials_path: str or None, optional
+    :param force_new_instance: A flag indicating whether a new database handler
+      instance must be initialized, defaults to :const:`False`
+    :type force_new_instance: bool, optional
+    :return: A :class:`DBHandler` instance connected to the default database
     :rtype: DBHandler
     '''
-    if not cookbase.db.handler._db_handler:
+    global _db_handler
+
+    if not _db_handler or force_new_instance:
+        if not credentials_path:
+            credentials_path = os.path.join(pathlib.Path(__file__).parent.absolute(),
+                                            '../../credentials.txt')
+
         with open(credentials_path) as f:
             mongodb_url = f.readline()
 
-        cookbase.db.handler._db_handler = DBHandler(mongodb_url, 'mongodb', 'cookbase')
+        _db_handler = DBHandler(mongodb_url, 'mongodb', 'cookbase')
 
-    return cookbase.db.handler._db_handler
+    return _db_handler
 
 
 _db_handler = None
 
 
 if __name__ == '__main__':
-    test_db_handler = init()
-    print(test_db_handler.get_cbr({'info.name': 'Pizza mozzarella'}))
+    from pprint import pprint
+
+    pprint(get_handler().get_cbr({'info.name': 'Pizza mozzarella'}))

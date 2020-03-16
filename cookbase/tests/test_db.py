@@ -2,7 +2,6 @@ import os
 import pathlib
 import unittest
 
-import cookbase
 import pymongo
 from cookbase.db import exceptions, handler, utils
 
@@ -11,14 +10,16 @@ class TestDBHandler(unittest.TestCase):
     '''Test class for the :mod:`cookbase.db.handler` module.
 
     '''
+    test_exhaustive = True
 
     def setUp(self):
         self.db_handler = handler.get_handler()
 
+    @unittest.skipIf(not test_exhaustive, 'test___init__() explicitly skipped')
     def test___init__(self):
         '''Tests the :class:`cookbase.db.handler.DBHandler` constructor method.'''
         #===============================================================================
-        # # -- Testing cookbase.db.exceptions.DBClientConnectionError ------------------
+        # # -- Testing cookbase.db.exceptions.DBClientConnectionError --
         # # INFO: Disallowed as it triggers a time-out wait
         #===============================================================================
         # with self.assertRaises(exceptions.DBClientConnectionError):
@@ -32,10 +33,10 @@ class TestDBHandler(unittest.TestCase):
             mongodb_url = f.readline()
 
         # -- Testing cookbase.db.exceptions.DBClientConnectionError (invalid database
-        # -- name) ---------------------------------------------------------------------
+        # -- name) -----------------------------------------------------
         with self.assertRaises(exceptions.DBClientConnectionError):
             handler.DBHandler(mongodb_url,
-                              db_type=handler.DBHandler.DBTypes.mongodb,
+                              db_type=handler.DBHandler.DBTypes.MONGODB,
                               db_name='invalid$db$name')
 
         # -- Testing cookbase.db.exceptions.InvalidDBTypeError (invalid database type) -
@@ -92,7 +93,7 @@ class TestDBHandler(unittest.TestCase):
         test_dict = {'unit': 'test'}
         test_graph_dict = {'graph': {}}
 
-        # -- Testing correct result ----------------------------------------------------
+        # -- Testing correct result ------------------------------------
         results = self.db_handler.insert_cbr(test_dict, test_graph_dict)
         expected_results = handler.DBHandler.InsertCBRResult(
             test_dict['_id'], test_graph_dict['_id'])
@@ -105,12 +106,12 @@ class TestDBHandler(unittest.TestCase):
             self.db_handler._default_db.cbrgraphs.delete_one(
                 {'_id': results.cbrgraph_id})
 
-        # -- Testing correct result (without CBRGraph insertion) -----------------------
+        # -- Testing correct result (without CBRGraph insertion) -------
         results = self.db_handler.insert_cbr(test_dict)
         expected_results = handler.DBHandler.InsertCBRResult(test_dict['_id'])
         self.assertEqual(results, expected_results)
 
-        # -- Testing pymongo.errors.PyMongoError (DuplicateKeyError) -------------------
+        # -- Testing pymongo.errors.PyMongoError (DuplicateKeyError) ---
         from bson.objectid import ObjectId
 
         with self.assertRaises(pymongo.errors.PyMongoError) as cm:
@@ -128,7 +129,7 @@ class TestDBHandler(unittest.TestCase):
             self.db_handler._default_db.cbrgraphs.delete_one(
                 {'_id': results.cbrgraph_id})
 
-        # -- Testing exceptions.BadCBRGraphError (invalid CBRGraph insertion) ----------
+        # -- Testing exceptions.BadCBRGraphError (invalid CBRGraph inser
         expected_results = handler.DBHandler.InsertCBRResult(test_dict['_id'])
 
         with self.assertRaises(exceptions.BadCBRGraphError):
@@ -143,6 +144,15 @@ class TestDBHandler(unittest.TestCase):
                 {'_id': results.cbrgraph_id})
 
         # TODO: Cases where the insertions are not acknowledged are not tested
+
+    @unittest.skipIf(not test_exhaustive, 'test_close_connections() explicitly skipped')
+    def test_close_connections(self):
+        '''Tests the :meth:`cookbase.db.handler.DBHandler.close_connections` method.'''
+        self.db_handler.close_connections()
+        self.assertEqual(self.db_handler._connections, {})
+
+        # Re-instantiate the database handler
+        self.db_handler = handler.get_handler(force_new_instance=True)
 
 
 if __name__ == '__main__':
