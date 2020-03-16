@@ -19,8 +19,10 @@ class ApplianceNotAvailableError(CBRValidationException):
         self.process = process
 
     def __str__(self):
-        return 'Appliance \'' + self.appliance + \
-            '\' is not available for the process\'' + self.process + '\''
+        return (
+            f'Appliance \'{self.appliance}\' is not available for the process '
+            f'\'{self.process}\''
+        )
 
 
 class NecessaryAppliancesError(CBRValidationException):
@@ -35,8 +37,10 @@ class NecessaryAppliancesError(CBRValidationException):
         self.process = process
 
     def __str__(self):
-        return 'Definition requirements of necessary appliances sets not met for ' +
-        'process \'' + self.process + '\''
+        return (
+            'Definition requirements of necessary appliances sets not met for '
+            f'process \'{self.process}\''
+        )
 
 
 class NoApplianceUsedAfterError(CBRValidationException):
@@ -51,7 +55,7 @@ class NoApplianceUsedAfterError(CBRValidationException):
         self.process = process
 
     def __str__(self):
-        return 'No appliance remains used after process \'' + self.process + '\''
+        return f'No appliance remains used after process \'{self.process}\''
 
 
 class PreparationFlowError(CBRValidationException):
@@ -75,7 +79,7 @@ class PreparationKeyError(CBRValidationException):
         self.key = key
 
     def __str__(self):
-        return 'Bad identifier ' + self.key
+        return f'Bad identifier {self.key}'
 
 
 class IngredientsNotUsedError(CBRValidationException):
@@ -98,9 +102,9 @@ class IngredientsNotUsedError(CBRValidationException):
                 if s != '':
                     s += ' ,'
 
-                s += '\'' + i + '\''
+                s += f'\'{i}\''
 
-        return 'Ingredient/s ' + s + ' not used'
+        return f'Ingredient/s {s} not used'
 
 
 class StorageError(CBRValidationException):

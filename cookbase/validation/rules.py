@@ -11,10 +11,62 @@ collapsed into a single function.
 '''
 from typing import Any, Dict, List
 
-from cookbase.db.handler import db_handler
+from attr import attrib, attrs
+from cookbase.db import handler
 from cookbase.graph.recipegraph import RecipeGraph
+from cookbase.logging import logger
 from cookbase.validation.globals import Definitions
-from cookbase.validation.logger import logger
+
+
+@attrs
+class AppliedRuleResult():
+    '''A class containing the results of applying a validation rule defined in the
+    :mod:`cookbase.validation.rules` module.
+
+    :param errors: Field containing all the errors produced during the application
+      of a rule, defaults to an empty list :const:`[]`
+    :type errors: list[str], optional
+    :param warnings: Field containing all the warnings produced during the application
+      of a rule, defaults to an empty list :const:`[]`
+    :type warnings: list[str], optional
+
+    '''
+
+    errors: List[str] = attrib(default=[])
+    warnings: List[str] = attrib(default=[])
+
+    def has_passed(self, strict: bool = True) -> bool:
+        '''Indicates whether the application of a rule resulted successful or not.
+
+        The `strict` flag indicates the policy for the evaluation of the rule
+        application results: if set to :const:`True` (the default), any registered
+        warning or error will cause the evaluation not to be passed; if set to
+        :const:`False`, only registering errors --disregarding on warnings-- will result
+        in a negative evaluation.
+
+        :param strict: A flag indicating the policy for the results evaluation,
+          defaults to :const:`True`
+        :type strict: bool, optional
+        :return: A value indicating whether the application of a rule resulted
+          successful (returning :const:`True`) or unsuccessful (returning
+          :const:`False`)
+        :rtype: bool
+        '''
+
+        if not strict:
+            if len(self.errors) == 0:
+                return True
+            else:
+                return False
+        else:
+            if len(self.errors) == 0 and len(self.warnings) == 0:
+                return True
+            else:
+                return False
+
+    def include_result(self, result: 'AppliedRuleResult'):
+        self.errors.extend(result.errors)
+        self.warnings.extend(result.warnings)
 
 
 class Semantics():
@@ -22,11 +74,11 @@ class Semantics():
     validate a :ref:`Cookbase Recipe (CBR) <cbr>`.
 
     All messages notifying validation errors or warnings are passed to the
-    :data:`cookbase.validation.logger.logger` instance.
+    :data:`cookbase.logging.logger` instance.
 
     '''
     @staticmethod
-    def ingredients_are_valid(ingredients: Dict[str, Any]) -> bool:
+    def ingredients_are_valid(ingredients: Dict[str, Any]) -> AppliedRuleResult:
         '''Checks whether the :ref:`CBR Ingredients <cbr-ingredients>` present in a
         :ref:`CBR <cbr>` are correct and their respective :ref:`CBIs <cbi>` exist in the
         database.
@@ -42,33 +94,37 @@ class Semantics():
           from the :ref:`CBR <cbr>` to be validated, which holds a set of :ref:`CBR
           Ingredients <cbr-ingredients>`
         :type ingredients: dict[str, Any]
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult()
+        db_handler = handler.get_handler()
 
         for i in ingredients.values():
             cbi = db_handler.get_cbi(i['cbiId'])
             if cbi is None:
-                ret = False
-                logger.error('CBI with id ' + str(i['cbiId']) +
-                             ' does not exist in database')
+                e = f'CBI with id {i["cbiId"]} does not exist in database'
+                result.errors.append(e)
+                logger.error(e)
             else:
                 cbi_names = cbi['name'][i['name']['language']]
 
                 if (isinstance(cbi_names, list) and
                         i['name']['text'] not in cbi_names) or \
                         (isinstance(cbi_names, str) and i['name']['text'] != cbi_names):
-                    ret = False
-                    logger.warning('Ingredient name "' + i['name']['text'] +
-                                   '" does not match any available name for CBI ' +
-                                   str(i['cbiId']))
+                    w = (
+                        f'Ingredient name {i["name"]["text"]} does not match any '
+                        f'available name for CBI {i["cbiId"]}'
+                    )
+                    result.warnings.append(w)
+                    logger.warning(w)
 
-        return ret
+        return result
 
     @staticmethod
-    def appliance_is_valid(appliance: Dict[str, Any], cba: Dict[str, Any]) -> bool:
+    def appliance_is_valid(appliance: Dict[str, Any],
+                           cba: Dict[str, Any]) -> AppliedRuleResult:
         '''Checks whether a :ref:`CBR Appliance <cbr-appliances>` is valid according to
         a given :ref:`Cookbase Appliance (CBA) <cba>`.
 
@@ -85,34 +141,39 @@ class Semantics():
         :param cba: A dictionary containing the :ref:`CBA <cba>` referred by the
           :ref:`CBR Appliance <cbr-appliances>` contained in `appliance`
         :type cba: dict[str, Any]
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult()
 
         try:
             cba_names = cba['name'][appliance['name']['language']]
         except KeyError as ke:
-            ret = False
-            logger.warning('Language code \'' + ke.__str__() + '\' of appliance "' +
-                           appliance['name']['text'] +
-                           '" does not match any available language code for CBA ' +
-                           str(appliance['cbaId']))
+            w = (
+                f'Language code \'{ke.__str__()}\' of appliance '
+                f'"{appliance["name"]["text"]}" does not match any available language '
+                f'code for CBA {appliance["cbaId"]}'
+            )
+            result.warnings.append(w)
+            logger.warning(w)
         else:
             if (isinstance(cba_names, list) and
                     appliance['name']['text'] not in cba_names) or \
                     (isinstance(cba_names, str) and
                      appliance['name']['text'] != cba_names):
-                ret = False
-                logger.warning('Appliance name "' + appliance['name']['text'] +
-                               '" does not match any available name for CBA ' +
-                               str(appliance['cbaId']))
+                w = (
+                    f'Appliance name "{appliance["name"]["text"]}" does not match any '
+                    f'available name for CBA {appliance["cbaId"]}'
+                )
+                result.warnings.append(w)
+                logger.warning(w)
 
-        return ret
+        return result
 
     @staticmethod
-    def process_is_valid(process: Dict[str, Any], cbp: Dict[str, Any]) -> bool:
+    def process_is_valid(process: Dict[str, Any],
+                         cbp: Dict[str, Any]) -> AppliedRuleResult:
         '''Checks whether a :ref:`CBR Process <cbr-preparation>` is valid according to
         a given :ref:`Cookbase Process (CBP) <cbp>`.
 
@@ -129,34 +190,38 @@ class Semantics():
         :param cbp: A dictionary containing the :ref:`CBP <cbp>` referred by the
           :ref:`CBR Process <cbr-preparation>` contained in `process`
         :type cbp: dict[str, Any]
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult()
 
         try:
             cbp_names = cbp['name'][process['name']['language']]
         except KeyError as ke:
-            ret = False
-            logger.warning('Language code \'' + ke.__str__() + '\' of process "' +
-                           process['name']['text'] +
-                           '" does not match any available language code for CBP ' +
-                           str(process['cbpId']))
+            w = (
+                f'Language code \'{ke.__str__()}\' of process '
+                f'"{process["name"]["text"]}" does not match any available language '
+                f'code for CBP {process["cbpId"]}'
+            )
+            result.warnings.append(w)
+            logger.warning(w)
         else:
             if (isinstance(cbp_names, list) and
                     process['name']['text'] not in cbp_names) or \
                     (isinstance(cbp_names, str) and
                      process['name']['text'] != cbp_names):
-                ret = False
-                logger.warning('Process name "' + process['name']['text'] +
-                               '" does not match any available name for CBP ' +
-                               str(process['cbpId']))
+                w = (
+                    f'Process name "{process["name"]["text"]}" does not match any '
+                    f'available name for CBP {process["cbpId"]}'
+                )
+                result.warnings.append(w)
+                logger.warning(w)
 
-        return ret
+        return result
 
     @staticmethod
-    def processes_are_valid(processes: Dict[str, Any]) -> bool:
+    def processes_are_valid(processes: Dict[str, Any]) -> AppliedRuleResult:
         '''Checks whether the :ref:`CBR Processes <cbr-preparation>` present in a
         :ref:`CBR <cbr>` are correct and their respective :ref:`CBPs <cbp>` exist in the
         database.
@@ -176,30 +241,32 @@ class Semantics():
           from the :ref:`CBR <cbr>` to be validated, which holds a set of :ref:`CBR
           Processes <cbr-preparation>`
         :type processes: dict[str, Any]
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult
+        db_handler = handler.get_handler()
 
         for i in processes.values():
             cbp = db_handler.get_cbp(i['cbpId'])
 
             if cbp is None:
-                ret = False
-                logger.error('CBP with id ' + str(i['cbpId']) +
-                             ' does not exist in database')
+                e = f'CBP with id {i["cbpId"]} does not exist in database'
+                result.errors.append(e)
+                logger.error(e)
             else:
-                ret = ret and Semantics.process_is_valid(i, cbp)
+                partial_result = Semantics.process_is_valid(i, cbp)
+                result.include_result(partial_result)
 
-        return ret
+        return result
 
     @staticmethod
     def foodstuff_and_appliance_references_are_consistent(
             ingredients: Dict[str, Any],
             appliances: Dict[str, Any],
             processes: Dict[str, Any]
-    ) -> bool:
+    ) -> AppliedRuleResult:
         '''Checks for the consistency of a :ref:`CBR <cbr>` on the scope of its
         :ref:`CBR Ingredient <cbr-ingredients>`, :ref:`CBR Appliance <cbr-appliances>`
         and :ref:`CBR Process <cbr-preparation>` references.
@@ -241,11 +308,11 @@ class Semantics():
           from the :ref:`CBR <cbr>` to be validated, which holds a set of :ref:`CBR
           Processes <cbr-preparation>`
         :type processes: dict[str, Any]
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult()
         used_ingredients = set()
         used_appliances = set()
 
@@ -257,29 +324,34 @@ class Semantics():
                 if isinstance(r, str):
                     if r not in ingredients.keys():
                         if r not in processes.keys():
-                            ret = False
-                            logger.error('Foodstuff reference \'' + r + '\' appears ' +
-                                         'neither in \'ingredients\' nor in ' +
-                                         '\'preparation\' section')
+                            e = (
+                                f'Foodstuff reference \'{r}\' appears neither in '
+                                f'\'ingredients\' nor in \'preparation\' section'
+                            )
+                            result.errors.append(e)
+                            logger.error(e)
                     else:
                         used_ingredients.add(r)
                 else:
                     for q in r:
                         if q not in ingredients.keys():
                             if q not in processes.keys():
-                                ret = False
-                                logger.error('Foodstuff reference \'' + q +
-                                             '\' appears neither in \'ingredients\' ' +
-                                             'nor in \'preparation\' section')
+                                e = (
+                                    f'Foodstuff reference \'{q}\' appears neither in '
+                                    f'\'ingredients\' nor in \'preparation\' section'
+                                )
                         else:
                             used_ingredients.add(q)
 
             # Checking appliances references
             for a in i['appliances']:
                 if a['appliance'] not in appliances.keys():
-                    ret = False
-                    logger.error('Appliance reference \'' + a['appliance'] +
-                                 '\' does not appear in \'appliances\' section')
+                    e = (
+                        f'Appliance reference \'{a["appliance"]}\' does not appear in '
+                        f'\'appliances\' section'
+                    )
+                    result.errors.append(e)
+                    logger.error(e)
                 else:
                     used_appliances.add(a['appliance'])
 
@@ -287,22 +359,23 @@ class Semantics():
         diff = ingredients.keys() - used_ingredients
 
         for d in diff:
-            ret = False
-            logger.warning('Ingredient \'' + d +
-                           '\' is not used in \'preparation\' section')
+            w = f'Ingredient \'{d}\' is not used in \'preparation\' section'
+            result.warnings.append(w)
+            logger.warning(w)
 
         # Checking unused appliances
         diff = appliances.keys() - used_appliances
 
         for d in diff:
-            ret = False
-            logger.warning('Appliance \'' + d +
-                           '\' is not used in \'preparation\' section')
+            w = f'Appliance \'{d}\' is not used in \'preparation\' section'
+            result.warnings.append(w)
+            logger.warning(w)
 
-        return ret
+        return result
 
     @staticmethod
-    def cbas_satisfy_cbp(cbas: List[Dict[str, Any]], cbp: Dict[str, Any]) -> bool:
+    def cbas_satisfy_cbp(cbas: List[Dict[str, Any]],
+                         cbp: Dict[str, Any]) -> AppliedRuleResult:
         '''Checks if a set of :ref:`CBAs <cba>` satisfy at least one of the condition
         clauses provided by the :code:`data.validation.conditions.requiredAppliances`
         property of a given :ref:`CBP <cbp>`.
@@ -314,11 +387,12 @@ class Semantics():
         :param cbp: The dictionary containing the :ref:`CBP <cbp>` whose conditions
           clauses are to be checked for satisfaction
         :type cbp: dict[str, Any]
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        unrolled_cbas = [cookbase.validation.cba.unroll(cba) for cba in cbas]
+        from cookbase.validation.cba import unroll
+        unrolled_cbas = [unroll(cba) for cba in cbas]
 
         for clause in cbp['info']['validation']['conditions']['requiredAppliances']:
             unsatisfied_clause = False
@@ -378,15 +452,17 @@ class Semantics():
                         break
 
             if not unsatisfied_clause:
-                return True
+                return AppliedRuleResult()
 
-        return False
+        e = f'Appliance requirements of CBP {cbp["id"]} are not satisfied'
+        logger.error(e)
+        return AppliedRuleResult(errors=[e])
 
     @staticmethod
     def processes_and_appliances_are_valid_and_processes_requirements_met(
             appliances: Dict[str, Any],
             processes: Dict[str, Any]
-    ) -> bool:
+    ) -> AppliedRuleResult:
         '''Checks correctness and consistency on the :ref:`CBR Appliances
         <cbr-appliances>` and :ref:`CBR Processes <cbr-preparation>` present in a
         :ref:`CBR <cbr>`.
@@ -418,21 +494,24 @@ class Semantics():
           from the :ref:`CBR <cbr>` to be validated, which holds a set of :ref:`CBR
           Processes <cbr-preparation>`
         :type processes: dict[str, Any]
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult()
+        db_handler = handler.get_handler()
+
         for process_reference, p in processes.items():
             # Checking CBP validity
             cbp = db_handler.get_cbp(p['cbpId'])
 
             if cbp is None:
-                ret = False
-                logger.error('CBP with id ' + str(p['cbpId']) +
-                             ' does not exist in database')
+                e = f'CBP with id {p["cbpId"]} does not exist in database'
+                result.errors.append(e)
+                logger.error(e)
             else:
-                ret = ret and Semantics.process_is_valid(p, cbp)
+                partial_result = Semantics.process_is_valid(p, cbp)
+                result.include_result(partial_result)
 
             # Checking CBAs validity
             cbas = []
@@ -442,14 +521,17 @@ class Semantics():
                     cba = db_handler.get_cba(appliances[a['appliance']]['cbaId'])
 
                     if cba is None:
-                        ret = False
-                        logger.error('CBA with id ' +
-                                     str(appliances[a['appliance']]['cbaId']) +
-                                     ' does not exist in database')
+                        e = (
+                            f'CBA with id {appliances[a["appliance"]]["cbaId"]} does '
+                            f'not exist in database'
+                        )
+                        result.errors.append(e)
+                        logger.error(e)
                         continue
                     else:
-                        ret = ret and Semantics.appliance_is_valid(
+                        partial_result = Semantics.appliance_is_valid(
                             appliances[a['appliance']], cba)
+                        result.include_result(partial_result)
                 else:
                     cba = {'id': None, 'info': {
                         'familyLevel': 0,
@@ -459,12 +541,10 @@ class Semantics():
                 cbas.append(cba)
 
             # Checking whether process requirements are met
-            if not Semantics.cbas_satisfy_cbp(cbas, cbp):
-                logger.error('Appliance requirements of process \'' + process_reference +
-                             '\' are not satisfied')
-                ret = False
+            partial_result = Semantics.cbas_satisfy_cbp(cbas, cbp)
+            result.include_result(partial_result)
 
-        return ret
+        return result
 
 
 class Graph():
@@ -473,12 +553,12 @@ class Graph():
     :doc:`Cookbase Recipe Graph (CBRGraph) <cbrg>`.
 
     All messages notifying validation errors or warnings are passed to the
-    :data:`cookbase.validation.logger.logger` instance.
+    :data:`cookbase.logging.logger` instance.
 
     '''
 
     @staticmethod
-    def ingredients_used_exactly_once(graph: RecipeGraph) -> bool:
+    def ingredients_used_exactly_once(graph: RecipeGraph) -> AppliedRuleResult:
         '''Checks that every :ref:`CBR Ingredient <cbr-ingredients>` in a given
         :doc:`CBRGraph <cbrg>` is directly used by a :ref:`CBR Process
         <cbr-preparation>` exactly once.
@@ -493,28 +573,28 @@ class Graph():
         :param graph: The :doc:`CBRGraph <cbrg>` generated from the :ref:`CBR <cbr>` to
           be validated
         :type graph: cookbase.graph.recipegraph.RecipeGraph
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult()
 
         for i in graph.get_ingredients():
             r = graph.g.out_degree(i)
 
             if r == 0:
-                logger.warning('Ingredient \'' + i +
-                               '\' is not used during preparation')
-                ret = False
+                w = f'Ingredient \'{i}\' is not used during preparation'
+                result.warnings.append(w)
+                logger.warning(w)
             elif r > 1:
-                logger.error('Ingredient \'' + i +
-                             '\' is used more than once during preparation')
-                ret = False
+                e = f'Ingredient \'{i}\' is used more than once during preparation'
+                result.errors.append(e)
+                logger.error(e)
 
-        return ret
+        return result
 
     @staticmethod
-    def single_final_process(graph: RecipeGraph) -> bool:
+    def single_final_process(graph: RecipeGraph) -> AppliedRuleResult:
         '''Checks if there is only one :ref:`CBR Process <cbr-preparation>` in a given
         :doc:`CBRGraph <cbrg>` acting as the end process.
 
@@ -526,19 +606,21 @@ class Graph():
         :param graph: The :doc:`CBRGraph <cbrg>` generated from the :ref:`CBR <cbr>` to
           be validated
         :type graph: cookbase.graph.recipegraph.RecipeGraph
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = len(graph.get_leaf_processes()) == 1
+        result = AppliedRuleResult()
 
-        if not ret:
-            logger.error('There are more than one ending processes in the recipe')
+        if len(graph.get_leaf_processes()) > 1:
+            e = f'There are more than one ending processes in the recipe'
+            result.errors.append(e)
+            logger.error(e)
 
-        return ret
+        return result
 
     @staticmethod
-    def appliances_not_in_conflict(graph: RecipeGraph) -> bool:
+    def appliances_not_in_conflict(graph: RecipeGraph) -> AppliedRuleResult:
         '''Checks whether there are not any :ref:`CBR Appliance <cbr-appliances>` in a
         given :doc:`CBRGraph <cbrg>` that may be in conflict, that is, potentially used
         by two or more concurrent :ref:`CBR Processes <cbr-preparation>` at the same
@@ -553,11 +635,11 @@ class Graph():
         :param graph: The :doc:`CBRGraph <cbrg>` generated from the :ref:`CBR <cbr>` to
           be validated
         :type graph: cookbase.graph.recipegraph.RecipeGraph
-        :return: A flag indicating whether the input succeeded validation against the
-          rule (:const:`True`) or not (:const:`False`)
-        :rtype: bool
+        :return: An :class:`AppliedRuleResult` object containing the errors and warnings
+          registered during rule application
+        :rtype: AppliedRuleResult
         '''
-        ret = True
+        result = AppliedRuleResult()
         ag = graph.aggregated_appliances_graph()
         concurrent_paths = [i for i, _ in ag.in_degree() if _ == 0]
 
@@ -570,23 +652,25 @@ class Graph():
                     conflicting_appliances = appls_1 & appls_2
 
                     if conflicting_appliances:
-                        ret = False
                         for k in conflicting_appliances:
                             s = '('
 
                             for p in ag.nodes[concurrent_paths[i]]['appliances'][k]:
-                                s += '\'' + p + '\', '
+                                s += f'\'{p}\', '
 
                             s = s.rpartition(', ')[0] + ') and ('
 
                             for p in ag.nodes[concurrent_paths[j]]['appliances'][k]:
-                                s += '\'' + p + '\', '
+                                s += f'\'{p}\', '
 
                             s = s.rpartition(', ')[0] + ')'
-                            logger.warning(
-                                'Appliance \'' + k +
-                                '\' is used in potentially concurrent processes ' + s
+
+                            w = (
+                                f'Appliance \'{k}\' is used in potentially concurrent '
+                                f'processes {s}'
                             )
+                            result.warnings.append(w)
+                            logger.warning(w)
 
             # Updates concurrent paths
             candidates_next = set()
@@ -615,4 +699,4 @@ class Graph():
 
             concurrent_paths = list(next_cp)
 
-        return ret
+        return result

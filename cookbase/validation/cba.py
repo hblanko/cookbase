@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from cookbase.db.handler import db_handler
+from cookbase.db import handler
 
 
 def unroll(cba: Dict[str, Any]) -> Dict[str, Any]:
@@ -9,8 +9,8 @@ def unroll(cba: Dict[str, Any]) -> Dict[str, Any]:
 
     If the :ref:`CBA <cba>` has a parent, :func:`unroll` is recursively called returning
     an augmented structure with inherited data on :code:`functions`, :code:`materials`,
-    and the :code:`id` field updated to a list that include all the parent :code:`id`s;
-    if the CBA has no parents, it is returned with no modifications.
+    and the :code:`id` field updated to a list that include all the parent
+    :code:`id`\ s; if the CBA has no parents, it is returned with no modifications.
 
     :param cba: A :ref:`CBA <cba>` to be unrolled
     :type cba: dict[str, Any]
@@ -24,7 +24,7 @@ def unroll(cba: Dict[str, Any]) -> Dict[str, Any]:
         if cba['info']['familyLevel'] <= 1:
             return cba
 
-        parent_cba = db_handler.get_cba(cba['info']['parent'])
+        parent_cba = handler.get_handler().get_cba(cba['info']['parent'])
 
         if parent_cba['info']['familyLevel'] > 1:
             parent_cba = unroll(parent_cba)

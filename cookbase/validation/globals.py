@@ -18,8 +18,8 @@ class Definitions():
     :vartype foodstuff_keywords: list[str]
     '''
     schema_base_url = 'http://landarltracker.com/schemas'
-    definitions_url = schema_base_url + '/cb-common-definitions.json'
-    cbr_schema_url = schema_base_url + '/cbr/cbr.json'
+    definitions_url = f'{schema_base_url}/cb-common-definitions.json'
+    cbr_schema_url = f'{schema_base_url}/cbr/cbr.json'
     materials = None
     appliance_functions = None
     foodstuff_keywords = None

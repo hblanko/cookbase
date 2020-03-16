@@ -2,15 +2,15 @@ from typing import Any, Dict, Union
 
 import jsonschema
 import requests
-
-from cookbase.db.handler import db_handler
+from cookbase.db import handler
 from cookbase.graph.recipegraph import RecipeGraph
+from cookbase.logging import logger
 from cookbase.validation import rules
 from cookbase.validation.globals import Definitions
-from cookbase.validation.logger import logger
 
 
 class Validator():
+    pass
     '''A class that performs validation and :doc:`Cookbase Recipe Graph (CBRGraph)
     <cbrg>` construction of recipes in :ref:`Cookbase Recipe format (CBR) <cbr>`.
 
@@ -28,7 +28,6 @@ class Validator():
     :vartype graph: cookbase.graph.recipegraph.RecipeGraph
 
     '''
-    graph = RecipeGraph()
 
     def __init__(self, schema_url: str = Definitions.cbr_schema_url):
         '''Constructor method.'''
@@ -38,7 +37,8 @@ class Validator():
         if len(r.content) == 0:
             raise Exception('the HTTP response from requesting JSON Schema is empty')
 
-        self.schema = r.json()
+        self.schema: Dict[str, Any] = r.json()
+        self.graph: RecipeGraph = RecipeGraph()
 
     def _store(self, data: Dict[str, Any]) -> Union[int, bool]:
         '''Stores a :ref:`CBR <cbr>` and its :doc:`CBRGraph <cbrg>` into database.
@@ -51,7 +51,8 @@ class Validator():
           returns the identifier of the stored object, returns :const:`False` otherwise
         :rtype: int or bool
         '''
-        return db_handler.insert_cbr(data, self.graph.get_serializable_graph())
+        return handler.get_handler().insert_cbr(data,
+                                                self.graph.get_serializable_graph())
 
     def apply_validation_rules(self, data: Dict[str, Any]) -> Dict[str, bool]:
         '''Validates a :ref:`CBR <cbr>` against the set of definition rules.
@@ -66,21 +67,27 @@ class Validator():
         :rtype: dict[str, bool]
         '''
         result = {}
-        result['ingredients_are_valid'] = \
-            rules.Semantics.ingredients_are_valid(data['ingredients'])
-        result['foodstuff_and_appliance_references_are_consistent'] = \
-            rules.Semantics.foodstuff_and_appliance_references_are_consistent(
-            data['ingredients'], data['appliances'], data['preparation'])
-        result['processes_and_appliances_are_valid_and_processes_requirements_met'] = \
-            rules.Semantics.
-        processes_and_appliances_are_valid_and_processes_requirements_met(
-            data['appliances'], data['preparation'])
+        rule = 'ingredients_are_valid'
+        result[rule] = getattr(rules.Semantics, rule)(
+            data['ingredients']
+        ).has_passed(strict=False)
+        rule = 'foodstuff_and_appliance_references_are_consistent'
+        result[rule] = getattr(rules.Semantics, rule)(
+            data['ingredients'],
+            data['appliances'],
+            data['preparation']
+        ).has_passed(strict=False)
+        rule = 'processes_and_appliances_are_valid_and_processes_requirements_met'
+        result[rule] = getattr(rules.Semantics, rule)(
+            data['appliances'], data['preparation']
+        ).has_passed(strict=False)
         self.graph.build_graph(data)
-        result['ingredients_used_only_once'] = rules.Graph.ingredients_used_only_once(
-            self.graph)
-        result['single_final_process'] = rules.Graph.single_final_process(self.graph)
-        result['appliances_not_in_conflict'] = rules.Graph.appliances_not_in_conflict(
-            self.graph)
+        rule = 'ingredients_used_exactly_once'
+        result[rule] = getattr(rules.Graph, rule)(self.graph).has_passed(strict=False)
+        rule = 'single_final_process'
+        result[rule] = getattr(rules.Graph, rule)(self.graph).has_passed(strict=False)
+        rule = 'appliances_not_in_conflict'
+        result[rule] = getattr(rules.Graph, rule)(self.graph).has_passed(strict=True)
         return result
 
     def validate(self,
@@ -108,13 +115,15 @@ class Validator():
         self.graph.clear()
         result = self.apply_validation_rules(data)
 
-        if store:
+        if store and False not in result.values():
             r = self._store(data)
 
             if r:
                 result['inserted_id'] = r
             else:
                 logger.error('Storing CBR and/or CBRGraph unsuccessful')
+        elif False in result.values():
+            logger.error('CBR and CBRGraph not stored due to validation errors')
 
         return result
 
@@ -124,15 +133,14 @@ if __name__ == '__main__':
     from cookbase.parsers import utils
 
     logger.info('Start logging')
-    # recipe = db_handler.get_cbr({'info.name': 'Pizza mozzarella'})
-    recipe_path = '../../resources/cbr/pizzaMozzarella.json'
-    recipe = utils.parse_json_recipe(recipe_path)
+    # recipe = handler.get_handler().get_cbr({'info.name': 'Pizza mozzarella'})
+    recipe = utils.parse_json_recipe('../../resources/cbr/pizzaMozzarella.json')
     t1 = time.time()
     result = Validator().validate(recipe, store=True)
 
     if 'inserted_id' in result:
-        logger.info('CBR and CBRGraph inserted with id ' + str(result['inserted_id']))
+        logger.info(f'CBR and CBRGraph inserted with id {result["inserted_id"]}')
 
     t2 = time.time()
-    logger.info('Recipe validation: ' + str(int((t2 - t1) * 1000)) + ' ms')
+    logger.info(f'Recipe validation: {int((t2 - t1) * 1000)} ms')
     logger.info(result)
