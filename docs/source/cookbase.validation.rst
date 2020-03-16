@@ -49,16 +49,6 @@ cookbase.validation.globals
    :undoc-members:
    :show-inheritance:
 
-
-cookbase.validation.logger
---------------------------
-
-.. automodule:: cookbase.validation.logger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 cookbase.validation.rules
 -------------------------
 

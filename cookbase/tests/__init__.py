@@ -1,2 +1,1 @@
-'''Testing suite of Cookbase'''
-__all__ = ['test_cbr', 'test_termcode']
+'''Testing suite for the :mod:`cookbase` package and submodules.'''

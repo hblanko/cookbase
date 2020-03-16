@@ -13,8 +13,9 @@ def _char_to_dec(character: str) -> int:
 
     if (ord(c) < 48 or ord(c) > 57) and (ord(c) < 65 or ord(c) > 90):
         raise ValueError(
-            'expected an alphanumeric character ([0-9], [A-Z], [a-z]), got \'' +
-            character + '\' instead')
+            'expected an alphanumeric character ([0-9], [A-Z], [a-z]), got '
+            f'\'{character}\' instead'
+        )
 
     if character.isdigit():
         return int(c)
@@ -24,8 +25,9 @@ def _char_to_dec(character: str) -> int:
 
 def _to_ascii(number: int) -> str:
     if number < 0 or number > 35:
-        raise ValueError('expected an integer in the range (0, 35), got \'' +
-                         str(number) + '\' instead')
+        raise ValueError(
+            f'expected an integer in the range (0, 35), got \'{number}\' instead'
+        )
 
     if number < 10:
         return str(number)
