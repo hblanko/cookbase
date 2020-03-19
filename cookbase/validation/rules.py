@@ -32,8 +32,8 @@ class AppliedRuleResult():
 
     '''
 
-    errors: List[str] = attrib(default=[])
-    warnings: List[str] = attrib(default=[])
+    errors: List[str] = attrib(factory=list)
+    warnings: List[str] = attrib(factory=list)
 
     def has_passed(self, strict: bool = True) -> bool:
         '''Indicates whether the application of a rule resulted successful or not.

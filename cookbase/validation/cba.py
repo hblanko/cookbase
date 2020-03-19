@@ -46,8 +46,8 @@ def unroll(cba: Dict[str, Any]) -> Dict[str, Any]:
             if 'materials' not in cba['info']:
                 cba['info']['materials'] = parent_cba['info']['materials']
             else:
-                if cba['info']['materials']['policy'] == \
-                        parent_cba['info']['materials']['policy']:
+                if (cba['info']['materials']['policy'] ==
+                        parent_cba['info']['materials']['policy']):
                     cba['info']['materials']['list'].extend(
                         parent_cba['info']['materials']['list'])
                 elif cba['info']['materials']['policy'] == 'disallow':

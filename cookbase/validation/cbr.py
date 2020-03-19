@@ -10,7 +10,6 @@ from cookbase.validation.globals import Definitions
 
 
 class Validator():
-    pass
     '''A class that performs validation and :doc:`Cookbase Recipe Graph (CBRGraph)
     <cbrg>` construction of recipes in :ref:`Cookbase Recipe format (CBR) <cbr>`.
 
@@ -87,7 +86,7 @@ class Validator():
         rule = 'single_final_process'
         result[rule] = getattr(rules.Graph, rule)(self.graph).has_passed(strict=False)
         rule = 'appliances_not_in_conflict'
-        result[rule] = getattr(rules.Graph, rule)(self.graph).has_passed(strict=True)
+        result[rule] = getattr(rules.Graph, rule)(self.graph).has_passed(strict=False)
         return result
 
     def validate(self,
@@ -134,7 +133,7 @@ if __name__ == '__main__':
 
     logger.info('Start logging')
     # recipe = handler.get_handler().get_cbr({'info.name': 'Pizza mozzarella'})
-    recipe = utils.parse_json_recipe('../../resources/cbr/pizzaMozzarella.json')
+    recipe = utils.parse_json_recipe('../tests/resources/pizza-mozzarella.cbr')
     t1 = time.time()
     result = Validator().validate(recipe, store=True)
 

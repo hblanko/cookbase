@@ -1,0 +1,961 @@
+{
+  "schema": "http://landarltracker.com/schemas/cbr/cbr.json",
+  "info": {
+    "name": "Pizza mozzarella",
+    "authorship": {
+      "fullName": "Hernán Blanco",
+      "version": "0.1"
+    },
+    "releaseDate": "2019-09-01",
+    "cuisine": [
+      "Argentine"
+    ],
+    "courseType": [
+      "main dish"
+    ],
+    "preparationTime": {
+      "value": 105,
+      "measure": "min"
+    },
+    "cookingTime": {
+      "value": 17,
+      "measure": "min"
+    },
+    "servingTime": {
+      "value": 1,
+      "measure": "min"
+    }
+  },
+  "yield": {
+    "servings": 8,
+    "servingSize": {
+      "descriptive": "medium",
+      "weight": {
+        "value": 160,
+        "measure": "g"
+      },
+      "volume": {
+        "value": 400,
+        "measure": "ml"
+      }
+    },
+    "servingFormat": "dinner plate"
+  },
+  "ingredients": {
+    "ing1": {
+      "subdivision": "dough",
+      "name": {
+        "text": "strong wheat flour",
+        "language": "en"
+      },
+      "cbiId": 4187221844,
+      "amount": {
+        "value": 350,
+        "measure": "g"
+      }
+    },
+    "ing2": {
+      "subdivision": "dough",
+      "name": {
+        "text": "filtered tap water",
+        "language": "en"
+      },
+      "cbiId": 605050900,
+      "amount": {
+        "value": 200,
+        "measure": "g"
+      }
+    },
+    "ing3": {
+      "subdivision": "dough",
+      "name": {
+        "text": "white sugar",
+        "language": "en"
+      },
+      "cbiId": 363864347,
+      "amount": {
+        "value": 7,
+        "measure": "g"
+      }
+    },
+    "ing4": {
+      "subdivision": "dough",
+      "name": {
+        "text": "yeast",
+        "language": "en"
+      },
+      "cbiId": 2577976100,
+      "amount": {
+        "value": 21,
+        "measure": "g"
+      }
+    },
+    "ing5": {
+      "subdivision": "dough",
+      "name": {
+        "text": "olive oil",
+        "language": "en"
+      },
+      "cbiId": 1670524486,
+      "amount": {
+        "value": 8,
+        "measure": "g"
+      }
+    },
+    "ing6": {
+      "subdivision": "dough",
+      "name": {
+        "text": "salt",
+        "language": "en"
+      },
+      "cbiId": 2415649015,
+      "amount": {
+        "value": 8,
+        "measure": "g"
+      }
+    },
+    "ing7": {
+      "subdivision": "sauce",
+      "name": {
+        "text": "tomato purée",
+        "language": "en"
+      },
+      "cbiId": 1978180615,
+      "amount": {
+        "value": 230,
+        "measure": "g"
+      }
+    },
+    "ing8": {
+      "subdivision": "sauce",
+      "name": {
+        "text": "garlic",
+        "language": "en"
+      },
+      "cbiId": 3760093923,
+      "amount": {
+        "value": 5,
+        "measure": "g"
+      }
+    },
+    "ing9": {
+      "subdivision": "sauce",
+      "name": {
+        "text": "olive oil",
+        "language": "en"
+      },
+      "cbiId": 1670524486,
+      "amount": {
+        "value": 6,
+        "measure": "g"
+      }
+    },
+    "ing10": {
+      "subdivision": "sauce",
+      "name": {
+        "text": "oregano",
+        "language": "en"
+      },
+      "cbiId": 1044243400,
+      "amount": {
+        "value": 2,
+        "measure": "g"
+      }
+    },
+    "ing11": {
+      "subdivision": "sauce",
+      "name": {
+        "text": "salt",
+        "language": "en"
+      },
+      "cbiId": 2415649015,
+      "amount": {
+        "value": 1,
+        "measure": "g"
+      }
+    },
+    "ing12": {
+      "subdivision": "topping",
+      "name": {
+        "text": "mozzarella cheese (specific for pizza)",
+        "language": "en"
+      },
+      "cbiId": 1864093579,
+      "amount": {
+        "value": 550,
+        "measure": "g"
+      }
+    },
+    "ing13": {
+      "subdivision": "topping",
+      "name": {
+        "text": "green olives",
+        "language": "en"
+      },
+      "cbiId": 2542022766,
+      "optional": true
+    },
+    "ing14": {
+      "subdivision": "topping",
+      "name": {
+        "text": "oregano",
+        "language": "en"
+      },
+      "cbiId": 1044243400,
+      "optional": true
+    }
+  },
+  "appliances": {
+    "app1": {
+      "cbaId": 3617238731,
+      "name": {
+        "text": "bowl",
+        "language": "en"
+      },
+      "properties": {
+        "capacity": {
+          "value": 0.3,
+          "measure": "l"
+        },
+        "withCover": false
+      }
+    },
+    "app2": {
+      "cbaId": 3617238731,
+      "name": {
+        "text": "bowl",
+        "language": "en"
+      },
+      "properties": {
+        "capacity": {
+          "value": 0.5,
+          "measure": "l"
+        },
+        "withCover": false
+      }
+    },
+    "app3": {
+      "cbaId": 3617238731,
+      "name": {
+        "text": "bowl",
+        "language": "en"
+      },
+      "properties": {
+        "capacity": {
+          "value": 1,
+          "measure": "l"
+        },
+        "withCover": false
+      }
+    },
+    "app4": {
+      "cbaId": 3617238731,
+      "name": {
+        "text": "bowl",
+        "language": "en"
+      },
+      "properties": {
+        "capacity": {
+          "value": 2,
+          "measure": "l"
+        },
+        "withCover": true
+      }
+    },
+    "app5": {
+      "cbaId": 2920669584,
+      "name": {
+        "text": "cooking spoon",
+        "language": "en"
+      }
+    },
+    "app6": {
+      "cbaId": 1402285076,
+      "name": {
+        "text": "cutting board",
+        "language": "en"
+      }
+    },
+    "app7": {
+      "cbaId": 2202333962,
+      "name": {
+        "text": "chef's knife",
+        "language": "en"
+      }
+    },
+    "app8": {
+      "cbaId": 2556679752,
+      "name": {
+        "text": "dough scraper",
+        "language": "en"
+      },
+      "optional": true
+    },
+    "app9": {
+      "cbaId": 1962226524,
+      "name": {
+        "text": "pizza tray",
+        "language": "en"
+      },
+      "properties": {
+        "diameter": {
+          "value": 32,
+          "measure": "cm"
+        },
+        "preferredMaterial": "metal"
+      }
+    },
+    "app10": {
+      "cbaId": 108268174,
+      "name": {
+        "text": "domestic oven",
+        "language": "en"
+      }
+    },
+    "app11": {
+      "cbaId": 653996692,
+      "name": {
+        "text": "cooking gloves",
+        "language": "en"
+      }
+    },
+    "app12": {
+      "functions": [
+        "stirs"
+      ],
+      "properties": {
+        "size": {
+          "relativeTo": "app1"
+        }
+      }
+    },
+    "app13": {
+      "cbaId": 2926544528,
+      "name": {
+        "text": "kitchen scale",
+        "language": "en"
+      }
+    },
+    "app14": {
+      "cbaId": 3282864417,
+      "name": {
+        "text": "worktop",
+        "language": "en"
+      }
+    },
+    "app15": {
+      "cbaId": 1937448445,
+      "name": {
+        "text": "dinner plate",
+        "language": "en"
+      },
+      "properties": {
+        "diameter": {
+          "value": 32,
+          "measure": "cm"
+        }
+      }
+    },
+    "app16": {
+      "cbaId": 2852564705,
+      "name": {
+        "text": "spatula",
+        "language": "en-US"
+      }
+    }
+  },
+  "preparation": {
+    "proc1": {
+      "name": {
+        "text": "adding",
+        "language": "en"
+      },
+      "cbpId": 3308424952,
+      "foodstuffsList": [
+        "ing2",
+        "ing3",
+        "ing4"
+      ],
+      "appliances": [
+        {
+          "appliance": "app1",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc2": {
+      "name": {
+        "text": "mixing",
+        "language": "en"
+      },
+      "cbpId": 1353671189,
+      "foodstuff": "proc1",
+      "appliances": [
+        {
+          "appliance": "app1",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app12",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc3": {
+      "name": {
+        "text": "adding",
+        "language": "en"
+      },
+      "cbpId": 3308424952,
+      "foodstuffsList": [
+        "ing1",
+        "proc2"
+      ],
+      "appliances": [
+        {
+          "appliance": "app1",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app4",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc4": {
+      "name": {
+        "text": "mixing",
+        "language": "en"
+      },
+      "cbpId": 1353671189,
+      "foodstuff": "proc3",
+      "appliances": [
+        {
+          "appliance": "app4",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc5": {
+      "name": {
+        "text": "adding",
+        "language": "en"
+      },
+      "cbpId": 3308424952,
+      "foodstuffsList": [
+        "proc4",
+        "ing5",
+        "ing6"
+      ],
+      "appliances": [
+        {
+          "appliance": "app4",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc6": {
+      "name": {
+        "text": "mixing",
+        "language": "en"
+      },
+      "cbpId": 1353671189,
+      "foodstuff": "proc5",
+      "appliances": [
+        {
+          "appliance": "app4",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc7": {
+      "name": {
+        "text": "kneading",
+        "language": "en"
+      },
+      "cbpId": 346797569,
+      "foodstuff": "proc6",
+      "appliances": [
+        {
+          "appliance": "app4",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app14",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc8": {
+      "name": {
+        "text": "rising",
+        "language": "en"
+      },
+      "parameters": {
+        "endConditions": {
+          "time": {
+            "value": 25,
+            "measure": "min"
+          }
+        }
+      },
+      "cbpId": 1965970778,
+      "foodstuff": "proc7",
+      "appliances": [
+        {
+          "appliance": "app14",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app4",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc9": {
+      "name": {
+        "text": "degassing",
+        "language": "en"
+      },
+      "cbpId": 1516376925,
+      "foodstuff": "proc8",
+      "appliances": [
+        {
+          "appliance": "app4",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app14",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc10": {
+      "name": {
+        "text": "dividing",
+        "language": "en"
+      },
+      "parameters": {
+        "pieces": 1
+      },
+      "cbpId": 3172901335,
+      "foodstuff": "proc9",
+      "appliances": [
+        {
+          "appliance": "app14",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app13",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app8",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc11": {
+      "name": {
+        "text": "rounding",
+        "language": "en"
+      },
+      "cbpId": 1353581311,
+      "foodstuff": "proc10",
+      "appliances": [
+        {
+          "appliance": "app14",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc12": {
+      "name": {
+        "text": "rising",
+        "language": "en"
+      },
+      "parameters": {
+        "endConditions": {
+          "time": {
+            "value": 20,
+            "measure": "min"
+          }
+        }
+      },
+      "cbpId": 1965970778,
+      "foodstuff": "proc11",
+      "appliances": [
+        {
+          "appliance": "app14",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app4",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc13": {
+      "name": {
+        "text": "degassing",
+        "language": "en"
+      },
+      "cbpId": 1516376925,
+      "foodstuff": "proc12",
+      "appliances": [
+        {
+          "appliance": "app4",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app14",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc14": {
+      "name": {
+        "text": "shaping",
+        "language": "en"
+      },
+      "cbpId": 76031203,
+      "foodstuff": "proc13",
+      "appliances": [
+        {
+          "appliance": "app14",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app9",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc15": {
+      "name": {
+        "text": "rising",
+        "language": "en"
+      },
+      "parameters": {
+        "endConditions": {
+          "time": {
+            "value": 20,
+            "measure": "min"
+          }
+        }
+      },
+      "cbpId": 1965970778,
+      "foodstuff": "proc14",
+      "appliances": [
+        {
+          "appliance": "app9",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc16": {
+      "name": {
+        "text": "chopping",
+        "language": "en"
+      },
+      "cbpId": 2281620754,
+      "foodstuff": "ing8",
+      "appliances": [
+        {
+          "appliance": "app6",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app7",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc17": {
+      "name": {
+        "text": "adding",
+        "language": "en"
+      },
+      "cbpId": 3308424952,
+      "foodstuffsList": [
+        "ing7",
+        "proc16",
+        "ing9",
+        "ing10",
+        "ing11"
+      ],
+      "appliances": [
+        {
+          "appliance": "app6",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app2",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc18": {
+      "name": {
+        "text": "mixing",
+        "language": "en"
+      },
+      "cbpId": 1353671189,
+      "foodstuff": "proc17",
+      "appliances": [
+        {
+          "appliance": "app2",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app5",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc19": {
+      "name": {
+        "text": "resting",
+        "language": "en"
+      },
+      "parameters": {
+        "endConditions": {
+          "time": {
+            "value": 120,
+            "measure": "min"
+          }
+        }
+      },
+      "cbpId": 2334355260,
+      "foodstuff": "proc18",
+      "appliances": [
+        {
+          "appliance": "app2",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc20": {
+      "name": {
+        "text": "saucing",
+        "language": "en"
+      },
+      "cbpId": 4098604056,
+      "base": "proc15",
+      "sauce": "proc19",
+      "appliances": [
+        {
+          "appliance": "app9",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app4",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app5",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc21": {
+      "name": {
+        "text": "baking",
+        "language": "en"
+      },
+      "parameters": {
+        "temperature": {
+          "value": 250,
+          "measure": "°C"
+        },
+        "ovenPosition": "low",
+        "endConditions": {
+          "time": {
+            "value": 7,
+            "measure": "min"
+          }
+        }
+      },
+      "cbpId": 3542442864,
+      "foodstuff": "proc20",
+      "appliances": [
+        {
+          "appliance": "app9",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app10",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc22": {
+      "name": {
+        "text": "dicing",
+        "language": "en"
+      },
+      "parameters": {
+        "size": {
+          "value": 5,
+          "measure": "mm"
+        }
+      },
+      "cbpId": 4038648643,
+      "foodstuff": "ing12",
+      "appliances": [
+        {
+          "appliance": "app3",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app6",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app7",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc23": {
+      "name": {
+        "text": "storing",
+        "language": "en"
+      },
+      "parameters": {
+        "endConditions": {
+          "time": {
+            "value": 2,
+            "measure": "d"
+          }
+        },
+        "temperature": {
+          "value": 8,
+          "measure": "°C"
+        }
+      },
+      "cbpId": 1705349353,
+      "foodstuff": "proc22",
+      "appliances": [
+        {
+          "appliance": "app3",
+          "usedAfter": true
+        }
+      ]
+    },
+    "proc24": {
+      "name": {
+        "text": "adding on top",
+        "language": "en"
+      },
+      "cbpId": 629280611,
+      "base": "proc21",
+      "onTop": [
+        "proc23"
+      ],
+      "appliances": [
+        {
+          "appliance": "app9",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app3",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app11",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc25": {
+      "name": {
+        "text": "baking",
+        "language": "en"
+      },
+      "parameters": {
+        "temperature": {
+          "value": 250,
+          "measure": "°C"
+        },
+        "ovenPosition": "medium",
+        "endConditions": {
+          "time": {
+            "value": 10,
+            "measure": "min"
+          },
+          "descriptive": {
+            "text": "cheese is melted and starting to brown",
+            "language": "en"
+          }
+        }
+      },
+      "cbpId": 3542442864,
+      "foodstuff": "proc24",
+      "appliances": [
+        {
+          "appliance": "app9",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app10",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app11",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc26": {
+      "name": {
+        "text": "adding on top",
+        "language": "en"
+      },
+      "cbpId": 629280611,
+      "base": "proc25",
+      "onTop": [
+        "ing14",
+        "ing13"
+      ],
+      "appliances": [
+        {
+          "appliance": "app9",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app11",
+          "usedAfter": false
+        }
+      ]
+    },
+    "proc27": {
+      "name": {
+        "text": "serving",
+        "language": "en"
+      },
+      "cbpId": 3124594099,
+      "foodstuffsList": [
+        "proc26"
+      ],
+      "appliances": [
+        {
+          "appliance": "app15",
+          "usedAfter": true
+        },
+        {
+          "appliance": "app9",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app11",
+          "usedAfter": false
+        },
+        {
+          "appliance": "app16",
+          "usedAfter": false
+        }
+      ]
+    }
+  }
+}
