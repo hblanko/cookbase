@@ -3,7 +3,7 @@ from unittest import mock
 
 import jsonschema
 from cookbase.db.handler import DBHandler
-from cookbase.parsers.utils import parse_json_recipe
+from cookbase.parsers.utils import parse_cbr
 from cookbase.validation import cbr
 
 
@@ -14,8 +14,8 @@ class TestCbrValidation(unittest.TestCase):
     test_exhaustive = True
 
     def setUp(self):
-        self.good_cbr = parse_json_recipe('resources/pizza-mozzarella.cbr')
-        self.bad_cbr = parse_json_recipe('resources/pizza-demigrella.cbr')
+        self.good_cbr = parse_cbr('resources/pizza-mozzarella.cbr')
+        self.bad_cbr = parse_cbr('resources/pizza-demigrella.cbr')
         self.validator = cbr.Validator()
 
     @mock.patch.object(DBHandler, 'insert_cbr', autospec=True)

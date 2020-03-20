@@ -27,11 +27,11 @@ def check_for_duplicate_keys(ordered_pairs: List[Tuple[Hashable, Any]]) -> Dict:
     return dict_out
 
 
-def parse_json_recipe(path: str) -> Dict[str, Any]:
-    '''Parses the JSON recipe handling duplicate keys.
+def parse_cbr(path: str) -> Dict[str, Any]:
+    '''Parses a :ref:`Cookbase Recipe (CBR) <cbr>`.
 
-    :param str path: The path to the file containing the recipe data
-    :return: A dictionary containing the JSON document
+    :param str path: The path to the :ref:`CBR <cbr>` document
+    :return: A dictionary containing the parsed :ref:`CBR <cbr>`
     :rtype: dict[str, Any]
     '''
     with open(path) as f:

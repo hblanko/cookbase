@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
     logger.info('Start logging')
     # recipe = handler.get_handler().get_cbr({'info.name': 'Pizza mozzarella'})
-    recipe = utils.parse_json_recipe('../tests/resources/pizza-mozzarella.cbr')
+    recipe = utils.parse_cbr('../tests/resources/pizza-mozzarella.cbr')
     t1 = time.time()
     result = Validator().validate(recipe, store=True)
 
