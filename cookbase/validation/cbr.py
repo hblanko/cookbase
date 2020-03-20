@@ -15,6 +15,9 @@ class ValidationResult():
     '''A class used to handle the results produced by the :meth:`Validator.validate`
     method.
 
+    :param bool schema_validated: A flag indicating if the evaluated :ref:`Cookbase
+      Recipe (CBR) <cbr>` was valid against the given CBR Schema, defaults to
+      :const:`True`
     :param rules_results: A dictionary whose keys are the names of the functions
       implementing the rules that were applied for evaluation, and the values are the
       :class:`rules.AppliedRuleResult` objects obtained after each rule application
@@ -26,6 +29,7 @@ class ValidationResult():
     :type storing_result: handler.DBHandler.InsertCBRResult, optional
 
     '''
+    schema_validated: bool = attrib(default=True)
     rules_results: Dict[str, rules.AppliedRuleResult] = attrib(factory=dict)
     cbrgraph: Optional[RecipeGraph] = attrib(default=None)
     storing_result: Optional[handler.DBHandler.InsertCBRResult] = attrib(default=None)
@@ -46,9 +50,12 @@ class ValidationResult():
           (returning :const:`True`) or unsuccessful (returning :const:`False`)
         :rtype: bool
         '''
+        if not self.schema_validated:
+            return False
+
         # TODO: Exception in len(rules_results) == 0 case
         for i in self.rules_results.values():
-            if not i.has_passed(strict=strict):
+            if not i.has_passed(strict):
                 return False
 
         return True
@@ -56,7 +63,7 @@ class ValidationResult():
 
 class Validator():
     '''A class that performs validation and :doc:`Cookbase Recipe Graph (CBRGraph)
-    <cbrg>` construction of recipes in :ref:`Cookbase Recipe format (CBR) <cbr>`.
+    <cbrg>` construction of recipes in :ref:`Cookbase Recipe (CBR) <cbr>` format.
 
     :param schema_url: A URL to where the :ref:`CBR <cbr>` Schema is to be retrieved,
       defaults to :attr:`cookbase.validation.globals.Definitions.cbr_schema_url`
@@ -81,7 +88,7 @@ class Validator():
         self.schema: Dict[str, Any] = r.json()
 
     def _store(self, cbr: Dict[str, Any],
-               cbrgraph: RecipeGraph = None) -> Union[int, bool]:
+               cbrgraph: RecipeGraph = None) -> handler.DBHandler.InsertCBRResult:
         '''Stores a :ref:`CBR <cbr>` and its :doc:`CBRGraph <cbrg>` into database.
 
         The data is stored using the :data:`cookbase.db.handler.db_handler` object.
@@ -91,10 +98,9 @@ class Validator():
         :param cbrgraph: An instance of :class:`cookbase.graph.recipegraph.RecipeGraph`
           storing the :doc:`CBRGraph <cbrg>` data
         :type cbrgraph: RecipeGraph, optional
-        :return: If :ref:`CBR <cbr>` and :doc:`CBRGraph <cbrg>` insertions were
-          successful returns the identifier of the stored object, returns :const:`False`
-          otherwise
-        :rtype: int or bool
+        :return: A :class:`handler.DBHandler.InsertCBRResult` object with the insertion
+          results
+        :rtype: handler.DBHandler.InsertCBRResult
         '''
         if cbrgraph:
             return handler.get_handler().insert_cbr(cbr,
@@ -136,9 +142,8 @@ class Validator():
         result.rules_results[rule] = getattr(rules.Graph, rule)(result.cbrgraph)
         return result
 
-    def validate(self,
-                 cbr: Dict[str, Any],
-                 store: bool = False) -> ValidationResult:
+    def validate(self, cbr: Dict[str, Any], store: bool = False,
+                 strict: bool = True) -> ValidationResult:
         '''Main function of the class, it performs the validation of a :ref:`CBR <cbr>`
         and builds the :doc:`CBRGraph <cbrg>`.
 
@@ -152,21 +157,30 @@ class Validator():
         :param store: A flag indicating whether the validated CBR and :doc:`CBRGraph
           <cbrg>` should be stored in database, defaults to :const:`False`
         :type store: bool, optional
+        :param strict: A flag indicating the validation policy, defaults to
+          :const:`True`
+        :type strict: bool, optional
         :return: The results from applying the set of validation rules
         :rtype: ValidationResult
         '''
-        jsonschema.validate(cbr, self.schema)
+        try:
+            jsonschema.validate(cbr, self.schema)
+        except jsonschema.exceptions.SchemaError as e:
+            logger.error('Invalid CBR Schema: ' + e.message)
+            return ValidationResult(schema_validated=False)
+        except jsonschema.exceptions.ValidationError as e:
+            logger.error('CBR does not satisfy CBR Schema: ' + e.message)
+            return ValidationResult(schema_validated=False)
+
         result = self.apply_validation_rules(cbr)
 
-        if store and result.is_valid(strict=False):
-            r = self._store(cbr, result.cbrgraph)
+        if not result.is_valid(strict):
+            logger.error('CBR does not satisfy CBR validation rules')
+        elif store:
+            result.storing_result = self._store(cbr, result.cbrgraph)
 
-            if r:
-                result.storing_result = r
-            else:
+            if not result.storing_result.cbr_id:
                 logger.error('Storing CBR and/or CBRGraph unsuccessful')
-        elif not result.is_valid(strict=False):
-            logger.error('CBR and CBRGraph not stored due to validation errors')
 
         return result
 
@@ -179,9 +193,10 @@ if __name__ == '__main__':
     # recipe = handler.get_handler().get_cbr({'info.name': 'Pizza mozzarella'})
     recipe = utils.parse_cbr('../tests/resources/pizza-mozzarella.cbr')
     t1 = time.time()
-    result = Validator().validate(recipe, store=True)
+    strict_policy = False
+    result = Validator().validate(recipe, store=True, strict=strict_policy)
 
-    if result.storing_result:
+    if result.is_valid(strict_policy) and result.storing_result:
         logger.info(f'CBR and CBRGraph inserted with id {result.storing_result.cbr_id}')
 
     t2 = time.time()

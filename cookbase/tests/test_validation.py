@@ -51,10 +51,10 @@ class TestCbrValidation(unittest.TestCase):
         mock__store.return_value = DBHandler.InsertCBRResult(cbr_id=id,
                                                              cbrgraph_id=id)
 
-        result = self.validator.validate(self.good_cbr)
+        result = self.validator.validate(self.good_cbr, strict=False)
         self.assertEqual(result.storing_result, None)
 
-        result = self.validator.validate(self.good_cbr, store=True)
+        result = self.validator.validate(self.good_cbr, store=True, strict=False)
         self.assertEqual(result.storing_result, mock__store.return_value)
 
 
