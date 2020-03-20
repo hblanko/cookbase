@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 
 import jsonschema
+from bson.objectid import ObjectId
 from cookbase.db.handler import DBHandler
 from cookbase.parsers.utils import parse_cbr
 from cookbase.validation import cbr
@@ -11,7 +12,7 @@ class TestCbrValidation(unittest.TestCase):
     '''Test class for the :mod:`cookbase.validation.cbr` module.
 
     '''
-    test_exhaustive = True
+    test_exhaustive = False
 
     def setUp(self):
         self.good_cbr = parse_cbr('resources/pizza-mozzarella.cbr')
@@ -33,10 +34,10 @@ class TestCbrValidation(unittest.TestCase):
         '''
         # -- Testing correct results ---------------------------------------------------
         results = self.validator.apply_validation_rules(self.good_cbr)
-        self.assertEqual(False in results.values(), False)
+        self.assertEqual(results.is_valid(strict=False), True)
 
         results = self.validator.apply_validation_rules(self.bad_cbr)
-        self.assertEqual(False in results.values(), True)
+        self.assertEqual(results.is_valid(strict=False), False)
 
     @mock.patch.object(cbr.Validator, '_store', autospec=True)
     @mock.patch.object(cbr.Validator, 'apply_validation_rules', autospec=True)
@@ -45,14 +46,16 @@ class TestCbrValidation(unittest.TestCase):
                       mock__store):
         '''Tests the :class:`cookbase.validation.cbr.Validator.validate` method.'''
         # -- Testing correct results ---------------------------------------------------
-        mock_apply_validation_rules.return_value = {'testing': True}
-        mock__store.return_value = 123456789
+        mock_apply_validation_rules.return_value = cbr.ValidationResult()
+        id = ObjectId()
+        mock__store.return_value = DBHandler.InsertCBRResult(cbr_id=id,
+                                                             cbrgraph_id=id)
 
         result = self.validator.validate(self.good_cbr)
-        self.assertNotIn('inserted_id', result.keys())
+        self.assertEqual(result.storing_result, None)
 
         result = self.validator.validate(self.good_cbr, store=True)
-        self.assertEqual(result['inserted_id'], mock__store.return_value)
+        self.assertEqual(result.storing_result, mock__store.return_value)
 
 
 if __name__ == '__main__':
