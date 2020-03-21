@@ -15,7 +15,7 @@ from cookbase.graph.recipegraph import RecipeGraph
 
 @attrs
 class InsertCBRResult():
-    '''A class containing the results from the :meth:`insert_cbr` method.
+    '''A class containing the results from the :meth:`DBHandler.insert_cbr` method.
 
     :param cbr_id: Field taking the database identifier of the inserted :ref:`Cookbase
       Recipe (CBR) <cbr>`, or :const:`None` if the insertion was not performed, defaults
@@ -153,7 +153,7 @@ class DBHandler():
         :param cbr: A dictionary representing the :ref:`CBR <cbr>`
         :type cbr: dict[str, Any]
         :param cbrgraph: A dictionary representing the :doc:`CBRGraph <cbrg>`
-        :type cbrgraph: dict[str, Any] or None, optional
+        :type cbrgraph: dict[str, Any], optional
         :return: A :class:`InsertCBRResult` object holding the insertion results.
         :rtype: InsertCBRResult
 
