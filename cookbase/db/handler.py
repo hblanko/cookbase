@@ -157,6 +157,8 @@ class DBHandler():
         :return: A :class:`InsertCBRResult` object holding the insertion results.
         :rtype: InsertCBRResult
 
+        :raises CBRInsertionError: The :ref:`CBR <cbr>` could not be stored
+        :raises CBRGraphInsertionError: The :doc:`CBRGraph <cbrg>` could not be stored
         :raises pymongo.errors.PyMongoError: Database error produced during insertion
         '''
         try:
