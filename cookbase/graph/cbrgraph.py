@@ -23,13 +23,12 @@ class CBRGraph():
     :vartype _pending_processes_edges: list[tuple[str, str]]
 
     '''
-    g = nx.DiGraph()
-    _appliances = {}
-    _pending_processes_edges = []
 
     def __init__(self):
         '''Constructor method.'''
-        pass
+        self.g = nx.DiGraph()
+        self._appliances = {}
+        self._pending_processes_edges = []
 
     def add_ingredient(self, ingredient_ref: str, ingredient: Dict[str, Any]) -> None:
         '''Adds an ingredient to the graph.
