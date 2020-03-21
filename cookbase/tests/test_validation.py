@@ -3,7 +3,7 @@ from unittest import mock
 
 import jsonschema
 from bson.objectid import ObjectId
-from cookbase.db.handler import DBHandler
+from cookbase.db import exceptions, handler
 from cookbase.parsers.utils import parse_cbr
 from cookbase.validation import cbr
 
@@ -19,7 +19,7 @@ class TestCbrValidation(unittest.TestCase):
         self.bad_cbr = parse_cbr('resources/pizza-demigrella.cbr')
         self.validator = cbr.Validator()
 
-    @mock.patch.object(DBHandler, 'insert_cbr', autospec=True)
+    @mock.patch.object(handler.DBHandler, 'insert_cbr', autospec=True)
     def test__store(self, mock_insert_cbr):
         '''Tests the :class:`cookbase.validation.cbr.Validator._store` method.'''
         # -- Testing correct result ----------------------------------------------------
@@ -48,14 +48,27 @@ class TestCbrValidation(unittest.TestCase):
         # -- Testing correct results ---------------------------------------------------
         mock_apply_validation_rules.return_value = cbr.ValidationResult()
         id = ObjectId()
-        mock__store.return_value = DBHandler.InsertCBRResult(cbr_id=id,
-                                                             cbrgraph_id=id)
+        mock__store.return_value = handler.InsertCBRResult(cbr_id=id, cbrgraph_id=id)
 
         result = self.validator.validate(self.good_cbr, strict=False)
         self.assertEqual(result.storing_result, None)
 
         result = self.validator.validate(self.good_cbr, store=True, strict=False)
         self.assertEqual(result.storing_result, mock__store.return_value)
+
+        # -- Testing CBRInsertionError -------------------------------------------------
+        mock__store.side_effect = exceptions.CBRInsertionError(
+            handler.InsertCBRResult())
+
+        result = self.validator.validate(self.good_cbr, store=True, strict=False)
+        self.assertEqual(result.storing_result, mock__store.side_effect.partial_result)
+
+        # -- Testing CBRGraphInsertionError --------------------------------------------
+        mock__store.side_effect = exceptions.CBRGraphInsertionError(
+            handler.InsertCBRResult(cbr_id=ObjectId()))
+
+        result = self.validator.validate(self.good_cbr, store=True, strict=False)
+        self.assertEqual(result.storing_result, mock__store.side_effect.partial_result)
 
 
 if __name__ == '__main__':

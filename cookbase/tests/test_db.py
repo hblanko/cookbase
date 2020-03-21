@@ -4,6 +4,7 @@ import unittest
 
 import pymongo
 from cookbase.db import exceptions, handler, utils
+from cookbase.graph.recipegraph import RecipeGraph
 
 
 class TestDBHandler(unittest.TestCase):
@@ -91,12 +92,12 @@ class TestDBHandler(unittest.TestCase):
     def test_insert_cbr(self):
         '''Tests the :meth:`cookbase.db.handler.DBHandler.insert_cbr` method.'''
         test_dict = {'unit': 'test'}
-        test_graph_dict = {'graph': {}}
+        test_graph = RecipeGraph()
 
         # -- Testing correct result ------------------------------------
-        results = self.db_handler.insert_cbr(test_dict, test_graph_dict)
-        expected_results = handler.DBHandler.InsertCBRResult(
-            test_dict['_id'], test_graph_dict['_id'])
+        results = self.db_handler.insert_cbr(test_dict, test_graph)
+        expected_results = handler.InsertCBRResult(
+            test_dict['_id'], test_dict['_id'])
         self.assertEqual(results, expected_results)
 
         if results.cbr_id:
@@ -108,7 +109,7 @@ class TestDBHandler(unittest.TestCase):
 
         # -- Testing correct result (without CBRGraph insertion) -------
         results = self.db_handler.insert_cbr(test_dict)
-        expected_results = handler.DBHandler.InsertCBRResult(test_dict['_id'])
+        expected_results = handler.InsertCBRResult(test_dict['_id'])
         self.assertEqual(results, expected_results)
 
         # -- Testing pymongo.errors.PyMongoError (DuplicateKeyError) ---
@@ -128,15 +129,6 @@ class TestDBHandler(unittest.TestCase):
         if results.cbrgraph_id:
             self.db_handler._default_db.cbrgraphs.delete_one(
                 {'_id': results.cbrgraph_id})
-
-        # -- Testing exceptions.BadCBRGraphError (invalid CBRGraph inser
-        expected_results = handler.DBHandler.InsertCBRResult(test_dict['_id'])
-
-        with self.assertRaises(exceptions.BadCBRGraphError):
-            results = self.db_handler.insert_cbr(test_dict, {'invalid': 'cbrgraph'})
-
-        if results.cbr_id:
-            self.db_handler._default_db.cbr.delete_one({'_id': results.cbr_id})
 
         # It has no effect in case of correct behavior, but done just in case
         if results.cbrgraph_id:

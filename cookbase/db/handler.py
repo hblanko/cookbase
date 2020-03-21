@@ -6,9 +6,29 @@ import pymongo
 import uritools
 from attr import attrib, attrs
 from bson.objectid import ObjectId
-from cookbase.db.exceptions import (BadCBRGraphError, DBClientConnectionError,
+from cookbase.db.exceptions import (CBRGraphInsertionError, CBRInsertionError,
+                                    DBClientConnectionError,
                                     DBNotRegisteredError, InvalidDBTypeError)
 from cookbase.db.utils import demongofy
+from cookbase.graph.recipegraph import RecipeGraph
+
+
+@attrs
+class InsertCBRResult():
+    '''A class containing the results from the :meth:`insert_cbr` method.
+
+    :param cbr_id: Field taking the database identifier of the inserted :ref:`Cookbase
+      Recipe (CBR) <cbr>`, or :const:`None` if the insertion was not performed, defaults
+      to :const:`None`
+    :type cbr_id: ObjectId, optional
+    :param cbrgraph_id: Field taking the database identifier of the inserted
+      :doc:`Cookbase Recipe Graph (CBRGraph) <cbrg>`, or :const:`None` if the insertion
+      was not performed, defaults to :const:`None`
+    :type cbrgraph_id: ObjectId, optional
+
+    '''
+    cbr_id: Optional[ObjectId] = attrib(default=None)
+    cbrgraph_id: Optional[ObjectId] = attrib(default=None)
 
 
 class DBHandler():
@@ -41,24 +61,6 @@ class DBHandler():
         :class:`cookbase.db.handler.DBHandler`.
         '''
         MONGODB: str = 'mongodb'
-
-    @attrs
-    class InsertCBRResult():
-        '''A class containing the results from the :meth:`insert_cbr` method.
-
-        :param cbr_id: Field taking an integer representing the database identifier of
-          the inserted :ref:`Cookbase Recipe (CBR) <cbr>`, or a :const:`False` boolean
-          value in case of an unsuccessful insertion
-        :type cbr_id: int or bool
-        :param cbrgraph_id: Field taking an integer representing the database identifier
-          of the inserted :doc:`Cookbase Recipe Graph (CBRGraph) <cbrg>`, a
-          :const:`False` boolean value in case of an unsuccessful insertion, or
-          :const:`None` if :doc:`CBRGraph <cbrg>` insertion was not performed
-        :type cbrgraph_id: int or bool, optional
-
-        '''
-        cbr_id: Union[int, bool] = attrib()
-        cbrgraph_id: Optional[Union[int, bool]] = attrib(default=None)
 
     def __init__(self, mongodb_url: str, db_type: str = DBTypes.MONGODB,
                  db_name: str = 'cookbase'):
@@ -144,19 +146,17 @@ class DBHandler():
         return self._default_db.cbr.find_one(query)
 
     def insert_cbr(self, cbr: Dict[str, Any],
-                   graph: Optional[Dict[str, Any]] = None) -> InsertCBRResult:
+                   cbrgraph: Optional[RecipeGraph] = None) -> InsertCBRResult:
         '''Inserts a :ref:`CBR <cbr>` into database with its :doc:`CBRGraph <cbrg>` (if
         given).
 
         :param cbr: A dictionary representing the :ref:`CBR <cbr>`
         :type cbr: dict[str, Any]
-        :param graph: A dictionary representing the :doc:`CBRGraph <cbrg>`
-        :type graph: dict[str, Any] or None, optional
+        :param cbrgraph: A dictionary representing the :doc:`CBRGraph <cbrg>`
+        :type cbrgraph: dict[str, Any] or None, optional
         :return: A :class:`InsertCBRResult` object holding the insertion results.
         :rtype: InsertCBRResult
 
-        :raises cookbase.db.exceptions.BadCBRGraphError: The provided :doc:`CBRGraph
-          <cbrg>` in `graph` is not valid
         :raises pymongo.errors.PyMongoError: Database error produced during insertion
         '''
         try:
@@ -165,27 +165,24 @@ class DBHandler():
             raise
 
         if not r_cbr.acknowledged:
-            return self.InsertCBRResult(False)
-        elif not graph:
-            return self.InsertCBRResult(r_cbr.inserted_id)
+            raise CBRInsertionError(InsertCBRResult())
+        elif not cbrgraph:
+            return InsertCBRResult(cbr_id=r_cbr.inserted_id)
         else:
-            graph['_id'] = ObjectId(str(r_cbr.inserted_id))
+            cbrgraph_dict = cbrgraph.get_serializable_graph()
+            cbrgraph_dict['_id'] = ObjectId(str(r_cbr.inserted_id))
+            cbrgraph_dict['graph']['cbrId'] = str(cbrgraph_dict['_id'])
 
             try:
-                graph['graph']['cbrId'] = str(graph['_id'])
-            except KeyError:
-                import sys
-                raise BadCBRGraphError().with_traceback(sys.exc_info()[2])
-
-            try:
-                r_graph = self._default_db.cbrgraphs.insert_one(graph)
+                r_graph = self._default_db.cbrgraphs.insert_one(cbrgraph_dict)
             except pymongo.errors.PyMongoError:
                 raise
 
             if not r_graph.acknowledged:
-                return self.InsertCBRResult(r_cbr.inserted_id, False)
+                raise CBRGraphInsertionError(InsertCBRResult(cbr_id=r_cbr.inserted_id))
             else:
-                return self.InsertCBRResult(r_cbr.inserted_id, r_graph.inserted_id)
+                return InsertCBRResult(cbr_id=r_cbr.inserted_id,
+                                       cbrgraph_id=r_graph.inserted_id)
 
     def close_connections(self):
         '''Closes all connections registered by this :class:`DBHandler` object.'''

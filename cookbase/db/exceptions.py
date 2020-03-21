@@ -1,19 +1,9 @@
+from bson import ObjectId
+
+
 class DBHandlerException(Exception):
     '''Base class for :class:`cookbase.db.handler.DBHandler` errors.'''
     db_handler_class_name = 'cookbase.db.handler.DBHandler'
-
-
-class BadCBRGraphError(DBHandlerException):
-    '''Raised when the dictionary representing a :doc:`Cookbase Recipe Graph (CBRGraph)
-    <cbrg>` is detected not to conform its standard format.
-
-    '''
-
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return 'The provided CBRGraph does not conform the standard format.'
 
 
 class DBClientConnectionError(DBHandlerException):
@@ -46,6 +36,40 @@ class DBNotRegisteredError(DBHandlerException):
             f'There is no \'{self.db_id}\' database registered on '
             f'{self.db_handler_class_name}.'
         )
+
+
+class InsertionError(DBHandlerException):
+    '''Base class for exceptions raised when an insertion operation resulted
+    unsuccessful.
+
+    '''
+
+    def __init__(self):
+        pass
+
+
+class CBRInsertionError(InsertionError):
+    '''Raised when a CBR insertion resulted unsuccessful.
+
+    '''
+
+    def __init__(self, partial_result):
+        self.partial_result = partial_result
+
+    def __str__(self):
+        return 'Storing CBR in database failed'
+
+
+class CBRGraphInsertionError(InsertionError):
+    '''Raised when a CBRGraph insertion resulted unsuccessful.
+
+    '''
+
+    def __init__(self, partial_result):
+        self.partial_result = partial_result
+
+    def __str__(self):
+        return 'Storing CBRGraph in database failed'
 
 
 class InvalidDBTypeError(DBHandlerException):

@@ -4,6 +4,7 @@ import jsonschema
 import requests
 from attr import attrib, attrs
 from cookbase.db import handler
+from cookbase.db.exceptions import CBRGraphInsertionError, CBRInsertionError
 from cookbase.graph.recipegraph import RecipeGraph
 from cookbase.logging import logger
 from cookbase.validation import rules
@@ -26,13 +27,13 @@ class ValidationResult():
       <cbrg>` data generated during validation
     :type cbrgraph: RecipeGraph, optional
     :param storing_result: 
-    :type storing_result: handler.DBHandler.InsertCBRResult, optional
+    :type storing_result: handler.InsertCBRResult, optional
 
     '''
     schema_validated: bool = attrib(default=True)
     rules_results: Dict[str, rules.AppliedRuleResult] = attrib(factory=dict)
     cbrgraph: Optional[RecipeGraph] = attrib(default=None)
-    storing_result: Optional[handler.DBHandler.InsertCBRResult] = attrib(default=None)
+    storing_result: Optional[handler.InsertCBRResult] = attrib(default=None)
 
     def is_valid(self, strict: bool = True) -> bool:
         '''Indicates whether the validation process is evaluated as valid or not.
@@ -88,7 +89,7 @@ class Validator():
         self.schema: Dict[str, Any] = r.json()
 
     def _store(self, cbr: Dict[str, Any],
-               cbrgraph: RecipeGraph = None) -> handler.DBHandler.InsertCBRResult:
+               cbrgraph: RecipeGraph = None) -> handler.InsertCBRResult:
         '''Stores a :ref:`CBR <cbr>` and its :doc:`CBRGraph <cbrg>` into database.
 
         The data is stored using the :data:`cookbase.db.handler.db_handler` object.
@@ -98,15 +99,11 @@ class Validator():
         :param cbrgraph: An instance of :class:`cookbase.graph.recipegraph.RecipeGraph`
           storing the :doc:`CBRGraph <cbrg>` data
         :type cbrgraph: RecipeGraph, optional
-        :return: A :class:`handler.DBHandler.InsertCBRResult` object with the insertion
+        :return: A :class:`handler.InsertCBRResult` object with the insertion
           results
-        :rtype: handler.DBHandler.InsertCBRResult
+        :rtype: handler.InsertCBRResult
         '''
-        if cbrgraph:
-            return handler.get_handler().insert_cbr(cbr,
-                                                    cbrgraph.get_serializable_graph())
-        else:
-            return handler.get_handler().insert_cbr(cbr)
+        return handler.get_handler().insert_cbr(cbr, cbrgraph)
 
     def apply_validation_rules(self, cbr: Dict[str, Any]) -> ValidationResult:
         '''Validates a :ref:`CBR <cbr>` against the set of definition rules.
@@ -177,10 +174,11 @@ class Validator():
         if not result.is_valid(strict):
             logger.error('CBR does not satisfy CBR validation rules')
         elif store:
-            result.storing_result = self._store(cbr, result.cbrgraph)
-
-            if not result.storing_result.cbr_id:
-                logger.error('Storing CBR and/or CBRGraph unsuccessful')
+            try:
+                result.storing_result = self._store(cbr, result.cbrgraph)
+            except (CBRInsertionError, CBRGraphInsertionError) as e:
+                logger.error(e)
+                result.storing_result = e.partial_result
 
         return result
 
