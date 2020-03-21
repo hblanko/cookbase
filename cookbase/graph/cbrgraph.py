@@ -6,7 +6,7 @@ from cookbase.validation.globals import Definitions
 from networkx.readwrite import json_graph
 
 
-class RecipeGraph():
+class CBRGraph():
     '''A class that provides the structures and methods needed to build, manipulate and
     analyze :doc:`Cookbase Recipe Graphs (CBRGraphs) <cbrg>`.
 

@@ -2,7 +2,7 @@ from bson import ObjectId
 
 
 class DBHandlerException(Exception):
-    '''Base class for :class:`cookbase.db.handler.DBHandler` errors.'''
+    '''Base class for :mod:`cookbase.db.handler` errors.'''
     db_handler_class_name = 'cookbase.db.handler.DBHandler'
 
 

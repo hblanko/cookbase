@@ -5,7 +5,7 @@ import requests
 from attr import attrib, attrs
 from cookbase.db import handler
 from cookbase.db.exceptions import CBRGraphInsertionError, CBRInsertionError
-from cookbase.graph.recipegraph import RecipeGraph
+from cookbase.graph.cbrgraph import CBRGraph
 from cookbase.logging import logger
 from cookbase.validation import rules
 from cookbase.validation.globals import Definitions
@@ -25,14 +25,14 @@ class ValidationResult():
     :type rules_results: dict[str, rules.AppliedRuleResult]
     :param cbrgraph: An object containing the :doc:`Cookbase Recipe Graph (CBRGraph)
       <cbrg>` data generated during validation
-    :type cbrgraph: RecipeGraph, optional
+    :type cbrgraph: CBRGraph, optional
     :param storing_result: 
     :type storing_result: handler.InsertCBRResult, optional
 
     '''
     schema_validated: bool = attrib(default=True)
     rules_results: Dict[str, rules.AppliedRuleResult] = attrib(factory=dict)
-    cbrgraph: Optional[RecipeGraph] = attrib(default=None)
+    cbrgraph: Optional[CBRGraph] = attrib(default=None)
     storing_result: Optional[handler.InsertCBRResult] = attrib(default=None)
 
     def is_valid(self, strict: bool = True) -> bool:
@@ -89,16 +89,16 @@ class Validator():
         self.schema: Dict[str, Any] = r.json()
 
     def _store(self, cbr: Dict[str, Any],
-               cbrgraph: RecipeGraph = None) -> handler.InsertCBRResult:
+               cbrgraph: CBRGraph = None) -> handler.InsertCBRResult:
         '''Stores a :ref:`CBR <cbr>` and its :doc:`CBRGraph <cbrg>` into database.
 
         The data is stored using the :data:`cookbase.db.handler.db_handler` object.
 
         :param cbr: The dictionary containing the validated :ref:`CBR <cbr>`
         :type cbr: dict[str, Any]
-        :param cbrgraph: An instance of :class:`cookbase.graph.recipegraph.RecipeGraph`
+        :param cbrgraph: An instance of :class:`cookbase.graph.cbrgraph.CBRGraph`
           storing the :doc:`CBRGraph <cbrg>` data
-        :type cbrgraph: RecipeGraph, optional
+        :type cbrgraph: CBRGraph, optional
         :return: A :class:`handler.InsertCBRResult` object with the insertion
           results
         :rtype: handler.InsertCBRResult
@@ -129,7 +129,7 @@ class Validator():
         rule = 'processes_and_appliances_are_valid_and_processes_requirements_met'
         result.rules_results[rule] = getattr(rules.Semantics, rule)(cbr['appliances'],
                                                                     cbr['preparation'])
-        result.cbrgraph = RecipeGraph()
+        result.cbrgraph = CBRGraph()
         result.cbrgraph.build_graph(cbr)
         rule = 'ingredients_used_exactly_once'
         result.rules_results[rule] = getattr(rules.Graph, rule)(result.cbrgraph)

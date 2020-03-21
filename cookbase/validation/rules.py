@@ -13,7 +13,7 @@ from typing import Any, Dict, List
 
 from attr import attrib, attrs
 from cookbase.db import handler
-from cookbase.graph.recipegraph import RecipeGraph
+from cookbase.graph.cbrgraph import CBRGraph
 from cookbase.logging import logger
 from cookbase.validation.globals import Definitions
 
@@ -558,7 +558,7 @@ class Graph():
     '''
 
     @staticmethod
-    def ingredients_used_exactly_once(graph: RecipeGraph) -> AppliedRuleResult:
+    def ingredients_used_exactly_once(graph: CBRGraph) -> AppliedRuleResult:
         '''Checks that every :ref:`CBR Ingredient <cbr-ingredients>` in a given
         :doc:`CBRGraph <cbrg>` is directly used by a :ref:`CBR Process
         <cbr-preparation>` exactly once.
@@ -572,7 +572,7 @@ class Graph():
 
         :param graph: The :doc:`CBRGraph <cbrg>` generated from the :ref:`CBR <cbr>` to
           be validated
-        :type graph: cookbase.graph.recipegraph.RecipeGraph
+        :type graph: cookbase.graph.cbrgraph.CBRGraph
         :return: An :class:`AppliedRuleResult` object containing the errors and warnings
           registered during rule application
         :rtype: AppliedRuleResult
@@ -594,7 +594,7 @@ class Graph():
         return result
 
     @staticmethod
-    def single_final_process(graph: RecipeGraph) -> AppliedRuleResult:
+    def single_final_process(graph: CBRGraph) -> AppliedRuleResult:
         '''Checks if there is only one :ref:`CBR Process <cbr-preparation>` in a given
         :doc:`CBRGraph <cbrg>` acting as the end process.
 
@@ -605,7 +605,7 @@ class Graph():
 
         :param graph: The :doc:`CBRGraph <cbrg>` generated from the :ref:`CBR <cbr>` to
           be validated
-        :type graph: cookbase.graph.recipegraph.RecipeGraph
+        :type graph: cookbase.graph.cbrgraph.CBRGraph
         :return: An :class:`AppliedRuleResult` object containing the errors and warnings
           registered during rule application
         :rtype: AppliedRuleResult
@@ -620,7 +620,7 @@ class Graph():
         return result
 
     @staticmethod
-    def appliances_not_in_conflict(graph: RecipeGraph) -> AppliedRuleResult:
+    def appliances_not_in_conflict(graph: CBRGraph) -> AppliedRuleResult:
         '''Checks whether there are not any :ref:`CBR Appliance <cbr-appliances>` in a
         given :doc:`CBRGraph <cbrg>` that may be in conflict, that is, potentially used
         by two or more concurrent :ref:`CBR Processes <cbr-preparation>` at the same
@@ -634,7 +634,7 @@ class Graph():
 
         :param graph: The :doc:`CBRGraph <cbrg>` generated from the :ref:`CBR <cbr>` to
           be validated
-        :type graph: cookbase.graph.recipegraph.RecipeGraph
+        :type graph: cookbase.graph.cbrgraph.CBRGraph
         :return: An :class:`AppliedRuleResult` object containing the errors and warnings
           registered during rule application
         :rtype: AppliedRuleResult

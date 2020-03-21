@@ -4,7 +4,7 @@ import unittest
 
 import pymongo
 from cookbase.db import exceptions, handler, utils
-from cookbase.graph.recipegraph import RecipeGraph
+from cookbase.graph.cbrgraph import CBRGraph
 
 
 class TestDBHandler(unittest.TestCase):
@@ -92,7 +92,7 @@ class TestDBHandler(unittest.TestCase):
     def test_insert_cbr(self):
         '''Tests the :meth:`cookbase.db.handler.DBHandler.insert_cbr` method.'''
         test_dict = {'unit': 'test'}
-        test_graph = RecipeGraph()
+        test_graph = CBRGraph()
 
         # -- Testing correct result ------------------------------------
         results = self.db_handler.insert_cbr(test_dict, test_graph)

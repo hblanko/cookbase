@@ -10,7 +10,7 @@ from cookbase.db.exceptions import (CBRGraphInsertionError, CBRInsertionError,
                                     DBClientConnectionError,
                                     DBNotRegisteredError, InvalidDBTypeError)
 from cookbase.db.utils import demongofy
-from cookbase.graph.recipegraph import RecipeGraph
+from cookbase.graph.cbrgraph import CBRGraph
 
 
 @attrs
@@ -146,7 +146,7 @@ class DBHandler():
         return self._default_db.cbr.find_one(query)
 
     def insert_cbr(self, cbr: Dict[str, Any],
-                   cbrgraph: Optional[RecipeGraph] = None) -> InsertCBRResult:
+                   cbrgraph: Optional[CBRGraph] = None) -> InsertCBRResult:
         '''Inserts a :ref:`CBR <cbr>` into database with its :doc:`CBRGraph <cbrg>` (if
         given).
 
