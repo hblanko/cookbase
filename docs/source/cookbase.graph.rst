@@ -15,10 +15,10 @@ Module contents
 Submodules
 ==========
 
-cookbase.graph.recipegraph
+cookbase.graph.cbrgraph
 --------------------------
 
-.. automodule:: cookbase.graph.recipegraph
+.. automodule:: cookbase.graph.cbrgraph
    :members:
    :undoc-members:
    :show-inheritance:
