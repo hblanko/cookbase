@@ -1,0 +1,5 @@
+**/__pycache__
+/docs/make.bat
+/docs/Makefile
+/docs/build/
+/resources/c*/
