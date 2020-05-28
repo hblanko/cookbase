@@ -14,17 +14,17 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath("../.."))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Cookbase'
-copyright = u'2019-2020, Hernán Blanco'
-author = u'Hernán Blanco'
+project = "Cookbase"
+copyright = u"2019-2020, Hernán Blanco"
+author = u"Hernán Blanco"
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = "0.1"
 
 
 # -- General configuration ---------------------------------------------------
@@ -33,14 +33,14 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
-    'sphinxcontrib.plantuml',
-    'sphinx.ext.extlinks'
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
+    "sphinxcontrib.plantuml",
+    "sphinx.ext.extlinks",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -53,26 +53,25 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-master_doc = 'index'
+html_static_path = ["_static"]
+master_doc = "index"
 
-html_css_files = ['css/custom-style.css']
-plantuml = 'java -jar ../../lib/plantuml.jar'
-plantuml_output_format = 'svg'
+html_css_files = ["css/custom-style.css"]
+plantuml = "java -jar ../../lib/plantuml.jar"
+plantuml_output_format = "svg"
 
 html_theme_options = {
-    'navigation_depth': -1,
-    'collapse_navigation': False,
-    'logo_only': True
+    "navigation_depth": -1,
+    "collapse_navigation": False,
+    "logo_only": True,
 }
 
-html_logo = '_static/new-logo-no-blue-green.png'
-rst_prolog = open('defs.rst', 'r').read()
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.git', 'defs.rst']
-extlinks = {'cbschema': ('http://landarltracker.com/schemas/%s',
-                         'CBSchema ')}
+html_logo = "_static/new-logo-no-blue-green.png"
+rst_prolog = open("defs.rst", "r").read()
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".git", "defs.rst"]
+extlinks = {"cbschema": ("http://landarltracker.com/schemas/%s", "CBSchema ")}

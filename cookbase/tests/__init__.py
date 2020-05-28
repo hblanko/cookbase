@@ -1,1 +1,1 @@
-'''Testing suite for the :mod:`cookbase` package and submodules.'''
+"""Testing suite for the :mod:`cookbase` package and submodules."""

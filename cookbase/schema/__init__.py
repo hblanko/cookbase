@@ -1,1 +1,1 @@
-'''Package for handling Cookbase Schema builds.'''
+"""Package for handling Cookbase Schema builds."""
