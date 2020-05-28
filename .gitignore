@@ -4,3 +4,6 @@
 /docs/build/
 /resources/c*/
 /credentials.txt
+/cookbase.egg-info
+/dist
+/build
