@@ -1,8 +1,8 @@
 {
   "$$schema": "${json_schema_uri}",
   "$$id": "${caf_schema_url}",
-  "title": "Cookbase Appliance Function - v1.0",
-  "description": "Schema defining the format of a Cookbase Appliance Function (CAF). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#caf to read the documentation.",
+  "title": "Cookbase Appliance Function",
+  "description": "Schema defining the format of a Cookbase Appliance Function. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#caf to read the documentation.",
   "examples": [
     {
       "schema": "${caf_schema_url}",
@@ -11,7 +11,7 @@
         "en": "bakes",
         "es": "hornea"
       },
-      "version": "1.0",
+      "version": "0.1.0",
       "contributors": [
         "Hernán Blanco, hblanco@pm.me"
       ],

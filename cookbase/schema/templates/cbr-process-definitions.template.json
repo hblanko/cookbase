@@ -1,7 +1,7 @@
 {
   "$$schema": "${json_schema_uri}",
   "$$id": "${cbr_process_definitions_url}",
-  "title": "Cookbase Recipe Process Schema definitions - v1.0",
+  "title": "Cookbase Recipe Process Schema definitions",
   "description": "Definitions of data types used by the CBR Process Schema. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-preparation to read the documentation.",
   "$$defs": {
     "foodstuff": {

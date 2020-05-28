@@ -1,8 +1,8 @@
 {
   "$$schema": "${json_schema_uri}",
   "$$id": "${cbr_yield_schema_url}",
-  "title": "Cookbase Recipe's yield section - v1.0",
-  "description": "Schema defining the content of the Cookbase Recipe (CBR) yield section. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-yield to read the documentation.",
+  "title": "Cookbase Recipe's yield section",
+  "description": "Schema defining the content of the Cookbase Recipe yield section. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-yield to read the documentation.",
   "type": "object",
   "properties": {
     "servings": {
