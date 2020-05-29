@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://landarltracker.com/schemas/cbr/cbr-yield.json",
-  "title": "Cookbase Recipe's yield section - v1.0",
-  "description": "Schema defining the content of the Cookbase Recipe (CBR) yield section. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-yield to read the documentation.",
+  "title": "Cookbase Recipe's yield section",
+  "description": "Schema defining the content of the Cookbase Recipe yield section. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-yield to read the documentation.",
   "type": "object",
   "properties": {
     "servings": {

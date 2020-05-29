@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://landarltracker.com/schemas/cbp/cbp.json",
-  "title": "Cookbase Process - v1.0",
-  "description": "Schema defining the format of a Cookbase Process (CBP). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbp to read the documentation.",
+  "title": "Cookbase Process",
+  "description": "Schema defining the format of a Cookbase Process. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbp to read the documentation.",
   "examples": [
     {
       "schema": "http://landarltracker.com/schemas/cbp/cbp.json",
@@ -14,7 +14,7 @@
           "trocear"
         ]
       },
-      "version": "1.0",
+      "version": "0.1.0",
       "contributors": [
         "Hernán Blanco, hblanco@pm.me"
       ],

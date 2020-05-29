@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://landarltracker.com/schemas/cbr/cbr.json",
-  "title": "Cookbase Recipe - v1.0",
-  "description": "Schema defining the format of a Cookbase Recipe (CBR). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr to read the documentation.",
+  "title": "Cookbase Recipe",
+  "description": "Schema defining the format of a Cookbase Recipe. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr to read the documentation.",
   "type": "object",
   "additionalProperties": false,
   "required": [

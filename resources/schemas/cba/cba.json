@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://landarltracker.com/schemas/cba/cba.json",
-  "title": "Cookbase Appliance - v1.0",
-  "description": "Schema defining the format of a Cookbase Appliance (CBA). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cba to read the documentation.",
+  "title": "Cookbase Appliance",
+  "description": "Schema defining the format of a Cookbase Appliance. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cba to read the documentation.",
   "examples": [
     {
       "schema": "http://landarltracker.com/schemas/cba/cba.json",
@@ -14,7 +14,7 @@
           "bol"
         ]
       },
-      "version": "1.0",
+      "version": "0.1.0",
       "contributors": [
         "Hernán Blanco, hblanco@pm.me"
       ],

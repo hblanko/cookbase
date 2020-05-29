@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://landarltracker.com/schemas/cbr/cbr-ingredient.json",
-  "title": "Cookbase Recipe Ingredient - v1.0",
-  "description": "Schema defining the format of a Cookbase Recipe (CBR) Ingredient. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-ingredients to read the documentation.",
+  "title": "Cookbase Recipe Ingredient",
+  "description": "Schema defining the format of a Cookbase Recipe Ingredient. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-ingredients to read the documentation.",
   "examples": [
     {
       "subdivision": "dough",

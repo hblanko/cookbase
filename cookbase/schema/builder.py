@@ -15,13 +15,15 @@ import json
 import os
 import string
 from collections import OrderedDict
+from collections.abc import Mapping
 from typing import Any, Dict
 
 import paramiko
 import uritools
-from cookbase.utils import _HelpAction, _SortingDict
 from paramiko.client import SSHClient
 from ruamel.yaml import YAML
+
+from cookbase.utils import _HelpAction, _SortingDict
 
 
 class _SSHConnection:
@@ -656,25 +658,56 @@ def init(config_path: str = None):
     """
     global config, ssh
 
-    with open("./build-config.yaml") as f:
-        config = YAML().load(f)
+    with open(os.path.join(os.path.dirname(__file__), "build-config.yaml")) as f:
+        default_config = YAML().load(f)
 
     if config_path:
 
-        def update(d, u):
-            import collections.abc
-
-            for k, v in u.items():
-                if isinstance(v, collections.abc.Mapping):
-                    d[k] = update(d.get(k, {}), v)
+        def build_config(default_config, custom_config):
+            def process_config_value(key, default_value, custom_value):
+                if isinstance(default_value, dict):
+                    return build_config(default_value, custom_value)
+                elif key == "root_build_dir":
+                    if custom_value:
+                        if uritools.isabsuri(custom_value):
+                            return custom_value
+                        else:
+                            return os.path.abspath(custom_value)
+                    else:
+                        if uritools.isabsuri(default_value):
+                            return default_value
+                        else:
+                            return os.path.normpath(
+                                os.path.join(os.path.dirname(__file__), default_value)
+                            )
+                elif key in ("cbp_dir", "cb_schema_templates_dir", "types_path"):
+                    if custom_value:
+                        return os.path.abspath(custom_value)
+                    else:
+                        return os.path.normpath(
+                            os.path.join(os.path.dirname(__file__), default_value)
+                        )
                 else:
-                    d[k] = v
-            return d
+                    if custom_value:
+                        return custom_value
+                    else:
+                        return default_value
+
+            if custom_config is not None and not isinstance(custom_config, Mapping):
+                raise ConfigError("Malformed custom configuration file.")
+
+            return {
+                k: process_config_value(k, v, custom_config.get(k, {}))
+                for k, v in default_config.items()
+            }
 
         with open(config_path) as f:
             custom_config = YAML().load(f)
 
-        config = update(config, custom_config)
+        config = build_config(default_config, custom_config)
+        import pprint
+
+        pprint.pprint(config)
 
     splits = uritools.urisplit(config["build_params"]["root_build_dir"])
 
@@ -684,6 +717,22 @@ def init(config_path: str = None):
         )
     elif not splits.getscheme("file") == "file":
         raise ValueError
+
+
+class ConfigError(Exception):
+    """
+    Class defining an error thrown when a configuration file is malformed.
+
+    """
+
+    def __init__(self, message: str):
+        """Initializer method.
+
+        :param str message: The error message.
+
+        """
+
+        super().__init__(message)
 
 
 def closedown():
