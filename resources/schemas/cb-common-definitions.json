@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://landarltracker.com/schemas/cb-common-definitions.json",
+  "$id": "http://landarltracker.com/cookbase/schemas/0.1.0/cb-common-definitions.json",
   "title": "Cookbase Schema common definitions",
   "description": "Common definitions for the Cookbase Data Model (CBDM). Visit https://cookbase.readthedocs.io/en/latest/cbdm.html to read the documentation.",
   "$defs": {

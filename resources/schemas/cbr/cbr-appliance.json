@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://landarltracker.com/schemas/cbr/cbr-appliance.json",
+  "$id": "http://landarltracker.com/cookbase/schemas/0.1.0/cbr/cbr-appliance.json",
   "title": "Cookbase Recipe Appliance",
   "description": "Schema defining the format of a Cookbase Recipe Appliance. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-appliances to read the documentation.",
   "$defs": {

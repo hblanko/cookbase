@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://landarltracker.com/schemas/cba/cba.json",
+  "$id": "http://landarltracker.com/cookbase/schemas/0.1.0/cba/cba.json",
   "title": "Cookbase Appliance",
   "description": "Schema defining the format of a Cookbase Appliance. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cba to read the documentation.",
   "examples": [
     {
-      "schema": "http://landarltracker.com/schemas/cba/cba.json",
+      "schema": "http://landarltracker.com/cookbase/schemas/0.1.0/cba/cba.json",
       "id": 3617238731,
       "name": {
         "en": "bowl",
@@ -121,7 +121,7 @@
   ],
   "properties": {
     "schema": {
-      "const": "http://landarltracker.com/schemas/cba/cba.json"
+      "const": "http://landarltracker.com/cookbase/schemas/0.1.0/cba/cba.json"
     },
     "id": {
       "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"

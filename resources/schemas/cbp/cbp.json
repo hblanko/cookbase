@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://landarltracker.com/schemas/cbp/cbp.json",
+  "$id": "http://landarltracker.com/cookbase/schemas/0.1.0/cbp/cbp.json",
   "title": "Cookbase Process",
   "description": "Schema defining the format of a Cookbase Process. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#cbp to read the documentation.",
   "examples": [
     {
-      "schema": "http://landarltracker.com/schemas/cbp/cbp.json",
+      "schema": "http://landarltracker.com/cookbase/schemas/0.1.0/cbp/cbp.json",
       "id": 4038648643,
       "name": {
         "en": "dicing",
@@ -81,7 +81,7 @@
   ],
   "properties": {
     "schema": {
-      "const": "http://landarltracker.com/schemas/cbp/cbp.json"
+      "const": "http://landarltracker.com/cookbase/schemas/0.1.0/cbp/cbp.json"
     },
     "id": {
       "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"

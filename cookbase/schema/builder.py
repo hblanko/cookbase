@@ -1,46 +1,47 @@
-"""Cookbase Schema Builder
+"""
+Cookbase Schema Builder.
 
 This module processes Cookbase Schema templates and compiles them into the desired
 directory structure, either on a local or remote (through SSH) location.
 
 The configuration is taken by default from the :file:`build-config.yaml` file, having
-the option to provide a custom configuration file by using the
-:option:`-c`/:option:`--config` command-line option. Any mandatory parameters lacking in
-the custom coniguration file are directly taken from the default values.
-
+the option to provide a custom configuration file. Any mandatory parameters lacking in
+the custom configuration file are directly taken from the default values.
 """
-import argparse
 import bisect
 import json
 import os
 import string
+import tempfile
+from argparse import Namespace
 from collections import OrderedDict
 from collections.abc import Mapping
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import paramiko
 import uritools
 from paramiko.client import SSHClient
 from ruamel.yaml import YAML
 
-from cookbase.utils import _HelpAction, _SortingDict
+from cookbase.utils import _SortingDict
 
 
 class _SSHConnection:
-    """Helper class handling SFTP communication.
+    """
+    Helper class handling SFTP communication.
 
     If provided with a hostname, automatically initiates the SFTP session.
 
-    :param hostname: The SSH host, defaults to :const:`None`
+    :param hostname: The SSH host, defaults to :const:`None`.
     :type hostname: str, optional
-    :param port: The port where the SSH host is listening, defaults to :const:`None`
+    :param port: The port where the SSH host is listening, defaults to :const:`None`.
     :type port: int, optional
-    :param username: The username on the target SSH host, defaults to :const:`None`
+    :param username: The username on the target SSH host, defaults to :const:`None`.
     :type username: str, optional
 
-    :ivar client: The SSH session handler
+    :ivar client: The SSH session handler.
     :vartype client: paramiko.client.SSHClient
-    :ivar sftp_session: The SFTP session handler
+    :ivar sftp_session: The SFTP session handler.
     :vartype sftp_session: paramiko.sftp_client.SFTPClient
     """
 
@@ -48,18 +49,19 @@ class _SSHConnection:
     sftp_session = None
 
     def __init__(self, hostname: str = None, port: int = None, username: str = None):
-        """Constructor method."""
+        """Initialize object."""
         if hostname:
             self.set_session(hostname, port, username)
 
     def set_session(self, hostname: str, port: int = None, username: str = None):
         """
-        Sets up a SFTP session.
+        Set up a SFTP session.
 
-        :param str hostname: The SSH host
-        :param port: The port where the SSH host is listening, defaults to :const:`None`
+        :param str hostname: The SSH host.
+        :param port: The port where the SSH host is listening, defaults to
+          :const:`None`.
         :type port: int, optional
-        :param username: The username on the target SSH host, defaults to :const:`None`
+        :param username: The username on the target SSH host, defaults to :const:`None`.
         :type username: str, optional
         """
         self.client = SSHClient()
@@ -77,18 +79,17 @@ class _SSHConnection:
         self.sftp_session = self.client.open_sftp()
 
     def close_session(self):
-        """
-        Closes the SFTP session.
-        """
+        """Close the SFTP session."""
         if self.is_active():
             self.client.close()
 
     def mkdir_p(self, path: str):
         """
-        Simulates the :command:`mkdir -p <path>` Unix command, making a directory and
-        all its non-existing parent directories.
+        Simulate the :command:`mkdir -p <path>` Unix command.
 
-        :param str path: The path to a directory
+        It creates the directory and all its non-existing parents.
+
+        :param str path: The path to a directory.
         """
         dirs = []
 
@@ -99,28 +100,44 @@ class _SSHConnection:
         if len(path) == 1 and not path.startswith("/"):
             dirs.append(path)
 
-        while len(dirs):
+        while dirs:
             path = dirs.pop()
             try:
                 self.sftp_session.stat(path)
-            except:
+            except IOError:
                 self.sftp_session.mkdir(path, mode=0o755)
 
-    def write_file(self, s: str, path: str):
-        """
-        Creates or overwrites a file under `path` and stores the content of `s` in it.
+    # def write_file(self, content: str, path: str):
+    #     """
+    #     Create or overwrite a file under `path` and store `content` in it.
+    #
+    #     It creates the parent directories if required.
+    #
+    #     :param str content: The file content.
+    #     :param str path: Path to the new file.
+    #     """
+    #     self.mkdir_p(os.path.normpath(os.path.dirname(path)))
+    #
+    #     with self.sftp_session.open(path, "w") as sftp_file:
+    #         sftp_file.write(content)
 
-        :param str s: String to be written into a new file
-        :param path: Path to the new file
+    def put_file(self, local_path, remote_path):
         """
-        self.mkdir_p(os.path.normpath(os.path.dirname(path)))
-        sftp_file = self.sftp_session.open(path, "w")
-        sftp_file.write(s)
-        sftp_file.close()
+        Copy the local file at `local_path` into `remote_path`.
 
-    def is_active(self):
+        It creates the parent directories if required.
+
+        :param str local_path: Path to the local file.
+        :param str remote_path: Path to the remote file.
         """
-        Checks whether the SSH session is active or not.
+        self.mkdir_p(os.path.normpath(os.path.dirname(remote_path)))
+        self.sftp_session.put(local_path, remote_path)
+
+    def is_active(self) -> bool:
+        """Check whether the SSH session is active or not.
+
+        :return: `True` if the SSH session is active, `False` otherwise.
+        :rtype: bool
         """
         if self.client:
             transport = self.client.get_transport()
@@ -135,358 +152,561 @@ class _SSHConnection:
         return False
 
 
-config = None
-ssh = None
-
-
-def build_abs_schema_uri(rel_path: str):
+def _build_abs_schema_uri(rel_path: str, cb_schemas_base_url: str) -> str:
     """
-    It forms an absolute URI from a relative path considering the
-    :code:`common.cb_schemas_base_url` property provided by the build configuration
-    file.
+    Form an absolute URI from a relative path.
 
-    :param str rel_path: A path relative to :code:`build_params.root_build_dir`
-    :return: An absolute URI intended to unambiguously refer to the given path
+    It takes the :code:`common.cb_schemas_base_url` property provided by the build
+    configuration file.
+
+    :param str rel_path: A path relative to :code:`build_params.root_build_dir`.
+    :param str cb_schemas_base_url: The base URL pointing to the directory where the
+      Cookbase Schemas are to be located.
+
+    :return: An absolute URI intended to unambiguously refer to the given path.
     :rtype: str
     """
-    base_url_splits = uritools.urisplit(config["common"]["cb_schemas_base_url"])
+    base_url_splits = uritools.urisplit(cb_schemas_base_url)
+    abs_path = base_url_splits.path or "/"
 
-    abs_path = base_url_splits.path
-
-    if abs_path == "":
-        abs_path = "/"
-
-    return uritools.urijoin(
-        config["common"]["cb_schemas_base_url"], os.path.join(abs_path, rel_path)
-    )
+    return uritools.urijoin(cb_schemas_base_url, os.path.join(abs_path, rel_path))
 
 
-def build_rel_path(start_rel_path: str, target_rel_path: str):
+def _build_rel_path(
+    start_rel_path: str, target_rel_path: str, root_build_dir: str
+) -> str:
     """
-    Calculates the relative path from `start_rel_path` to `target_rel_path`.
+    Calculate the relative path from `start_rel_path` to `target_rel_path`.
 
-    :param str start_rel_path: The startpoint path
-    :param str target_rel_path: The target path
-    :return: A relative path from `start_rel_path` to `target_rel_path`
+    :param str start_rel_path: The start-point path.
+    :param str target_rel_path: The target path.
+    :param str root_build_dir: The absolute path to the directory where the built
+      schemas are to be located.
+
+    :return: A relative path from `start_rel_path` to `target_rel_path`.
     :rtype: str
     """
-    base_path = uritools.urisplit(config["build_params"]["root_build_dir"]).path
+    base_path = uritools.urisplit(root_build_dir).path
     start_path = os.path.dirname(os.path.join(base_path, start_rel_path))
     target_path = os.path.join(base_path, target_rel_path)
 
     return os.path.relpath(target_path, start_path)
 
 
-def write_to_file(s: str, path: str):
+def render(template_path: str, substitutions: Dict[str, str]) -> str:
     """
-    Creates or overwrites a file (either locally or remotely) and stores `s` in it.
+    Generate a JSON Schema by applying substitutions on a template.
 
-    :param str s: The string to be written in the file
-    :param str path: The path where the file is to be created
+    :param str template_path: The path to the template file.
+    :param substitutions: A dictionary including the substitutions to be performed on
+      the template.
+    :type substitutions: Dict[str, str]
+
+    :return: The rendered JSON Schema.
+    :rtype: str
     """
-    if ssh:
-        ssh.write_file(s, path)
-    else:
-        os.makedirs(os.path.dirname(path), mode=0o755, exist_ok=True)
-        with open(path, "w") as f:
-            f.write(s)
+    with open(template_path) as file:
+        template = string.Template(file.read())
+
+    return template.substitute(substitutions)
 
 
-def render(template_filename: str, schema_path: str, substs: Dict[str, str]):
+def build_cb_common_definitions_schema(
+    common_config: Dict[str, str], build_params: Dict[str, str]
+) -> Tuple[str, str]:
     """
-    Creates a JSON Schema file under `schema_path` from applying the substitutions
-    `substs` to a template stored in `template_filename`.
+    Build the CB Common Definitions Schema.
 
-    :param str template_filename: The name of the template file to be rendered
-    :param str schema_path: The path where the generated JSON Schema will be stored
-    :param substs: A dictionary including the substitutions to be performed on the
-      template
-    :type substs: Dict[str, str]
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple having two elements, the rendered CB Common Definitions Schema as
+      first element and the path where to be located as second element.
+    :rtype: Tuple[str, str]
     """
-    with open(
-        os.path.join(
-            config["build_params"]["cb_schema_templates_dir"], template_filename
-        )
-    ) as f:
-        template = string.Template(f.read())
-
-    schema = template.substitute(substs)
-    path = os.path.join(
-        uritools.urisplit(config["build_params"]["root_build_dir"]).path, schema_path
-    )
-    write_to_file(schema, path)
-
-
-def build_cb_common_definitions_schema():
-    """
-    Builds the CB Common Definitions Schema according to the provided configuration.
-    """
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cb_common_definitions_url": build_abs_schema_uri(
-            config["common"]["defs_path"]
-        ),
-    }
-
-    render("cb-common-definitions.template.json", config["common"]["defs_path"], substs)
-
-
-def build_cbr_schema(build_cbr_process: bool = True):
-    """
-    Builds the CBR Schema according to the provided configuration.
-
-    If the `build_cbr_process` flag is set to :const:`True` (the default), this
-    function will also build CBR Process Schema.
-
-    :param build_cbr_process: Flag indicating whether the CBR Process Schema will be
-      generated or not
-    :type build_cbr_process: bool, optional
-    """
-    # Build CBR main schema
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbr_schema_url": build_abs_schema_uri(
-            config["build_params"]["cbr_schema_path"]
-        ),
-        "common_defs_path": build_rel_path(
-            config["build_params"]["cbr_schema_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    for k, v in config["cbr"].items():
-        substs[k] = build_rel_path(config["build_params"]["cbr_schema_path"], v)
-
-    render("cbr.template.json", config["build_params"]["cbr_schema_path"], substs)
-
-    # Build CBR-info schema
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbr_info_schema_url": build_abs_schema_uri(config["cbr"]["cbr_info_path"]),
-        "common_defs_path": build_rel_path(
-            config["cbr"]["cbr_info_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("cbr-info.template.json", config["cbr"]["cbr_info_path"], substs)
-
-    # Build CBR-yield schema
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbr_yield_schema_url": build_abs_schema_uri(config["cbr"]["cbr_yield_path"]),
-        "common_defs_path": build_rel_path(
-            config["cbr"]["cbr_yield_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("cbr-yield.template.json", config["cbr"]["cbr_yield_path"], substs)
-
-    # Build CBR-ingredient schema
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbr_ingredient_schema_url": build_abs_schema_uri(
-            config["cbr"]["cbr_ingredient_path"]
-        ),
-        "common_defs_path": build_rel_path(
-            config["cbr"]["cbr_ingredient_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("cbr-ingredient.template.json", config["cbr"]["cbr_ingredient_path"], substs)
-
-    # Build CBR-appliance schema
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbr_appliance_schema_url": build_abs_schema_uri(
-            config["cbr"]["cbr_appliance_path"]
-        ),
-        "common_defs_path": build_rel_path(
-            config["cbr"]["cbr_appliance_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("cbr-appliance.template.json", config["cbr"]["cbr_appliance_path"], substs)
-
-    if build_cbr_process:
-        build_cbr_process_schema()
-
-
-def build_cbi_schema():
-    """
-    Builds the CBI Schema according to the provided configuration.
-    """
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbi_schema_url": build_abs_schema_uri(
-            config["build_params"]["cbi_schema_path"]
-        ),
-        "common_defs_path": build_rel_path(
-            config["build_params"]["cbi_schema_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("cbi.template.json", config["build_params"]["cbi_schema_path"], substs)
-
-
-def build_cba_schema():
-    """
-    Builds the CBA Schema according to the provided configuration.
-    """
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cba_schema_url": build_abs_schema_uri(
-            config["build_params"]["cba_schema_path"]
-        ),
-        "common_defs_path": build_rel_path(
-            config["build_params"]["cba_schema_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("cba.template.json", config["build_params"]["cba_schema_path"], substs)
-
-
-def build_cbp_schema():
-    """
-    Builds the CBP Schema according to the provided configuration.
-    """
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbp_schema_url": build_abs_schema_uri(
-            config["build_params"]["cbp_schema_path"]
-        ),
-        "common_defs_path": build_rel_path(
-            config["build_params"]["cbp_schema_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("cbp.template.json", config["build_params"]["cbp_schema_path"], substs)
-
-
-def build_caf_schema():
-    """
-    Builds the CAF Schema according to the provided configuration.
-    """
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "caf_schema_url": build_abs_schema_uri(
-            config["build_params"]["caf_schema_path"]
-        ),
-        "common_defs_path": build_rel_path(
-            config["build_params"]["caf_schema_path"], config["common"]["defs_path"]
-        ),
-    }
-
-    render("caf.template.json", config["build_params"]["caf_schema_path"], substs)
-
-
-def build_cbr_process_schema(do_collection: bool = True):
-    """
-    Builds the CBR Process Schema according to the provided configuration.
-
-    If the `do_collection` flag is set to :const:`True` (the default), the
-    function will builds CBR Process Schemas collection.
-
-    :param do_collection: Flag indicating whether the CBR Process Schemas collection
-      will be generated or not.
-    :type do_collection: bool, optional
-    """
-    build_cbr_process_definitions_schema()
-
-    if do_collection:
-        generate_cbr_process_collection()
-
-    generate_cbr_process_main_schema()
-
-
-def build_cbr_process_definitions_schema():
-    """
-    Builds the CBR Process Definitions Schema according to the provided configuration.
-    """
-    substs = {
-        "json_schema_uri": config["common"]["json_schema_uri"],
-        "cbr_process_definitions_url": build_abs_schema_uri(
-            config["cbr_process"]["defs_path"]
-        ),
-    }
-
-    render(
-        "cbr-process-definitions.template.json",
-        config["cbr_process"]["defs_path"],
-        substs,
-    )
-
-
-def generate_cbr_process_collection():
-    """
-    Generates and writes into files the CBR Process Schemas from a collection of CBP
-    files.
-
-    The accessed CBP files are under the directory specified by the
-    :code:`cbr_process.cbp_dir` property from the build configuration file.
-
-    The routes to the JSON Schema definitions of the different :code:`type`\ s referred
-    by the CBP documents are detailed in the configuration file under the path given by
-    the :code:`cbr_process.types_path` property.
-    """
-
-    with open(config["cbr_process"]["types_path"]) as f:
-        d = YAML().load(f)
-
-    def build_ref(entry):
-        return uritools.urijoin(
-            build_rel_path(
-                os.path.join(
-                    config["build_params"]["cbr_process_collection_dir"], "dummy"
-                ),
-                config[entry["ns"]]["defs_path"],
+    return (
+        render(
+            os.path.join(
+                build_params["cb_schema_templates_dir"],
+                "cb-common-definitions.template.json",
             ),
-            f'#{entry["def"]}',
+            {
+                "json_schema_uri": common_config["json_schema_uri"],
+                "cb_common_definitions_url": _build_abs_schema_uri(
+                    common_config["defs_path"], common_config["cb_schemas_base_url"]
+                ),
+            },
+        ),
+        os.path.join(
+            uritools.urisplit(build_params["root_build_dir"]).path,
+            common_config["defs_path"],
+        ),
+    )
+
+
+def build_cbr_schema(
+    cbr_config: Dict[str, str],
+    cbr_process_config: Dict[str, str],
+    common_config: Dict[str, str],
+    build_params: Dict[str, str],
+) -> Tuple[Tuple[str, str]]:
+    """
+    Build the CBR Schema.
+
+    :param cbr_config: The :code:`cbr` configuration block.
+    :type cbr_config: Dict[str, str]
+    :param cbr_process_config: The :code:`cbr_process` configuration block.
+    :type cbr_process_config: Dict[str, str]
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple of tuples that represent the Cookbase Recipe Schema and all its
+      subschemas. Each sub-tuple has two elements: a rendered JSON Schema representing
+      either the Cookbase Recipe Schema itself or any of its subschemas as first
+      element, and the path where the schema is to be located as second element.
+    :rtype: Tuple[Tuple[str, str]]
+    """
+
+    def _render_subschema(subschema_name):
+        return render(
+            os.path.join(
+                build_params["cb_schema_templates_dir"],
+                f"cbr-{subschema_name}.template.json",
+            ),
+            {
+                "json_schema_uri": common_config["json_schema_uri"],
+                f"cbr_{subschema_name}_schema_url": _build_abs_schema_uri(
+                    cbr_config[f"cbr_{subschema_name}_path"],
+                    common_config["cb_schemas_base_url"],
+                ),
+                "common_defs_path": _build_rel_path(
+                    cbr_config[f"cbr_{subschema_name}_path"],
+                    common_config["defs_path"],
+                    build_params["root_build_dir"],
+                ),
+            },
         )
 
-    defs = {i: build_ref(d[i]) for i in d.keys()}
+    return (
+        (
+            render(
+                os.path.join(
+                    build_params["cb_schema_templates_dir"], "cbr.template.json"
+                ),
+                {
+                    **{
+                        key: _build_rel_path(
+                            cbr_config["schema_path"],
+                            value,
+                            build_params["root_build_dir"],
+                        )
+                        for key, value in filter(
+                            lambda item: item[0] != "schema_path", cbr_config.items()
+                        )
+                    },
+                    **{
+                        "json_schema_uri": common_config["json_schema_uri"],
+                        "cbr_schema_url": _build_abs_schema_uri(
+                            cbr_config["schema_path"],
+                            common_config["cb_schemas_base_url"],
+                        ),
+                        "common_defs_path": _build_rel_path(
+                            cbr_config["schema_path"],
+                            common_config["defs_path"],
+                            build_params["root_build_dir"],
+                        ),
+                    },
+                },
+            ),
+            os.path.join(
+                uritools.urisplit(build_params["root_build_dir"]).path,
+                cbr_config["schema_path"],
+            ),
+        ),
+        (
+            _render_subschema("info"),
+            os.path.join(
+                uritools.urisplit(build_params["root_build_dir"]).path,
+                cbr_config["cbr_info_path"],
+            ),
+        ),
+        (
+            _render_subschema("yield"),
+            os.path.join(
+                uritools.urisplit(build_params["root_build_dir"]).path,
+                cbr_config["cbr_yield_path"],
+            ),
+        ),
+        (
+            _render_subschema("ingredient"),
+            os.path.join(
+                uritools.urisplit(build_params["root_build_dir"]).path,
+                cbr_config["cbr_ingredient_path"],
+            ),
+        ),
+        (
+            _render_subschema("appliance"),
+            os.path.join(
+                uritools.urisplit(build_params["root_build_dir"]).path,
+                cbr_config["cbr_appliance_path"],
+            ),
+        ),
+        *build_cbr_process_schema(
+            cbr_config["cbr_process_path"],
+            cbr_process_config,
+            common_config,
+            build_params,
+        ),
+    )
 
-    for filename in os.listdir(config["cbr_process"]["cbp_dir"]):
-        if os.path.splitext(filename)[1] == ".cbp":
-            with open(os.path.join(config["cbr_process"]["cbp_dir"], filename)) as f:
-                cbp = json.load(f, object_pairs_hook=OrderedDict)
 
-            if cbp["data"]["processType"] != "generic":
-                continue
+def build_cbi_schema(
+    cbi_schema_path: str, common_config: Dict[str, str], build_params: Dict[str, str]
+) -> Tuple[str, str]:
+    """
+    Build the CBI Schema.
 
-            schema_filename = filename.rsplit("-", 1)[0].replace(" ", "_") + ".json"
-            schema = generate_cbr_process_collection_item(cbp, defs, schema_filename)
-            path = os.path.join(
-                uritools.urisplit(config["build_params"]["root_build_dir"]).path,
-                config["build_params"]["cbr_process_collection_dir"],
-                filename.rsplit("-", 1)[0] + ".json",
-            )
+    :param str cbi_schema_path: The relative path to the Cookbase Ingredient Schema.
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
 
-            write_to_file(json.dumps(schema, indent=2), path)
+    :return: A tuple having two elements, the rendered Cookbase Ingredient Schema as
+      first element and the path where to be located as second element.
+    :rtype: Tuple[str, str]
+    """
+    return (
+        render(
+            os.path.join(build_params["cb_schema_templates_dir"], "cbi.template.json"),
+            {
+                "json_schema_uri": common_config["json_schema_uri"],
+                "cbi_schema_url": _build_abs_schema_uri(
+                    cbi_schema_path, common_config["cb_schemas_base_url"],
+                ),
+                "common_defs_path": _build_rel_path(
+                    cbi_schema_path,
+                    common_config["defs_path"],
+                    build_params["root_build_dir"],
+                ),
+            },
+        ),
+        os.path.join(
+            uritools.urisplit(build_params["root_build_dir"]).path, cbi_schema_path
+        ),
+    )
+
+
+def build_cba_schema(
+    cba_schema_path: str, common_config: Dict[str, str], build_params: Dict[str, str]
+) -> Tuple[str, str]:
+    """
+    Build the CBA Schema.
+
+    :param str cba_schema_path: The relative path to the Cookbase Appliance Schema.
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple having two elements, the rendered Cookbase Appliance Schema as
+      first element and the path where to be located as second element.
+    :rtype: Tuple[str, str]
+    """
+    return (
+        render(
+            os.path.join(build_params["cb_schema_templates_dir"], "cba.template.json"),
+            {
+                "json_schema_uri": common_config["json_schema_uri"],
+                "cba_schema_url": _build_abs_schema_uri(
+                    cba_schema_path, common_config["cb_schemas_base_url"],
+                ),
+                "common_defs_path": _build_rel_path(
+                    cba_schema_path,
+                    common_config["defs_path"],
+                    build_params["root_build_dir"],
+                ),
+            },
+        ),
+        os.path.join(
+            uritools.urisplit(build_params["root_build_dir"]).path, cba_schema_path
+        ),
+    )
+
+
+def build_cbp_schema(
+    cbp_schema_path: str, common_config: Dict[str, str], build_params: Dict[str, str]
+) -> Tuple[str, str]:
+    """
+    Build the CBP Schema.
+
+    :param str cbp_schema_path: The relative path to the Cookbase Process Schema.
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple having two elements, the rendered Cookbase Process Schema as first
+      element and the path where to be located as second element.
+    :rtype: Tuple[str, str]
+    """
+    return (
+        render(
+            os.path.join(build_params["cb_schema_templates_dir"], "cbp.template.json"),
+            {
+                "json_schema_uri": common_config["json_schema_uri"],
+                "cbp_schema_url": _build_abs_schema_uri(
+                    cbp_schema_path, common_config["cb_schemas_base_url"],
+                ),
+                "common_defs_path": _build_rel_path(
+                    cbp_schema_path,
+                    common_config["defs_path"],
+                    build_params["root_build_dir"],
+                ),
+            },
+        ),
+        os.path.join(
+            uritools.urisplit(build_params["root_build_dir"]).path, cbp_schema_path
+        ),
+    )
+
+
+def build_caf_schema(
+    caf_schema_path: str, common_config: Dict[str, str], build_params: Dict[str, str]
+) -> Tuple[str, str]:
+    """
+    Build the CAF Schema.
+
+    :param str caf_schema_path: The relative path to the Cookbase Appliance Function
+      Schema.
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple having two elements, the rendered Cookbase Appliance Function
+      Schema as first element and the path where to be located as second element.
+    :rtype: Tuple[str, str]
+    """
+    return (
+        render(
+            os.path.join(build_params["cb_schema_templates_dir"], "caf.template.json"),
+            {
+                "json_schema_uri": common_config["json_schema_uri"],
+                "caf_schema_url": _build_abs_schema_uri(
+                    caf_schema_path, common_config["cb_schemas_base_url"],
+                ),
+                "common_defs_path": _build_rel_path(
+                    caf_schema_path,
+                    common_config["defs_path"],
+                    build_params["root_build_dir"],
+                ),
+            },
+        ),
+        os.path.join(
+            uritools.urisplit(build_params["root_build_dir"]).path, caf_schema_path
+        ),
+    )
+
+
+def build_cbr_process_schema(
+    cbr_process_path: str,
+    cbr_process_config: Dict[str, str],
+    common_config: Dict[str, str],
+    build_params: Dict[str, str],
+) -> Tuple[Tuple[str, str]]:
+    """
+    Build the CBR Process Schema.
+
+    :param str cbr_process_path: The relative path to the CBR Process Main Schema.
+    :param cbr_process_config: The :code:`cbr_process` configuration block.
+    :type cbr_process_config: Dict[str, str]
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple of tuples that represent the CBR Process Main Schema and its
+      subschemas. Each sub-tuple has two elements: a rendered JSON Schema representing
+      either the CBR Process Main Schema itself or any of its subschemas as first
+      element, and the path where the schema is to be located as second element.
+    :rtype: Tuple[Tuple[str, str]]
+    """
+    cbr_process_collection = generate_cbr_process_collection(
+        cbr_process_config, common_config, build_params
+    )
+    return (
+        build_cbr_process_definitions_schema(
+            cbr_process_config["defs_path"], common_config, build_params
+        ),
+        *cbr_process_collection,
+        generate_cbr_process_main_schema(
+            cbr_process_path,
+            cbr_process_config["cbr_process_collection_dir"],
+            common_config,
+            build_params,
+            tuple(os.path.basename(path) for _, path in cbr_process_collection),
+        ),
+    )
+
+
+def build_cbr_process_definitions_schema(
+    cbr_defs_path: str, common_config: Dict[str, str], build_params: Dict[str, str],
+) -> Tuple[str, str]:
+    """
+    Build the CBR Process Definitions Schema.
+
+    :param str cbr_defs_path: The relative path to the CBR Process Definitions Schema.
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple having two elements, the rendered CBR Process Definitions Schema as
+      first element and the path where to be located as second element.
+    :rtype: Tuple[str, str]
+    """
+    return (
+        render(
+            os.path.join(
+                build_params["cb_schema_templates_dir"],
+                "cbr-process-definitions.template.json",
+            ),
+            {
+                "json_schema_uri": common_config["json_schema_uri"],
+                "cbr_process_definitions_url": _build_abs_schema_uri(
+                    cbr_defs_path, common_config["cb_schemas_base_url"],
+                ),
+            },
+        ),
+        os.path.join(
+            uritools.urisplit(build_params["root_build_dir"]).path, cbr_defs_path
+        ),
+    )
+
+
+def generate_cbr_process_collection(
+    cbr_process_config: Dict[str, str],
+    common_config: Dict[str, str],
+    build_params: Dict[str, str],
+) -> Tuple[Tuple[str, str]]:
+    r"""
+    Build the collection of CBR Process Schemas.
+
+    Generates and writes into files the CBR Process Schemas from a collection of CBP
+    files, which are under the directory specified by the :code:`cbr_process.cbp_dir`
+    property from the build configuration file. The routes to the JSON Schema
+    definitions of the different :code:`type`\ s referred by the CBP documents are
+    detailed in the configuration file under the path given by the
+    :code:`cbr_process.types_path` property.
+
+    :param cbr_process_config: The :code:`cbr_process` configuration block.
+    :type cbr_process_config: Dict[str, str]
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+
+    :return: A tuple of tuples that represent the collection of CBR Process Schemas.
+      Each sub-tuple has two elements: a rendered JSON Schema representing either the
+      CBR Process Schema as first element, and the path where the schema is to
+      be located as second element.
+    :rtype: Tuple[Tuple[str, str]]
+    """
+
+    def build_ref(type_entry):
+        if type_entry["ns"] == "common":
+            defs_path = common_config["defs_path"]
+        elif type_entry["ns"] == "cbr_process":
+            defs_path = cbr_process_config["defs_path"]
+
+        return uritools.urijoin(
+            _build_rel_path(
+                os.path.join(cbr_process_config["cbr_process_collection_dir"], "dummy"),
+                defs_path,
+                build_params["root_build_dir"],
+            ),
+            f"#{type_entry['def']}",
+        )
+
+    with open(cbr_process_config["types_path"]) as file:
+        types = YAML().load(file)
+
+    defs = {i: build_ref(types[i]) for i in types.keys()}
+
+    cbp_filenames = tuple(
+        filter(
+            lambda filename: os.path.splitext(filename)[1] == ".cbp",
+            os.listdir(cbr_process_config["cbp_dir"]),
+        )
+    )
+
+    cbr_processes = {}
+
+    for cbp_filename in cbp_filenames:
+        with open(os.path.join(cbr_process_config["cbp_dir"], cbp_filename)) as file:
+            cbp = json.load(file, object_pairs_hook=OrderedDict)
+
+        if cbp["data"]["processType"] == "generic":
+            cbr_processes[
+                os.path.join(
+                    cbr_process_config["cbr_process_collection_dir"],
+                    cbp_filename.rsplit("-", 1)[0] + ".json",
+                )
+            ] = cbp
+
+    return tuple(
+        (
+            generate_cbr_process_collection_item(
+                cbp,
+                defs,
+                common_config["json_schema_uri"],
+                _build_abs_schema_uri(
+                    schema_path, common_config["cb_schemas_base_url"]
+                ),
+            ),
+            os.path.join(
+                uritools.urisplit(build_params["root_build_dir"]).path, schema_path
+            ),
+        )
+        for schema_path, cbp in cbr_processes.items()
+    )
 
 
 def generate_cbr_process_collection_item(
-    cbp: Dict[str, Any], defs: Dict[str, str], schema_filename: str = None
-):
+    cbp: Dict[str, Any], defs: Dict[str, str], json_schema_uri: str, cbr_schema_uri: str
+) -> str:
     """
-    Generates and writes into a file a CBR Process Schema from a CBP document.
+    Build a CBR Process Schema from a CBP document.
 
     If `schema_filename` is set to :const:`None` (the default), the output file name
     will be assumed to be the first English name given in the CBP's :code:`name`
     property, lowercased, substituted spaces by underscores :const:`_`, and appended the
     :code:`.json` extension.
 
-    :param cbp: The dictionary representing the content of a CBP document
+    :param cbp: The dictionary representing the content of a CBP document.
     :type cbp: dict[str, Any]
-    :param defs: A dictionary mapping the CBP
+    :param defs: A dictionary mapping the CBP.
       :code:`data.schema.foodstuffKeywords.*.type` properties to the location of its
       definition
     :type defs: dict[str, str]
-    :param schema_filename: The name of the file where the CBP is to be stored,
-      defaults to :const:`None`
-    :type schema_filename: str, optional
+    :param str json_schema_uri: The URI identifying the followed JSON Schema
+      specification.
+    :param str cbr_schema_uri: The absolute URI referring to the CBR Process Schema.
+
+    :return: The CBR Process Schema.
+    :rtype: str
+
+    :raises ValueError: The processed CBP does not have :code:`"generic"` as
+      :code:`data.processType`.
     """
     # It assumes a valid CBP
     if cbp["data"]["processType"] != "generic":
-        raise ValueError
+        raise ValueError('The processed CBP has wrong "processType".')
 
     # Get CBP name
     process_name = cbp["name"]["en"]
@@ -494,65 +714,67 @@ def generate_cbr_process_collection_item(
     if isinstance(process_name, list):
         process_name = process_name[0]
 
-    if not schema_filename:
-        schema_filename = process_name.lower().replace(" ", "_")
-
-    schema = OrderedDict()
-    schema["$schema"] = config["common"]["json_schema_uri"]
-    schema["$id"] = build_abs_schema_uri(
-        os.path.join(
-            config["build_params"]["cbr_process_collection_dir"], schema_filename
-        )
-    )
-    schema["title"] = 'Cookbase Recipe Process "' + process_name + '"'
+    schema = {}
+    schema["$schema"] = json_schema_uri
+    schema["$id"] = cbr_schema_uri
+    schema["title"] = f'Cookbase Recipe Process "{process_name}"'
     schema[
         "description"
     ] = f'Schema defining the format of the CBR "{process_name}" Process.'
     schema["type"] = "object"
     schema["additionalProperties"] = False
     schema["required"] = ["name", "cbpId"]
-    schema["properties"] = OrderedDict(
-        [("name", {"$ref": defs["name"]}), ("cbpId", {"const": cbp["id"]})]
-    )
+    schema["properties"] = {
+        "name": {"$ref": defs["name"]},
+        "cbpId": {"const": cbp["id"]},
+    }
 
     # Generate parameters property
     parameters_is_required = False
 
     if cbp["data"]["schema"].get("parameters"):
-        schema["properties"]["parameters"] = OrderedDict(
-            [("type", "object"), ("additionalProperties", False)]
-        )
+        schema["properties"]["parameters"] = {
+            "type": "object",
+            "additionalProperties": False,
+        }
 
         required_params = []
-        properties_params = OrderedDict()
+        properties_params = {}
 
-        for p, v in cbp["data"]["schema"]["parameters"].items():
-            if p == "endConditions":
-                properties_params["endConditions"] = OrderedDict(
-                    [("type", "object"), ("additionalProperties", False)]
-                )
+        for param_key, param_value in cbp["data"]["schema"]["parameters"].items():
+            if param_key == "endConditions":
+                properties_params["endConditions"] = {
+                    "type": "object",
+                    "additionalProperties": False,
+                }
 
-                required_ec = []
-                properties_ec = OrderedDict()
+                required_end_condition = []
+                properties_end_condition = {}
 
-                for ec, v_ec in v.items():
-                    if v_ec["required"]:
+                for end_condition_key, end_condition_value in param_value.items():
+                    if end_condition_value["required"]:
                         parameters_is_required = False
-                        required_ec.append(ec)
+                        required_end_condition.append(end_condition_key)
 
-                    properties_ec[ec] = {"$ref": defs[ec]}
+                    properties_end_condition[end_condition_key] = {
+                        "$ref": defs[end_condition_key]
+                    }
 
-                if required_ec:
-                    properties_params["endConditions"]["required"] = required_ec
+                if required_end_condition:
+                    properties_params["endConditions"][
+                        "required"
+                    ] = required_end_condition
 
-                properties_params["endConditions"]["properties"] = properties_ec
+                properties_params["endConditions"][
+                    "properties"
+                ] = properties_end_condition
 
             else:
-                if v["required"]:
+                if param_value["required"]:
                     parameters_is_required = False
-                    required_params.append(p)
+                    required_params.append(param_key)
 
-                properties_params[p] = {"$ref": defs[p]}
+                properties_params[param_key] = {"$ref": defs[param_key]}
 
         if required_params:
             schema["properties"]["parameters"]["required"] = required_params
@@ -568,193 +790,225 @@ def generate_cbr_process_collection_item(
         schema["required"].append("parameters")
 
     # Generate foodstuff properties
-    for f, v in cbp["data"]["schema"]["foodstuffKeywords"].items():
-        if v["required"]:
-            schema["required"].append(f)
+    for foodstuff_key, foodstuff_value in cbp["data"]["schema"][
+        "foodstuffKeywords"
+    ].items():
+        if foodstuff_value["required"]:
+            schema["required"].append(foodstuff_key)
 
-        schema["properties"][f] = {"$ref": defs[v["type"]]}
+        schema["properties"][foodstuff_key] = {"$ref": defs[foodstuff_value["type"]]}
 
     # Generate appliances property
     schema["required"].append("appliances")
     schema["properties"]["appliances"] = {"$ref": defs["appliances"]}
 
     if cbp["data"]["schema"].get("flags"):
-        for f in cbp["data"]["schema"]["flags"]:
-            schema["required"].append(f)
-            schema["properties"][f] = {"const": True}
+        for foodstuff_key in cbp["data"]["schema"]["flags"]:
+            schema["required"].append(foodstuff_key)
+            schema["properties"][foodstuff_key] = {"const": True}
 
     schema["properties"]["notes"] = {"$ref": defs["notes"]}
 
-    return schema
+    return json.dumps(schema, indent=2)
 
 
-def generate_cbr_process_main_schema():
+def generate_cbr_process_main_schema(
+    cbr_process_path: str,
+    cbr_process_collection_dir: str,
+    common_config: Dict[str, str],
+    build_params: Dict[str, str],
+    cbr_process_collection_filenames: Tuple[str],
+) -> Tuple[str, str]:
     """
-    Generates and writes into file the CBR Process Main Schema from a collection of CBR
-    Process Schemas.
+    Build the CBR Process Main Schema from a collection of CBR Process Schemas.
 
-    Its path is provided by the :code:`cbr.cbr_process_path` property in the build
-    configuration file.
+    :param str cbr_process_path: The relative path to the CBR Process Main Schema.
+    :param str cbr_process_collection_dir: The relative path to the directory containing
+      the collection of CBR Process Schemas.
+    :param common_config: The :code:`common` configuration block.
+    :type common_config: Dict[str, str]
+    :param build_params: The :code:`build_params` configuration block.
+    :type build_params: Dict[str, str]
+    :param cbr_process_collection_filenames: The names of all files containing the
+      collection of CBR Process Schemas.
+    :type cbr_process_collection_filenames: Tuple[str]
+
+    :return: A tuple having two elements, the rendered CBR Process Main Schema as first
+      element and the path where to be located as second element.
+    :rtype: Tuple[str, str]
     """
-    schema = OrderedDict()
-    schema["$schema"] = config["common"]["json_schema_uri"]
-    schema["$id"] = build_abs_schema_uri(config["cbr"]["cbr_process_path"])
-    schema["title"] = "Cookbase Recipe Process - v1.0"
+    schema = {}
+    schema["$schema"] = common_config["json_schema_uri"]
+    schema["$id"] = _build_abs_schema_uri(
+        cbr_process_path, common_config["cb_schemas_base_url"]
+    )
+    schema["title"] = "Cookbase Recipe Process"
     schema["description"] = (
-        "Schema defining the format of the Cookbase Recipe (CBR) Process. Visit "
+        "Schema defining the format of the Cookbase Recipe Process. Visit "
         "https://cookbase.readthedocs.io/en/latest/cbdm.html#cbr-preparation to read "
         "the documentation."
     )
     schema["oneOf"] = []
-    collection_base_path = os.path.join(
-        uritools.urisplit(config["build_params"]["root_build_dir"]).path,
-        config["build_params"]["cbr_process_collection_dir"],
-    )
 
-    def enter_ref(p):
-        return bisect.insort(
+    for cbr_process_filename in cbr_process_collection_filenames:
+        bisect.insort(
             schema["oneOf"],
             _SortingDict(
                 {
-                    "$ref": build_rel_path(
-                        config["cbr"]["cbr_process_path"],
-                        os.path.join(collection_base_path, p),
+                    "$ref": _build_rel_path(
+                        cbr_process_path,
+                        os.path.join(cbr_process_collection_dir, cbr_process_filename),
+                        build_params["root_build_dir"],
                     )
                 }
             ),
         )
 
-    if ssh:
-        for p in ssh.sftp_session.listdir(collection_base_path):
-            if os.path.splitext(p)[1] == ".json":
-                enter_ref(p)
-    else:
-        for p in os.listdir(collection_base_path):
-            if os.path.splitext(p)[1] == ".json":
-                enter_ref(p)
-
-    path = os.path.join(
-        uritools.urisplit(config["build_params"]["root_build_dir"]).path,
-        config["cbr"]["cbr_process_path"],
+    return (
+        json.dumps(schema, indent=2),
+        os.path.join(
+            uritools.urisplit(build_params["root_build_dir"]).path, cbr_process_path
+        ),
     )
 
-    write_to_file(json.dumps(schema, indent=2), path)
 
-
-def init(config_path: str = None):
+def build_config(custom_config_path: str = None):
     """
-    Initializes the builder.
+    Generate the builder configuration.
 
-    If a custom build configuration file `config_path` is not provided, the default
-    build configuration is loaded; if provided, any lacking parameter will be completed
-    with the default configuration.
+    If a custom build configuration file `custom_config_path` is not provided, the
+    default build configuration is loaded; if provided, all provided parameters will
+    override the default configuration.
 
-    In case of a :code:`build_params.root_build_dir` configuration property consisting
-    of a SSH or SFTP URI, a SFTP session with the target host is opened.
-
-    :param config_path: Path to the custom build configuration file, defaults to
-      :const:`None`
+    :param custom_config_path: Path to the custom build configuration file, defaults to
+      :const:`None`.
     :type config_path: str, optional
+
+    :raises ConfigError: The custom configuration file has a wrong format.
     """
-    global config, ssh
 
-    with open(os.path.join(os.path.dirname(__file__), "build-config.yaml")) as f:
-        default_config = YAML().load(f)
+    def _build_config(default_config, custom_config):
+        def process_config_value(key, default_value, custom_value):
+            if isinstance(default_value, dict):
+                return _build_config(default_value, custom_value)
 
-    if config_path:
+            if key == "root_build_dir":
+                value = custom_value or default_value
 
-        def build_config(default_config, custom_config):
-            def process_config_value(key, default_value, custom_value):
-                if isinstance(default_value, dict):
-                    return build_config(default_value, custom_value)
-                elif key == "root_build_dir":
-                    if custom_value:
-                        if uritools.isabsuri(custom_value):
-                            return custom_value
-                        else:
-                            return os.path.abspath(custom_value)
-                    else:
-                        if uritools.isabsuri(default_value):
-                            return default_value
-                        else:
-                            return os.path.normpath(
-                                os.path.join(os.path.dirname(__file__), default_value)
-                            )
-                elif key in ("cbp_dir", "cb_schema_templates_dir", "types_path"):
-                    if custom_value:
-                        return os.path.abspath(custom_value)
-                    else:
-                        return os.path.normpath(
-                            os.path.join(os.path.dirname(__file__), default_value)
-                        )
-                else:
-                    if custom_value:
-                        return custom_value
-                    else:
-                        return default_value
+                return value if uritools.isabsuri(value) else os.path.abspath(value)
 
-            if custom_config is not None and not isinstance(custom_config, Mapping):
-                raise ConfigError("Malformed custom configuration file.")
+            if key in ("cbp_dir", "cb_schema_templates_dir", "types_path"):
+                if custom_value:
+                    return os.path.abspath(custom_value)
 
-            return {
-                k: process_config_value(k, v, custom_config.get(k, {}))
-                for k, v in default_config.items()
-            }
+                return os.path.normpath(
+                    os.path.join(os.path.dirname(__file__), default_value)
+                )
 
-        with open(config_path) as f:
-            custom_config = YAML().load(f)
+            return custom_value or default_value
 
-        config = build_config(default_config, custom_config)
-        import pprint
+        if custom_config is not None and not isinstance(custom_config, Mapping):
+            raise ConfigError("malformed custom configuration file")
 
-        pprint.pprint(config)
+        return {
+            k: process_config_value(k, v, custom_config.get(k, {}))
+            for k, v in default_config.items()
+        }
 
-    splits = uritools.urisplit(config["build_params"]["root_build_dir"])
+    with open(os.path.join(os.path.dirname(__file__), "build-config.yaml")) as file:
+        default_config = YAML().load(file)
 
-    if splits.getscheme() == "ssh" or splits.getscheme() == "sftp":
-        ssh = _SSHConnection(
-            str(splits.gethost()), splits.getport(22), splits.getuserinfo()
-        )
-    elif not splits.getscheme("file") == "file":
-        raise ValueError
+    if custom_config_path:
+        with open(custom_config_path) as file:
+            custom_config = YAML().load(file)
+    else:
+        custom_config = {}
+
+    return _build_config(default_config, custom_config)
 
 
 class ConfigError(Exception):
-    """
-    Class defining an error thrown when a configuration file is malformed.
-
-    """
+    """Class defining errors thrown when a configuration parsing problem arises."""
 
     def __init__(self, message: str):
-        """Initializer method.
-
-        :param str message: The error message.
-
         """
+        Initialize exception.
 
-        super().__init__(message)
+        :param str message: The specific error message.
+        """
+        super().__init__(f"Error parsing configuration due to {message}.")
 
 
-def closedown():
+def main(args: Namespace):
     """
-    Terminates the builder.
+    Run the module with the provided configuration.
+
+    In case that the :code:`build_params.root_build_dir` configuration property
+    consists of a SSH or SFTP URI, a SFTP session with the target host is opened in
+    order to store the files remotely.
+
+    .. warning::
+       This function generates output files and may overwrite stored data.
+
+    :param args: The passed arguments including the `config_path` attribute which holds
+      the path to the custom configuration file.
+    :type args: argparse.Namespace
+
+    :raises ValueError: The URI under the :code:`build_params.root_build_dir`
+      configuration property is neither a SSH/SFTP URI nor a filesystem path.
     """
+    print(args.config_path)
+    config = build_config(args.config_path)
+    build_dir_splits = uritools.urisplit(config["build_params"]["root_build_dir"])
+
+    ssh = (
+        _SSHConnection(
+            str(build_dir_splits.gethost()),
+            build_dir_splits.getport(22),
+            build_dir_splits.getuserinfo(),
+        )
+        if build_dir_splits.getscheme() == "ssh"
+        or build_dir_splits.getscheme() == "sftp"
+        else None
+    )
+
+    if build_dir_splits.getscheme("file") not in ("ssh", "sftp", "file"):
+        raise ValueError(
+            "The URI given to the root_build_dir configuration is neither a SSH URI nor"
+            " a filesystem path."
+        )
+
+    for schema, path in (
+        build_cb_common_definitions_schema(config["common"], config["build_params"]),
+        *build_cbr_schema(
+            config["cbr"],
+            config["cbr_process"],
+            config["common"],
+            config["build_params"],
+        ),
+        build_cbi_schema(
+            config["cbi"]["schema_path"], config["common"], config["build_params"]
+        ),
+        build_cba_schema(
+            config["cba"]["schema_path"], config["common"], config["build_params"]
+        ),
+        build_cbp_schema(
+            config["cbp"]["schema_path"], config["common"], config["build_params"]
+        ),
+        build_caf_schema(
+            config["caf"]["schema_path"], config["common"], config["build_params"]
+        ),
+    ):
+        if ssh:
+            with tempfile.NamedTemporaryFile() as temp_file:
+                temp_file.write(schema.encode())
+                temp_file.seek(0)
+                ssh.put_file(temp_file.name, path)
+        else:
+            os.makedirs(os.path.dirname(path), mode=0o755, exist_ok=True)
+
+            with open(path, "w") as file:
+                file.write(schema)
+
     if ssh:
         ssh.close_session()
-
-
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Cookbase Schema Builder", add_help=False)
-    ap.add_argument(
-        "-h", "--help", action=_HelpAction, help="show this help message and exit"
-    )
-    ap.add_argument("-c", "--config", help="path to the build configuration file")
-    args = ap.parse_args()
-    init(args.config)
-    build_cb_common_definitions_schema()
-    build_cbr_schema()
-    build_cbi_schema()
-    build_cba_schema()
-    build_cbp_schema()
-    build_caf_schema()
-    closedown()

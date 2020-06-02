@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://landarltracker.com/schemas/cbr/processes/adding_on_top.json",
+  "$id": "http://landarltracker.com/cookbase/schemas/0.1.0/cbr/processes/adding_on_top.json",
   "title": "Cookbase Recipe Process \"adding on top\"",
   "description": "Schema defining the format of the CBR \"adding on top\" Process.",
   "type": "object",

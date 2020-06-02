@@ -1,11 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://landarltracker.com/schemas/caf/caf.json",
+  "$id": "http://landarltracker.com/cookbase/schemas/0.1.0/caf/caf.json",
   "title": "Cookbase Appliance Function",
   "description": "Schema defining the format of a Cookbase Appliance Function. Visit https://cookbase.readthedocs.io/en/latest/cbdm.html#caf to read the documentation.",
   "examples": [
     {
-      "schema": "http://landarltracker.com/schemas/caf/caf.json",
+      "schema": "http://landarltracker.com/cookbase/schemas/0.1.0/caf/caf.json",
       "id": 860805363,
       "name": {
         "en": "bakes",
@@ -37,7 +37,7 @@
   ],
   "properties": {
     "schema": {
-      "const": "http://landarltracker.com/schemas/caf/caf.json"
+      "const": "http://landarltracker.com/cookbase/schemas/0.1.0/caf/caf.json"
     },
     "id": {
       "$ref": "../cb-common-definitions.json#/$defs/hashCRC32"

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://landarltracker.com/schemas/cbr/processes/rounding.json",
+  "$id": "http://landarltracker.com/cookbase/schemas/0.1.0/cbr/processes/rounding.json",
   "title": "Cookbase Recipe Process \"rounding\"",
   "description": "Schema defining the format of the CBR \"rounding\" Process.",
   "type": "object",
